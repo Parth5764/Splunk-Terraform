@@ -1,0 +1,95 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena Error in citrix ping",
+    "Description": "This should indicate a problem with an Athena service in PRODUCTION. Check the search result to see the exception.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=* \"Ping target service call failed\" ctxathp-*\n| stats count\n| search count > 1",
+      "Disabled": false,
+      "Indices": [
+        "production_ath_services",
+        "production_ath_services",
+        "production_ath_services",
+        "production_ath_services",
+        "production_ath_services",
+        "production_ath_services",
+        "productionjp_ath_services",
+        "productionjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Production/AustraliaEast/AthenaProduction/Cluster",
+        "ath/Production/AustraliaSoutheast/AthenaProduction/Cluster",
+        "ath/Production/EastUS/AthenaProduction/Cluster",
+        "ath/Production/WestUS/AthenaProduction/Cluster",
+        "ath/Production/WestEurope/AthenaProduction/Cluster",
+        "ath/Production/NorthEurope/AthenaProduction/Cluster",
+        "ath/ProductionJP/JapanEast/*/Cluster",
+        "ath/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": ">>> *PRODUCTION*: https://accounts.cloud.com/citrix/ping reported a problem!"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/f43b76cc5258471796a205c42f8648aa/enqueue",
+      "CronExpression": "*/7 * * * *",
+      "StartTime": "-7m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "Internal Athena Error in citrix ping",
+    "Description": "This should indicate a problem with an Athena service in PRODUCTION INTERNAL. Check the search result to see the exception and contact Athena devs.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=* \"Ping target service call failed\" ctxathpi",
+      "Disabled": false,
+      "Indices": [
+        "production_ath_services",
+        "production_ath_services",
+        "production_ath_services"
+      ],
+      "Sources": [
+        "ath/Production/AustraliaEast/AthenaProductionInternal/Cluster",
+        "ath/Production/EastUS/AthenaProductionInternal/Cluster",
+        "ath/Production/WestEurope/AthenaProductionInternal/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": ">>> *PRODUCTION INTERNAL*: https://accounts-internal.cloud.com/citrix/ping reported a problem!"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/710ee052b75c480ac00421cc14d4fa3d/enqueue",
+      "CronExpression": "*/7 * * * *",
+      "StartTime": "-7m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

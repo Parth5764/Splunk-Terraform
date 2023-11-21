@@ -1,0 +1,15 @@
+resource "splunk_saved_searches" "{{ resource_name }}" {
+  name        = "{{ saved_search_name }}"
+  search      = <<EOT
+{{ saved_search_query }}
+EOT
+  description = "{{ saved_search_description }}"
+  disabled = {{ saved_search_disabled }}
+  actions = "{{ enabled_actions }}"
+  cron_schedule = "{{ cron_schedule }}"
+  action_email_to = "{{ action_email_to }}"
+  action_email_subject = "{{ action_email_subject }}"
+  action_slack_param_channel = "{{ action_slack_param_channel }}"
+  action_slack_param_message = "{{ action_slack_param_message }}"
+  action_pagerduty_integration_url = "{{ action_pagerduty_integration_url }}"
+}
