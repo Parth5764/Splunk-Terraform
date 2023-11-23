@@ -1,0 +1,815 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "BlackBoxMonitor Errors",
+    "Description": "READ THIS: There is a 48 hour SLA on orders. However, if it is the end of the quarter, this needs to be resolved on weekends. If this search identifies any logged errors, we need to confirm with Felipe Leon or Roberto Valdes if they are valid. In the event that neither developer is available, we need to login to the FTP server and check if there are any files in the Pending Orders folder. (SOP in progress)",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "Level=ERROR AND NOT \"A connection attempt failed\"\n| regex Message = \"\\[BlackBoxMonitor\\] *\"\n| stats count by source, Message\n| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_APS_ProductionCwcServiceRuntime",
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "alex.tompkins@citrix.com",
+        "felipe.leon@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#order-failures",
+        "Message": "BlackBox Monitor has thrown an error. Please reference alert : DevOps Notifications - Prod - BlackBoxMonitor Errors for further investigation on the error that was thrown."
+      },
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Outgoing Order Emails Notification",
+    "Description": "Displays outgoing email events triggered by IT after order completion.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "notifications CallerServiceName=itwebmarketing SendProductionOrderFulfillmentEmailAsync\n| rex field=Message \"utm_campaign\\\\\\=(?<emailTemplate>.*?)\\},\"\n| rex field=Message \"-customerName-: (?<customerName>.*?),\"\n| rex field=Message \"orders/(?<orderId>.*)/notifications\"\n| stats count by emailTemplate, customerName, orderId",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "*/7 * * * *",
+      "StartTime": "-7m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring  Access Control",
+    "Description": "To check if the Access Control resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=AccessSecurity\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring   Analytics Service",
+    "Description": "To check if the Analytics Service resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=CAS\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring   AppLayering",
+    "Description": "To check if the AppLayering resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=AppLayering\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring   App Delivery Mgmt",
+    "Description": "To check if the Application Delivery Management resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=MAS\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring   BrowserService",
+    "Description": "To check if the browser resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=BrowserService\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring ITM Service",
+    "Description": "To check if the ITM Service resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=ITM\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring ITSM Adapter Service",
+    "Description": "To check if the ITSM Adapter Service resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=ITSM\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring Licensing",
+    "Description": "To check if the Licensing resource provider fails to fulfill entitlements for 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\"\n| spath input=messageJSON \n| search EventId=CoreEntitlementFailed AND ServiceName=licensing\n| bin _time span=48h\n| rename EventId as CoreEntitlementStatus\n| stats count by _time, CoreEntitlementStatus,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "Xiaofeng.Zhu@citrix.com",
+        "liang.bao@citrix.com",
+        "WorkspaceSupport@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring NetscalerGateway",
+    "Description": "To check if the NetscalerGateway resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=NetscalerGateway\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring ShareFile",
+    "Description": "To check if the ShareFile resource provider fails to fulfill entitlements for 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\"  \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=ShareFile \n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed\n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "Praveen.buravilli@citrix.com",
+        "David.Noland@citrix.com",
+        "ops@scalextreme.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring Work Environment Management",
+    "Description": "To check if the Work Environment Management resource provider fails to fulfill entitlements for 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=WEM\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed \n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring XenDesktop",
+    "Description": "To check if the XenDesktop resource provider fails to fulfill entitlements for 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=XenDesktop\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed\n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "XD-Cloud-DevOps@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring XenMobile",
+    "Description": "To check if the XenMobile resource provider fails to fulfill entitlements for 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\" \n| spath input=messageJSON \n| search EventId=CoreEntitlementFailed AND ServiceName=XenMobile\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed\n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "xencloudops@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Failure Monitoring LifecycleManagement",
+    "Description": "To check if the LCM resource provider fails to fulfill entitlements for 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\"  \n| spath input=messageJSON\n| search EventId=CoreEntitlementFailed AND ServiceName=LifecycleManagement\n| bin _time span=48h\n| rename EventId as CoreEntitlementFailed\n| stats count by _time, CoreEntitlementFailed,CallerServiceName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "ops@scalextreme.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 8 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Entitlement Processing Notification for Slack",
+    "Description": "Entitlement Notification Post the result into Splunk",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"CoreEntitlementFulfilled\" OR \"CoreEntitlementFailed\"\n| spath input=messageJSON \n| bin _time span=15m\n| rename EventId as CoreEntitlementStatus\n| rex field=source \"cc/Production/(?<geo>.+)/.elease-(?<release>.)/Core\"\n| stats count by _time, geo, CoreEntitlementStatus,ServiceName",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "SlackChannel": {
+        "Channel": "#entitlementprocessing",
+        "Message": "ServiceName: $result.ServiceName$, Status: $result.CoreEntitlementStatus$, Count: $result.count$, Geo:$result.geo$"
+      },
+      "CronExpression": "50 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Errors from FH or BlackBox",
+    "Description": "Errors from FH or BlackBox",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ErrorsFromFH OR ErrorsFromBlackBox NOT Retry*\n| dedup TransactionId\n| table ApplicationName, NodeName, EventTime, Message",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_APS_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime"
+      ],
+      "Emails": [
+        "ryan.morey@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "orders-blackboxmonitor-order-failures.mdt5phcm@citrix-systems-inc.pagerduty.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#order-failures",
+        "Message": "#ccordersrequest - There is an Error from either FH or BlackBox. We need to look into the failure."
+      },
+      "CronExpression": "*/7 * * * *",
+      "StartTime": "-7m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Order File Errors",
+    "Description": "This search shows all of the instances of log messages where the order file was rejected. If this search returns any results, the SRE can either review the logs for the transaction id associated with the failed file, or log into the FTP using the connection details stored in the production configuration using the FTP connection info stored in Secret Server. The error needs to be reviewed, and steps taken to correct the issue so the order can be resubmitted.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ErrorsFromFH OR ErrorsFromBlackBox\n| rex field=Message \"\\/CTXS - CWC/(?<folderName>.+)/(?<fileName>.*)\"\n| stats count by folderName, fileName, source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_APS_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "alex.tompkins@citrix.com",
+        "ryan.morey@citrix.com",
+        "nishil.prajapati@citrix.com",
+        "alejandro.carrasquilla@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

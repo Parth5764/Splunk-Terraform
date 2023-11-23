@@ -1,0 +1,778 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS Service Abnormality Notification STS QA",
+    "Description": "The STS QA service run into abnormality, please check Splunk logs for details.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=servicesmonitorworker \"Exception occurred\" OR \"failed\" \n| rex field=Message  \"when calling the Api, ServiceName: (?<ServiceName>.+), HttpMethod: (?<Method>.+), ApiUrl: (?<Url>.+), \"\n| search ServiceName=STS_QA\n| dedup ServiceName, Method, Url\n| table ServiceName, Method, Url",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "liang.bao@citrix.com",
+        "wenhui.peng@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "rui.zhu@citrix.com",
+        "wenxi.chen@citrix.com",
+        "sushmita.nad@citrix.com",
+        "#IT-WebOnCall@citrix.com"
+      ],
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS Reached AWS HealthCheck count limit",
+    "Description": "Reached AWS health checker count limit, increase AWS health checker quota or remove un-used health checkers.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services tooManyHealthChecksException",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "DMS AwsRoute53Backup Worker",
+    "Description": "AWS Route53 Backup Worker does not seem to be doing the backup. The worker runs once every 48 hours.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=AwsRoute53BackupWorker \"Backup completed*\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "25 08 * * *",
+      "StartTime": "-50h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\" NOT \"*ListTablesAsync(CancellationToken cancellationToken)*\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "26 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Completions",
+    "Description": "There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "41 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "21 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Completions",
+    "Description": "There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "46 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS AzureBlobBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzureBlobBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "36 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "DMS AzureBlobBackupWorker Completions",
+    "Description": "There has been no completions of the AzureBlobBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzureBlobBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Production: There has been no completions of the AzureBlobBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "51 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS BlobToBlobTransfer Worker",
+    "Description": "DMS BlobToBlobTransfer Worker",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=BlobToBlobTransferWorker AND \"*BlobToBlobBackup: Blob to Blob Transfer Complete*\"",
+      "Disabled": true,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "7 17 * * *",
+      "StartTime": "-24h@h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "DMS Johnny5 Health",
+    "Description": "Status of Johnny5 being down (Production DMS OpsBot). In order to resolve please follow this SOP https://info.citrite.net/display/CWC/Johnny5",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=OpsBotWorker HeartBeat  \n| regex Message=\"HeartBeat message received from Slack.  Message Received Code: \\\"(\\d+)\\\". Message Text: \\\"(.+)\\\". Message Id: (\\d+).  SlackBot Is connected status (.+)\" \n| rex field=Message \"HeartBeat message received from Slack.  Message Received Code: \\\"(?<code>\\d+)\\\". Message Text: \\\"(?<message>.+)\\\". Message Id: (?<messageId>\\d+).  SlackBot Is connected status (?<status>.+)\"\n| stats count(eval(status=\"True\")) AS countStatus\n| eval slackBotStatus= if(countStatus > 0,\"Johonny5 is UP\", \"Johonny5 is Down\")",
+      "Disabled": true,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "DMS SendGridBackup Worker",
+    "Description": "DMS SendGridBackup Worker",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=SendGridWorker \"*Backup Complete*\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "5 14 * * *",
+      "StartTime": "-30h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "DMS Service Abnormality Notification BackOffice",
+    "Description": "The BackOffice service run into abnormality, please check Splunk logs for details.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=servicesmonitorworker \"Exception occurred\" OR \"failed\" \n| rex field=Message  \"when calling the Api, ServiceName: (?<ServiceName>.+), HttpMethod: (?<Method>.+), ApiUrl: (?<Url>.+), \"\n| search ServiceName=BackOffice",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "liang.bao@citrix.com",
+        "wenchao.li@citrix.com",
+        "wenhui.peng@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "wenxi.chen@citrix.com",
+        "rui.zhu@citrix.com",
+        "#IT-WebOnCall@citrix.com",
+        "adam.brancato@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "DMS Service Abnormality Notification STS",
+    "Description": "The STS Production service run into abnormality, please check Splunk logs for details.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=servicesmonitorworker \"Exception occurred\" OR \"failed\" \n| rex field=Message  \"when calling the Api, ServiceName: (?<ServiceName>.+), HttpMethod: (?<Method>.+), ApiUrl: (?<Url>.+), \"\n| search ServiceName=STS_Prod\n| dedup ServiceName,Method,Url\n| table ServiceName,Method,Url",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "liang.bao@citrix.com",
+        "wenchao.li@citrix.com",
+        "wenhui.peng@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "rui.zhu@citrix.com",
+        "wenxi.chen@citrix.com",
+        "#IT-WebOnCall@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS StorageBackup Worker",
+    "Description": "Monitors the DMS job that transfers CWC Backups from Azure to AWS for redundency. Will alert if nothing was copied over for less than 24 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=StorageBackupWorker AND \"*SecondaryBackup: Writing StateId: * state...*\"\n| rex field=Message \"SecondaryBackup: Writing StateId: (?<environment>.+) state...\"\n| stats count by environment",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "23 11 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenLessThan": "2",
+      "AlertSuppressionDuration": "2d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Incoming Orders Notification for Slack",
+    "Description": "Incoming Orders Notification for Slack",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "PackageDataAccess.CreateAsync /root/blackbox/orders package=* | spath input=package path=Entitlements{} output=entitlements | fields entitlements, package, source| mvexpand entitlements | spath input=entitlements | strcat \"ServiceName:\" ServiceName \" - ProductSku:\" ProductSku \" - Quantity:\" Quantity \";\" Enetitlement | spath input=package | strcat \"CustomerId:\" CustomerId  \" - PackageName:\" DisplayName \" - OrderId:\" OrderId \" - Geo:\" OrderInfo | rex field=source \"cc/Production/(?<GeoCode>.+)/release-(?<Release>.+)/Core\" | strcat OrderInfo GeoCode OrderInfoTitle | table OrderInfoTitle, Enetitlement | stats values(Enetitlement) as Enetitlements by OrderInfoTitle | rex mode=sed field=Enetitlements \"s/;/\\n/g\"",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Core",
+        "cc/Production/WestEurope/*/Core",
+        "cc/Production/AustraliaEast/*/Core",
+        "cc/ProductionJP/JapanEast/*/Core",
+        "cc/ProductionJP/JapanWest/*/Core"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-orders",
+        "Message": "*$result.OrderTitle$* \n >>>$result.Enetitlements$"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS AwsLimitsWorker",
+    "Description": "Please work with AWS to increase the limits of the hosted zones indicated in the search results.\n\nDetails on how to open ticket with AWS can be found here: https://info.citrite.net/display/CWC/How+To+Increase+Resource+Limits+in+AWS",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "AwsLimitsWorker ZoneName!=\"cloudburrito.com.\" ZoneName!=\"xendesktop.net.\"\n| eval ZonePctUsage=rtrim(ZonePctUsage, \"`\")\n| where ZonePctUsage >= 80\n| stats count by ZoneName, ZoneHostCount, ZoneHostLimit, ZonePctUsage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "Azure vCpu Quota Alert",
+    "Description": "Please work with Azure support to increase the limits of the vCPU quota indicated in the search results.\n\nDetails on how to open ticket with Azure can be found here: https://info.citrite.net/display/CWC/How+To+Increase+VCpu+Quota+in+Azure",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AzureMetricCollectorWorker\" vCPU_Quota_Metrics | fields Subscription,Location,vCPUSeries,CurrentValue,LimitValue| convert auto(*) none(Subscription)| eval Percentage=(CurrentValue/LimitValue)*100| where Percentage > 80| dedup Subscription | table Subscription,Location,vCPUSeries,CurrentValue,LimitValue,Percentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "* */8 * * *",
+      "StartTime": "-8m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Client Secret Expiration Monitoring - PagerDuty",
+    "Description": "Please follow the SOP to rotate Athena client secrets: https://info.citrite.net/x/KChZUg",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AthenaClientsMonitorWorker ClientOwner=workspaceadmins@citrix.com | where ClientSecretRemainingDays >= 0 AND ClientSecretRemainingDays <= 30 | dedup ClientApiKey | table ClientName, ClientApiKey, ClientOwner, ClientSecretExpiration, ClientSecretRemainingDays",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/b5a08a16009b4e02d0cd525f3ffab909/enqueue",
+      "CronExpression": "30 13 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS AthenaClientsMonitorWorker is not logging",
+    "Description": "Please check the DMS AthenaClientsMonitorWorker Configuration",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AthenaClientsMonitorWorker Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "PRODUCTION: Warning! \nDMS AthenaClientsMonitorWorker is not logging to splunk. No logs found in last 72 hrs \n```index=production_csgops_services HostedRoleName=\"AthenaClientsMonitorWorker\"```"
+      },
+      "CronExpression": "00 1 * * *",
+      "StartTime": "-72h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": 0
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Azure AD Application Change Audit",
+    "Description": "Please follow SOP to check audit log: https://info.citrite.net/x/4AjIXw",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ApplicationName=Dms HostedRoleName=AzureADAuditLogMonitorWorker ActivityName=Update-application* OR  ActivityName=Update-service* |eval ActivityTimeStamp=strptime(ActivityDateTime,\"%Y-%m-%dT%H:%M:%S.%NZ\")|eval TimeOffset=(now() - ActivityTimeStamp)/60 | where TimeOffset<15 | table ActivityDateTime,Target,PropertyName,OldValue,NewValue,InitiatedBy,ActivityName",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "PRODUCTION: Warning! \n AzureAD application changes detected. SOP: https://info.citrite.net/x/4AjIXw \n```index=production_csgops_services HostedRoleName=AzureADAuditLogMonitorWorker```"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": false
+    }
+  }
+]

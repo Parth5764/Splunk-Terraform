@@ -1,0 +1,342 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Administrators Added to root",
+    "Description": "Administrators Added to root",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=cc:services  (RoleName=Identity OR ServiceName=Identity)  \"CreateAdministrator(START): administrator:\" \"for customer: root\"\n| table source _raw",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "critical-alerts@citrix-systems-inc.pagerduty.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "IT Web Marketing Key Used Outside of Scope",
+    "Description": "This alert will trigger if the IT Web Marketing Service key is used outside of the scope which was agreed upon during the key creation.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=ITWebMarketing AND !(\"root/orders/*/notifications RefererHeader\")",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 9 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XenMobile Unauthorized calls to Production",
+    "Description": "Notification to Citrix Cloud Operations and Citrix Cloud CQE that the XenMobile keys of XenMobile-Chrome and XenMobile-rpi are being used outside of the agreed context. Please reach out to the XenMobile Ops team ASAP if this key is being used as it is not agreed upon.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=xenmobile-rpi OR CallerServiceName=xenmobile-chrome NOT (RequestMethod=POST AND AbsoluteUri=https://trust-*.ctxwsstgapi.net/*/authorization)",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "ryan.morey@citrix.com"
+      ],
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XenMobile CAS using elevated privileges",
+    "Description": "Tracking of XenMobile CAS service to only be using GET API calls.\nReach out to XM DevOps team to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=xenmobile-cas NOT (changeevents OR auhtorization)\n| bin _time span=10m\n| stats count by _time, AbsoluteUri\n| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "joseph.theriault@citrix.com"
+      ],
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XenMobile GoogleConfig key used out of scope",
+    "Description": "Contact XenMobile Operations and jaikrishnan.ravindranath@citrix.com if this key is used in Staging. Please execute Delete this key if it is being used in Production. This key is not to be used to call any Citrix Cloud APIs.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName\n| where CallerServiceName=xenmobile-googleconfig",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "jaikrishnan.ravindranath@citrix.com"
+      ],
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XdAccessLog using elevated privileges",
+    "Description": "Tracking of XdAccessLog service to only be using GET API calls.\nReach out to XD DevOps team to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=XdAccessLog RequestMethod!=GET AbsoluteUri!=https://trust-*.citrixworkspacesapi.net/*/authorization NOT ValidateAuthorizationHeader\n| bin _time span=10m\n| stats count by _time, AbsoluteUri\n| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "joseph.theriault@citrix.com"
+      ],
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XaXdActionAdapter using elevated privileges",
+    "Description": "Tracking of XaXdActionAdapter service to only be using GET API calls.\nReach out to XD DevOps team to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=XaxdActionAdapter RequestMethod!=GET\n| bin _time span=10m\n| stats count by _time, AbsoluteUri\n| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bharath.miryalu@citrix.com",
+        "joseph.theriault@citrix.com",
+        "wagner.rehn@citrix.com"
+      ],
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "NetScaler EverGreen using elevated privileges",
+    "Description": "Tracking of NetScaler DNBU EverGreen service to only be using GET API calls.\nReach out to NGS DevOps team,  Kenneth Bell and Mugdha Agarwal to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=dnbu-evergreen NOT (changeevents OR auhtorization OR root/trust/v1/instance/edge OR download/v1/downloadurl OR \"root/customers/*\")\n| bin _time span=10m\n| stats count by _time, AbsoluteUri\n| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "Mugdha.Agarwal@citrix.com",
+        "Kenneth.Bell@citrix.com",
+        "hrushikesh.paralikar@citrix.com"
+      ],
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

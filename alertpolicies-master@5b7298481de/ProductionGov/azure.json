@@ -1,0 +1,1012 @@
+[
+  {
+    "Filter": {
+      "Type": "redis",
+      "Name": "redis",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Redis CPU Warning",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "Location": "global",
+      "MetricName": "percentProcessorTime",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Scope": "{{InstanceId}}",
+      "Severity": 1,
+      "Threshold": 75.0,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "redis",
+      "Name": "cwspredis-canary",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Canary Redis High Cache miss rate",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "Location": "global",
+      "MetricName": "allcachemisses",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Scope": "{{InstanceId}}",
+      "Severity": 1,
+      "Threshold": 100000,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "redis",
+      "Name": "cwspredis-canary",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Canary Redis High Error count",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "Location": "global",
+      "MetricName": "errors",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Scope": "{{InstanceId}}",
+      "Severity": 1,
+      "Threshold": 1,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "redis",
+      "Name": "cwspredis-canary",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Canary Redis Experiencing latency",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "Location": "global",
+      "MetricName": "cacheLatency",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Scope": "{{InstanceId}}",
+      "Severity": 1,
+      "Threshold": 5000,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "redis",
+      "Name": "redis",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Redis CPU Critical",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "Location": "global",
+      "MetricName": "percentProcessorTime",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Scope": "{{InstanceId}}",
+      "Severity": 1,
+      "Threshold": 90.0,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert for when a Service Fabric service has low memory available. It should list the services with low memory",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "performanceCounters | where category == \"Memory\" and counter == \"Available Bytes\" | extend availableMemoryInGb = (value / 1024 / 1024 / 1024) | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | extend nodeName = tostring(customDimensions[\"ServiceFabric.NodeName\"]) | where isnotempty(nodeName) and isnotempty(serviceName) | summarize percentile(availableMemoryInGb, 90), min(availableMemoryInGb) by serviceName, nodeName, appName, cloud_RoleInstance | where percentile_availableMemoryInGb_90 <= 1.5 | sort by percentile_availableMemoryInGb_90 asc",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert for when a Cloud Service has low memory available. It should list the services with low memory",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "performanceCounters | where category == \"Memory\" and counter == \"Available Bytes\" | extend availableMemoryInGb = (value / 1024 / 1024 / 1024) | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | extend nodeName = tostring(customDimensions[\"ServiceFabric.NodeName\"]) | where isempty(nodeName) and isnotempty(serviceName) | summarize percentile(availableMemoryInGb, 90), min(availableMemoryInGb) by serviceName, category, counter, cloud_RoleName, cloud_RoleInstance | where percentile_availableMemoryInGb_90 <= 1.2 | sort by percentile_availableMemoryInGb_90 asc",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 30,
+      "TimeWindowInMinutes": 30,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert for when Service Fabric service is consuming high CPU. It lists all services with high CPU usage",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "performanceCounters | where category == \"Processor\" and counter == \"% Processor Time\" | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | extend nodeName = tostring(customDimensions[\"ServiceFabric.NodeName\"]) | where isnotempty(nodeName) and isnotempty(serviceName) | summarize percentile(value, 90), avg(value) by serviceName, nodeName, appName, cloud_RoleInstance | where avg_value >= 75 | sort by avg_value desc",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert for when a Cloud Service is consuming high CPU. It lists all services with high CPU usage",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "performanceCounters | where category == \"Processor\" and counter == \"% Processor Time\" | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | extend nodeName = tostring(customDimensions[\"ServiceFabric.NodeName\"]) | where isempty(nodeName) and isnotempty(serviceName) | summarize percentile(value, 90), avg(value) by serviceName, category, counter, cloud_RoleName, cloud_RoleInstance | where avg_value >= 90 | sort by avg_value desc",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert to ensure the flow of data into Application insights for the Cloud services",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "requests| where not (tostring(customDimensions[\"_CitrixCloud.ComponentName\"]) contains \"fabric\" )",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 15,
+      "TimeWindowInMinutes": 15,
+      "Operator": "Equal",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ClusterRestartFunctionApp",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "CC SRE - Inquisitor - Cluster Restart Node Function Failure",
+    "Description": "Alert for when a cluster restart node function fails",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "requests | project timestamp, id, operation_Name, success, resultCode, duration, operation_Id, cloud_RoleName |where cloud_RoleName =~ 'ClusterRestartFunctionApp' and operation_Name == 'RestartNodeFunction' and resultCode != 200",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 30,
+      "TimeWindowInMinutes": 30,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ClusterRestartFunctionApp",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "CC SRE - Inquisitor - Cluster Restart Summary",
+    "Description": "Summary of cluster nodes restart by ClusterRestartFunctionApp",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "traces |where message contains \"restart completed!\" |extend node = extract(\"\\'.*\\'\",0, message) | summarize count() by node",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 480,
+      "TimeWindowInMinutes": 480,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert to ensure the flow of data into Application insights for the Azure Service Fabric services",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "requests| where tostring(customDimensions[\"_CitrixCloud.ComponentName\"]) contains \"fabric\" ",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 15,
+      "TimeWindowInMinutes": 15,
+      "Operator": "Equal",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert indicates that calls to CosmosDB are taking more than 10 seconds. Use the query in this alert to find out more. We currently believe that might indicate a infrastructure update on the Azure side (see COUT-358)",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "dependencies | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | where type == \"Azure DocumentDB\" | summarize percentile(duration, 70) by serviceName | where percentile_duration_70 > 10000",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 1,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert indicates that the response time for Core service is greater than 5 seconds. We currently believe that might indicate a latency for Table Storage on Azure side (see COUT-813)",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "dependencies | extend ServiceName = tostring(customDimensions[\"_CitrixCloud.ComponentName\"]) | where type == \"Azure table\" and ServiceName contains \"Core\" | summarize percentile(duration, 70) by bin(timestamp, 1m) | where percentile_duration_70 > 5000",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 5,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "appinsights",
+      "Type": "microsoft.insights/components",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert and restart ticketing service if response time greater than 1000 milliseconds",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "false",
+      "Query": "let apps = toscalar(requests | extend ApplicationName = tostring(customDimensions[\"_CitrixCloud.ComponentName\"]) | extend serviceName = tostring(customDimensions[\"_CitrixCloud.ServiceName\"]) | extend InstanceName = tostring(customDimensions[\"_CitrixCloud.ServiceInstance\"]) | where serviceName contains \"ctxwsp-ticketing\" and ApplicationName contains \"fabric\" | summarize percentile(duration, 70) by InstanceName | where percentile_duration_70 > 1000 | distinct InstanceName | summarize makeset(InstanceName)); requests | where tostring(customDimensions[\"_CitrixCloud.ServiceInstance\"]) in (apps) | extend ApplicationName = tostring(customDimensions[\"_CitrixCloud.ComponentName\"]) | extend ApplicationName = substring(ApplicationName, indexof(ApplicationName, \"/\") + 1) | extend instanceName = tostring(customDimensions[\"_CitrixCloud.ServiceInstance\"]) | extend idx = indexof(instanceName, \"_VMSS\") | extend NodeType = substring(instanceName, idx) | extend idx1 =  indexof(instanceName, \"_\") | extend instanceName = substring(instanceName, 0, idx1) | extend AppInfos = split(instanceName, '-') | extend Region = tostring(AppInfos[2]) | extend Release = tostring(AppInfos[4]) | distinct ApplicationName, appName, Region, Release, NodeType | project ApplicationName, appName, Region, Release, NodeType",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 10,
+      "TimeWindowInMinutes": 10,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 2,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "Microsoft.ServiceBus/namespaces",
+      "Name": "premium",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Azure Service Bus Namespace High CPU Usage",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "MetricName": "NamespaceCpuUsage",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 1,
+      "Threshold": 90.0,
+      "TimeAggregation": "Maximum",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "Microsoft.ServiceBus/namespaces",
+      "Name": "premium",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Azure Service Bus Namespace High Memory Usage",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT5M",
+      "MetricName": "NamespaceMemoryUsage",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 1,
+      "Threshold": 90.0,
+      "TimeAggregation": "Maximum",
+      "WindowSize": "PT5M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ],
+      "CustomWebhookPayload": "{\"blocks\": [{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Alert*-#alertrulename *Severity-#severity* `#alerttype #thresholdoperator #thresholdvalue`\"}},{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"*Start Time* : #searchintervalstarttimeutc \\n*End Time* : #searchintervalendtimeutc \\n*Search Interval* : #searchinterval\"}},{\"type\": \"section\",\"block_id\": \"section789\",\"fields\": [{\"type\": \"mrkdwn\",\"text\": \"*Search Query*\\n>>>#searchquery\"}]},{\"type\": \"section\",\"block_id\": \"section567\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"<#linktosearchresults|View #searchresultcount Result>\"}}]}"
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - SRE",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 0,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\",\"SdWanRawPayload\",\"ChangeFeedsLease\",\"LicenseServerCustomerMap\",\"OnPremiseEnterpriseLicenseServerDeletionStatus\",\"SdWanStatistics\",\"SdWanCustomerList\",\"ActiveUseChangeFeedsLease\",\"ActiveUseExceptionTask\",\"CspCvadStatistics\",\"CloudLicenseEntitledSkusType\",\"XenMobileStatistics\",\"CspDaaSStatistics\",\"NetscalerGatewayBandwidth\",\"CvadEntitledSkusType\",\"DaaSCcu\",\"AdmStatistics\",\"DaaSEnterpriseStatistics\",\"NetscalerGatewayProductTypeMapping\",\"XDCcu\",\"StateSync\",\"NetscalerGatewayLicenses\",\"XDUserDevice\",\"NetscalerGatewayRawEvents\",\"NetscalerGatewayBandwidthUsages\",\"NetscalerGatewayEvents\",\"NetscalerGatewayStatistics\",\"NetscalerGatewayUsersStatistics\",\"Connections\",\"Invitations\",\"XaXdStatistics\",\"PartnerPredefinedAccessScopes\",\"PartnerMemberships\",\"LuiCustomerRetentionState\",\"SchedulerJobs\",\"PartnerHostedCustomers\",\"DomainSettings\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Asgard",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"TemplateLibrary\",\"HealthDataRequestCustomers\",\"HealthData\",\"ResourceLocationManagement\",\"HealthDataRequestCustomersPartitioned\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/hcp-asgard",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Asgard",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"TemplateLibrary\",\"HealthDataRequestCustomers\",\"HealthData\",\"ResourceLocationManagement\",\"HealthDataRequestCustomersPartitioned\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/hcp-asgard",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Apollo",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"PartnerDomainUsages\",\"PartnerCustomerOfferings\",\"CoreContinuationTokens\",\"CustomerList\",\"Entitlements\",\"Events\",\"TrialPackages\",\"Migration\",\"ContinuationTokens\",\"TrialNotifications\",\"Products\",\"ContinuationTokens\",\"Customers\",\"LinkedCustomers\",\"CoreCustomerIds\",\"Orders\",\"OrdersTracker\",\"Customers\",\"SelfServiceAdminOnboardings\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-apollo",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Apollo",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"PartnerDomainUsages\",\"PartnerCustomerOfferings\",\"CoreContinuationTokens\",\"CustomerList\",\"Entitlements\",\"Events\",\"TrialPackages\",\"Migration\",\"ContinuationTokens\",\"TrialNotifications\",\"Products\",\"ContinuationTokens\",\"Customers\",\"LinkedCustomers\",\"CoreCustomerIds\",\"Orders\",\"OrdersTracker\",\"Customers\",\"SelfServiceAdminOnboardings\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-apollo",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Apollo",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"SettingsManager\",\"RegistryMigration\",\"ServiceHosts\",\"RegistryCustomerTermsOfService\",\"RegistryFeatures\",\"RegistryFeatureCustomers\",\"CanaryCustomers\",\"RegistryLocations\",\"RegistryTimeZones\",\"RegistryEdgeProxy\",\"RegistryCustomerSettings\",\"RegistryTaggedEntities\",\"ChangeEventsSubscriptions\",\"RegistryPreferences\",\"RegistryRoutes\",\"-connectionLeases\",\"-endpoint\",\"-instance\",\"-connection\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-apollo"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Apollo",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"SettingsManager\",\"RegistryMigration\",\"ServiceHosts\",\"RegistryCustomerTermsOfService\",\"RegistryFeatures\",\"RegistryFeatureCustomers\",\"CanaryCustomers\",\"RegistryLocations\",\"RegistryTimeZones\",\"RegistryEdgeProxy\",\"RegistryCustomerSettings\",\"RegistryTaggedEntities\",\"ChangeEventsSubscriptions\",\"RegistryPreferences\",\"RegistryRoutes\",\"-connectionLeases\",\"-endpoint\",\"-instance\",\"-connection\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-apollo"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Asgard",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"ConnectorRoles\",\"ConnectorManifests\",\"ConnectorManifestsReleaseInfo\",\"ImageManifests\",\"AgentHubServiceBusConnectionGlobal\",\"AgentHubMaintenanceHistoryGlobal\",\"AgentHubNotificationRulesGlobal\",\"AgentHubMaintenanceGlobal\",\"AgentHubEdgeServersGlobal\",\"AgentHubEdgeServerMessagesGlobal\",\"AgentHubConnectorPackagesGlobal\",\"ResourceLocationManagementGlobal\",\"AgentHubNotificationEventsGlobal\",\"ProviderManifests\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-flareon",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Asgard",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"ConnectorRoles\",\"ConnectorManifests\",\"ConnectorManifestsReleaseInfo\",\"ImageManifests\",\"AgentHubServiceBusConnectionGlobal\",\"AgentHubMaintenanceHistoryGlobal\",\"AgentHubNotificationRulesGlobal\",\"AgentHubMaintenanceGlobal\",\"AgentHubEdgeServersGlobal\",\"AgentHubEdgeServerMessagesGlobal\",\"AgentHubConnectorPackagesGlobal\",\"ResourceLocationManagementGlobal\",\"AgentHubNotificationEventsGlobal\",\"ProviderManifests\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-flareon",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Atlas",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"ConnectorCanaryReleaseInfo\",\"ConnectorCanaryCustomers\",\"ServiceReleasesLeases\",\"Exceptions\",\"ServiceReleases\",\"CustomerReleases\",\"Features\",\"ServiceReleaseStatesLeases\",\"CanaryReleaseInfo\",\"ServiceReleaseStates\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-atlas",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Atlas",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"ConnectorCanaryReleaseInfo\",\"ConnectorCanaryCustomers\",\"ServiceReleasesLeases\",\"Exceptions\",\"ServiceReleases\",\"CustomerReleases\",\"Features\",\"ServiceReleaseStatesLeases\",\"CanaryReleaseInfo\",\"ServiceReleaseStates\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-atlas",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Mercury",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"Sites\",\"GlobalMigrationState\",\"SitesGlobal\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-mercury"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Mercury",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"Sites\",\"GlobalMigrationState\",\"SitesGlobal\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-mercury"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Cronus",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"TicketStore\",\"TrustMigration\",\"DelegatedAdministrationPolicySetGlobal\",\"ThrottlePolicy\",\"DelegatedAdministrationPendingPolicyGlobal\",\"DelegatedAdministrationPredefinedPolicyGlobal\",\"DelegatedAdministrationSecureClientsGlobal\",\"DelegatedAdministrationAppClientsGlobal\",\"Administrators\",\"TokenBlacklistGlobal\",\"DelegatedAdministrationCustomersGlobal\",\"TrustSecondaryKeyGlobal\",\"TrustLinkedCustomersGlobal\",\"DelegatedAdministrationChangeEventsChangeFeedLeasesGlobal\",\"CredentialWalletSecretsGlobal\",\"DelegatedAdministrationCustomerInfoGlobal\",\"DelegatedAdministrationInvitationsGlobal\",\"TrustKeyVaultGlobal\",\"TrustPublicKeyGlobal\",\"DelegatedAdministrationAdministratorsGlobal\",\"DelegatedAdministrationPolicySetGlobal\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-cronus",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Cronus",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"TicketStore\",\"TrustMigration\",\"DelegatedAdministrationPolicySetGlobal\",\"ThrottlePolicy\",\"DelegatedAdministrationPendingPolicyGlobal\",\"DelegatedAdministrationPredefinedPolicyGlobal\",\"DelegatedAdministrationSecureClientsGlobal\",\"DelegatedAdministrationAppClientsGlobal\",\"Administrators\",\"TokenBlacklistGlobal\",\"DelegatedAdministrationCustomersGlobal\",\"TrustSecondaryKeyGlobal\",\"TrustLinkedCustomersGlobal\",\"DelegatedAdministrationChangeEventsChangeFeedLeasesGlobal\",\"CredentialWalletSecretsGlobal\",\"DelegatedAdministrationCustomerInfoGlobal\",\"DelegatedAdministrationInvitationsGlobal\",\"TrustKeyVaultGlobal\",\"TrustPublicKeyGlobal\",\"DelegatedAdministrationAdministratorsGlobal\",\"DelegatedAdministrationPolicySetGlobal\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-cronus",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Console",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"CwsCipConfig\",\"CsrfTokens\",\"SelfServiceAdminOnboardings\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-console",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Console",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"CwsCipConfig\",\"CsrfTokens\",\"SelfServiceAdminOnboardings\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-console",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB usage is close to its current capacity - Panda",
+    "Description": "Alert indicates CosmosDB usage is close to its current capacity for {{InstanceName}}. Runbook: https://info.citrite.net/x/-qSFWQ",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT30M",
+      "Location": "global",
+      "MetricName": "NormalizedRUConsumption",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 90,
+      "Dimensions": "[{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"SdWanRawPayload\",\"ChangeFeedsLease\",\"LicenseServerCustomerMap\",\"OnPremiseEnterpriseLicenseServerDeletionStatus\",\"SdWanStatistics\",\"SdWanCustomerList\",\"ActiveUseChangeFeedsLease\",\"ActiveUseExceptionTask\",\"CspCvadStatistics\",\"CloudLicenseEntitledSkusType\",\"XenMobileStatistics\",\"CspDaaSStatistics\",\"NetscalerGatewayBandwidth\",\"CvadEntitledSkusType\",\"DaaSCcu\",\"AdmStatistics\",\"DaaSEnterpriseStatistics\",\"NetscalerGatewayProductTypeMapping\",\"XDCcu\",\"StateSync\",\"NetscalerGatewayLicenses\",\"XDUserDevice\",\"NetscalerGatewayRawEvents\",\"NetscalerGatewayBandwidthUsages\",\"NetscalerGatewayEvents\",\"NetscalerGatewayStatistics\",\"NetscalerGatewayUsersStatistics\",\"Connections\",\"Invitations\",\"XaXdStatistics\",\"PartnerPredefinedAccessScopes\",\"PartnerMemberships\",\"LuiCustomerRetentionState\",\"SchedulerJobs\",\"PartnerHostedCustomers\",\"DomainSettings\",\"SystemLog\",\"SystemLogRawChangeEvents\"]},{\"name\": \"DatabaseName\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT30M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-panda",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB throttled requests - Panda",
+    "Description": "Alert indicates the existence of CosmosDB throttled requests for {{InstanceName}}. Runbook: https://info.citrite.net/x/IrxhW",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "TotalRequests",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 3,
+      "Threshold": 500,
+      "Dimensions": "[{\"name\": \"StatusCode\", \"operator\": \"Include\", \"values\": [\"429\"]},{\"name\": \"CollectionName\", \"operator\": \"Include\", \"values\": [\"SdWanRawPayload\",\"ChangeFeedsLease\",\"LicenseServerCustomerMap\",\"OnPremiseEnterpriseLicenseServerDeletionStatus\",\"SdWanStatistics\",\"SdWanCustomerList\",\"ActiveUseChangeFeedsLease\",\"ActiveUseExceptionTask\",\"CspCvadStatistics\",\"CloudLicenseEntitledSkusType\",\"XenMobileStatistics\",\"CspDaaSStatistics\",\"NetscalerGatewayBandwidth\",\"CvadEntitledSkusType\",\"DaaSCcu\",\"AdmStatistics\",\"DaaSEnterpriseStatistics\",\"NetscalerGatewayProductTypeMapping\",\"XDCcu\",\"StateSync\",\"NetscalerGatewayLicenses\",\"XDUserDevice\",\"NetscalerGatewayRawEvents\",\"NetscalerGatewayBandwidthUsages\",\"NetscalerGatewayEvents\",\"NetscalerGatewayStatistics\",\"NetscalerGatewayUsersStatistics\",\"Connections\",\"Invitations\",\"XaXdStatistics\",\"PartnerPredefinedAccessScopes\",\"PartnerMemberships\",\"LuiCustomerRetentionState\",\"SchedulerJobs\",\"PartnerHostedCustomers\",\"DomainSettings\",\"SystemLog\",\"SystemLogRawChangeEvents\"]},{\"name\": \"DatabaseName\", \"operator\": \"Exclude\", \"values\": [\"<empty>\"]}]",
+      "TimeAggregation": "Count",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-panda",
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Type": "documentDB",
+      "SubscriptionName": "Prod"
+    },
+    "Name": "Inquisitor - {{InstanceName}} - CosmosDB Server Side Latency is greater than 20ms for the last 15 mins",
+    "Description": "Alert indicates that {{InstanceName}} CosmosDB Server Side Latency has exeeded 20ms for the last 15 mins. This could further indicate CosmosDB service unavailability on Azure side (see COUT-1492). Runbook: https://info.citrite.net/x/xCRmX",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "CriteriaName": "Metric1",
+      "Enabled": "true",
+      "EvaluationFrequency": "PT15M",
+      "Location": "global",
+      "MetricName": "ServerSideLatency",
+      "MonitorTemplateType": 8,
+      "Operator": "GreaterThan",
+      "Severity": 1,
+      "Threshold": 20.0,
+      "Dimensions": "[{\"name\": \"Region\", \"operator\": \"Include\", \"values\": [\"*\"]}]",
+      "TimeAggregation": "Average",
+      "WindowSize": "PT15M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_cc_alerts"
+      ]
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ctxwsp-identity-",
+      "Type": "Microsoft.Network/trafficmanagerprofiles",
+      "SubscriptionName": "Prod"
+    },
+    "Description": "Alert of CC Identity failing over",
+    "Type": "Microsoft.Insights/metricAlerts",
+    "Properties": {
+      "Enabled": "true",
+      "MetricName": "ProbeAgentCurrentEndpointStateByProfileResourceId",
+      "MonitorTemplateType": 0,
+      "OdataType": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+      "Operator": "LessThan",
+      "Severity": 1,
+      "Threshold": 0.7,
+      "TimeAggregation": "Average",
+      "WindowSize": "PT5M",
+      "CriteriaName": "Metric1",
+      "EvaluationFrequency": "PT1M",
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_ath_alerts",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/cc-sre-team",
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/critical%20pd"
+      ],
+      "CustomWebhookPayload": "{}"
+    }
+  }
+]

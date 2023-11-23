@@ -1,0 +1,184 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "HTTP SSL Certificates Expired In 30 Days",
+    "Description": "CC SRE - HTTP SSL Certificates Expired In 30 Days",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CertificatesMonitorWorker \"*CWC Platform CertificatesMonitor Log Entry*\"\n|rex field=Name \"{(?<Cert_Name>.*)}\"\n|rex field=Address \"{(?<Cert_Url>.*)}\"\n|rex field=ExpirationDaysRemaining \"{(?<Expiration>\\d+)}\"\n|where Expiration <= 30\n|table Cert_Name,Cert_Url,Expiration",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 11 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Marketplace  SSL Certificates Expired In 30 Days",
+    "Description": "CC SRE - Marketplace  SSL Certificates Expired In 30 Days",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CertificatesMonitorWorker \"Prod-Marketplace-*-Interface\" \"*CWC Platform CertificatesMonitor Log Entry*\"\n|rex field=Name \"{(?<Cert_Name>.*)}\"\n|rex field=Address \"{(?<Cert_Url>.*)}\"\n|rex field=ExpirationDaysRemaining \"{(?<Expiration>\\d+)}\"\n|where Expiration <= 30\n|table Cert_Name,Cert_Url,Expiration",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"      
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 10 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Azure Certificate expiry alarm",
+    "Description": "Certificate monitor worker will log all certificate that has a inappropriate expiry date",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureCertificateMonitorWorker\n| regex Message=\"Certificate: .*\"\n| table Message\n| rex field=Message \"Certificate:(?<certname>.*), with thumbprint:(?<thumbprints>.*) in subscription:(?<release>.*), (?<reason>.*), the expiry date is: (?<expirydate>.*)\"\n| eval parsedExpiryDate=strptime(expirydate,\"%Y-%m-%d %H:%M:%S\")\n| eval oneMonthAgo=relative_time(now(), \"-1mon\")\n| eval threeMonthsAhead=relative_time(now(), \"+3mon\")\n| where parsedExpiryDate >= oneMonthAgo AND parsedExpiryDate <= threeMonthsAhead\n| table release, certname, thumbprints, expirydate, reason, parsedExpiryDate, oneMonthAgo, threeMonthsAhead",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "productionjp_csgops_services",
+        "productionjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"        
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 18 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Third Party Certificate Expiry",
+    "Description": "Generates Email and PagerDuty alert when third party certificate Expiration date <= 7 days\n\nSOP : https://info.citrite.net/display/CWC/Third+Party+Certificate+Expiry",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=ServicesMonitorWorker | regex Message=\"The Certificate.*\" | rex field=Message \"The Certificate for the URL (?<Url_Name>.*) expires in (?<DaysRemaining>.*) days.The Expiry date is (?<Expiry_Date>.*)\" | dedup Url_Name,DaysRemaining,Expiry_Date | table Url_Name,DaysRemaining,Expiry_Date | where DaysRemaining <=7",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "23 0 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "WestEurope"
+      ]
+    },
+    "Name": "DevPortal SSL Certificates Expired In 30 Days",
+    "Description": "CC SRE - DevPortal SSL Certificates Expired In 30 Days",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CertificatesMonitorWorker \"DevPortal\" \"*CWC Platform CertificatesMonitor Log Entry*\"\n|rex field=Name \"{(?<Cert_Name>.*)}\"\n|rex field=Address \"{(?<Cert_Url>.*)}\"\n|rex field=ExpirationDaysRemaining \"{(?<Expiration>\\d+)}\"\n|where Expiration <= 30\n|table Cert_Name,Cert_Url,Expiration",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "23 10 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

@@ -1,0 +1,84 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Ticketing health check failure",
+    "Description": "Ticketing health check failures were found. Check the dependency status by search ServiceName=Ticketing CheckHealthAsync",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Ticketing \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-cronus-staging-alerts-inquisitor-slack",
+        "Message": "STAGING: Ticketing is experiencing a high count of health check failures in $result.source$, please be on alert for possible failures.\n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "8-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Ticketing increase in StatusCode 204 (not founds)",
+    "Description": "Ticketing is seeing an abrupt increase in StatusCode 204 (not founds). Most likely an issue with Ticketing Redis. Compares the ratio between 204's and 200's.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=Ticketing EventType=Performance RequestMethod=GET CustomerId=root GetByIdFromQueryAsync OR GetByIdFromRouteAsync\n| dedup TicketId\n| bin _time span=15m\n| stats count(eval(StatusCode=200)) as count_200, count(eval(StatusCode=204)) as count_204 by _time\n| eval ratio = count_204 / count_200\n| where ratio > 1",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-cronus-staging-alerts-inquisitor-slack",
+        "Message": "STAGING: Ticketing is experiencing an increase in 204's (not founds). Please check for possible outage.\n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "8-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

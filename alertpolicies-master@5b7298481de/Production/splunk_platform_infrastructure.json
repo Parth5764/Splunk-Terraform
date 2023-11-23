@@ -1,0 +1,124 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CC POA Monitor",
+    "Description": "The alert to summarize recent POA result",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=PatchMonitor RecordType=UpdateResult \n| eval currentxTimeStamp=now() \n| eval operationUnixTimeStamp=strptime(OperationTime,\"%Y-%m-%dT%H:%M:%S.%N\") \n| where currentxTimeStamp-operationUnixTimeStamp<3600 \n| fields RegionName, LayerName, NodeName, OperationTime,OperationResult \n| join NodeName [search index=production_cc_services ServiceName=PatchMonitor RecordType=UpdateDetail \n| rex \"[ |(]KB(?<KB>\\d*)\"] \n| table RegionName, LayerName, NodeName, OperationTime, OperationResult, KB",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-poa-alerts",
+        "Message": "> *Region:* $result.RegionName$ | *Node Name:* $result.NodeName$ | *Patch Time:* $result.OperationTime$ | *Result:* $result.OperationResult$ | *KB:* <http://www.catalog.update.microsoft.com/Search.aspx?q=KB$result.KB$|$result.KB$>"
+      },
+      "CronExpression": "00 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "EastUS",
+            "WestEurope",
+            "AustraliaEast",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "CC Throttled ComosDB Request",
+    "Description": "SOP : https://info.citrite.net/display/CWC/CC+Azure+Cosmos+DB+Throttling+Issue",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "cosmosdb-error-429 ServiceName!=NULL ServiceName!=CloudLicense | stats count by ServiceName,RegionName,LayerName | where count>200 | fields RegionName,LayerName,ServiceName,count",
+        "Disabled": false,
+        "Indices": [
+            "production_cc_services",
+            "production_cc_services",
+            "production_cc_services",
+            "productionjp_cc_services",
+            "productionjp_cc_services"
+        ],
+        "Sources": [
+          "cc/Production/EastUS/*",
+          "cc/Production/WestEurope/*",
+          "cc/Production/AustraliaEast/*",
+          "cc/ProductionJP/JapanEast/*",
+          "cc/ProductionJP/JapanWest/*"
+        ],
+        "SlackChannel": {
+            "Channel": "#cc-cosmosdb-alerts",
+            "Message": ">Throttled CosmosDB requests in last 15 mins, <https://info.citrite.net/display/CWC/CC+Azure+Cosmos+DB+Throttling+Issue|Runbook>\n> *Region:* $result.RegionName$ *Layer:* $result.LayerName$ *Service Name:* $result.ServiceName$ *Count:* $result.count$\n> \n```index=production_cc_services cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>200 | fields RegionName,LayerName,ServiceName,count```"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "EastUS",
+            "WestEurope",
+            "AustraliaEast",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "Cosmos DB exception from DAL",
+    "Description": "Cosmos DB exception from DAL, should be issue on MS Azure side: do region failover for specific service. \nIf it happens on multiple regions, please trigger the hot issue immediately. \nBoth path need open severity-A MS support ticket .",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "\"DocumentDB exception from DAL: Request timed out.\" | stats count by ServiceName | where count>100",
+        "Disabled": false,
+        "Indices": [
+            "production_cc_services",
+            "production_cc_services",
+            "production_cc_services",
+            "productionjp_cc_services",
+            "productionjp_cc_services"
+        ],
+        "Sources": [
+          "cc/Production/EastUS/*",
+          "cc/Production/WestEurope/*",
+          "cc/Production/AustraliaEast/*",
+          "cc/ProductionJP/JapanEast/*",
+          "cc/ProductionJP/JapanWest/*"
+        ],
+        "SlackChannel": {
+            "Channel": "#cc-alerts",
+            "Message": "Cosmos DB exception from DAL, should be issue on MS Azure side: do region failover for specific service. If it happens on multiple regions, please trigger the hot issue immediately. Both path need open severity-A MS support ticket .Please refer <https://issues.citrite.net/browse/COUT-1174|COUT-1174> \n ```index=production_cc_services \"DocumentDB exception from DAL: Request timed out.\"```"
+        },
+        "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  }
+]

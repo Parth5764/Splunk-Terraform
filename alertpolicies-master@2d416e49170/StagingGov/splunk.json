@@ -1,0 +1,1030 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Gov Pen Test user delete calls",
+    "Description": "Alert is triggered whenever the athena pentest users make a delete call.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ClientName=ath_pen_testuser_2019_* HTTP/* DELETE\n| bin span=5m _time",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Staging Athena: Alert is triggered whenever the athena pentest users make a delete call : $result.ErrorMessage$"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Alert for DSAuth throttling",
+    "Description": "To alert throttling customers too aggressively in Athena. If alerted Correlate log's ServiceInstanceIp key to its respective value for scaleset and node ID, restart nodeID through CC Dashboard.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Not building the domain contexts due to throttling\" | stats count by ServiceInstanceIp | where count > 50",
+      "Disabled": true,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Athena: DSAuth throttling customers too aggressively."
+      },
+      "PagerDuty": "",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Alert for Athena Gov AuthDomain.",
+    "Description": "AuthDomain not found in Athena Customer.\n Link to SOP - https://info.citrite.net/pages/viewpage.action?pageId=1381595811",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"sourcetype=ath:services ServiceName=DSAuth* Message=\"not found in athena customer AuthDomains\" | stats count by AuthDomain\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Staging Athena: One or more auth domains not found in an athena customer : $result.ErrorMessage$"
+      },
+      "PagerDuty": "",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "CronExpression": "*/30 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Gov not redirecting to Logon Page",
+    "Description": "Athena Gov - Staging: Failing to redirect from DSAuth-Web to Identity to show the Logon Page: Error looking up auth domain. See: https://info.citrite.net/display/CWC/DSAuthWeb2+Logon+page+not+available+cross-geo",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=DSAuth-Web2 RequestUri=\"*webview*\" Message=\"Error looking up auth domain:*\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena Gov - Staging:*\r\nThere are an abnormal count of failures to get redirect to the Logon Page: $result.ErrorMessage$\r\n```index=staginggov_ath_services ServiceName=DSAuth-Web2 RequestUri=\"*webview*\" Message=\"Error looking up auth domain:*\"```\r\nPossible issue with redirecting from DSAuth-Web to Identity to display the Logon page, please review splunk and follow <https://info.citrite.net/display/CWC/DSAuthWeb2+Logon+page+not+available+cross-geo | this runbook>"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "25"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Signing key not found in DSAuthWeb2 Gov",
+    "Description": "Athena Gov - Staging: This alert is triggered when DSAuthWeb2 cannot find appropriate signing key in the discovery document. Possible root cause could be an upgrade in Identity4 causing changes in kid. Please check <https://accounts.cloud.com/core/.well-known/openid-configuration/jwks>",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" ServiceName=DSAuth-Web2 EventType=Error \"No appropriate signing key found in the discovery document.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena - Staging:*\r\n There are failures in DSAuthWeb2 when trying to find signing key in the discovery document: $result.ErrorMessage$\r\n```index=staginggov_ath_services sourcetype=\"ath:services\" ServiceName=DSAuth-* EventType=Error \"No appropriate signing key found in the discovery document.\"```\r\nPossible root cause could be an upgrade in Identity4 causing changes in kid. Please check <https://accounts.cloudburrito.com/core/.well-known/openid-configuration/jwks>.\nPlease execute this <https://info.citrite.net/x/lkfJWg|runbook>"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "100"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "USGovTexas",
+          "USGovVirginia"
+        ]
+    },
+    "Name": "Athena Gov: DSAuthWeb 500 Errors",
+    "Description": "Shows if the number of errors in DSAuthWeb Gov is at an increased level of 500",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "index=staginggov_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500 | stats count AS number_of_issues |\neval alertMessage=\"*Staging Athena: \nAlertType = Error \n Showing an increased level of 500 errors in DSAuthWeb.  Check in Splunk and warn the @cc-athena-squad\". \n\"`staginggov_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500`\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+          "staginggov_ath_services",
+          "staginggov_ath_services"
+        ],
+        "Sources": [
+          "ath/StagingGov/USGovTexas/*/Cluster",
+          "ath/StagingGov/USGovVirginia/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "USGovTexas",
+          "USGovVirginia"
+        ]
+    },
+    "Name": "Athena Gov: DSAuthWeb is failing to get the OIDC token",
+    "Description": "Shows if OpenID Connect Token request returned Http status code: BadRequest",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": " sourcetype=ath:services ServiceName=DSAuth* Message=\"The OpenID Connect Token request, returned Http status code: BadRequest\" | dedup AuthDomain | top limit=1 AuthDomain |\neval alertMessage=\"*Staging Athena*: DSAuthWeb is failing to get the OIDC token for one or more customers.\n AlertType=Error \n```index=staginggov_ath_services sourcetype=ath:services ServiceName=DSAuth* Message=\\\"The OpenID Connect Token request, returned Http status code: BadRequest\\\"```\n\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+            "staginggov_ath_services",
+            "staginggov_ath_services"
+        ],
+        "Sources": [
+            "ath/StagingGov/USGovTexas/*/Cluster",
+            "ath/StagingGov/USGovVirginia/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$\nPlease execute this <https://info.citrite.net/x/s4aVVg|runbook>"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Failed to process cip_cred in DSAuthWeb2 Gov",
+    "Description": "Athena - Staging: This alert is triggered when DSAuthWeb2 cannot process the cip_cred provided in the ID Token. Please review the Splunk query for more details",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" ServiceName=DSAuth-Web2 EventType=Error Method=\"*OidcRequestTokenResponseFactory.CreateCredentialWalletReferenceFromCipCred*\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena - Staging:*\r\n DSAuthWeb2 cannot process the cip_cred: $result.ErrorMessage$\r\n Check Splunk to determine what the error is. If there is a decryption error and there has been a recent roll-out, then a service roll back may be required \r\n```index=staginggov_ath_services sourcetype=\"ath:services\" ServiceName=DSAuth-* EventType=Error Method=\"*OidcRequestTokenResponseFactory.CreateCredentialWalletReferenceFromCipCred*\"```"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Gov: Invalid Autorization token",
+    "Description": "If you receive this alert it means Token is Expired or start date is set to future date. please check token's validity and reachout to Athena Squad",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "EventType=Error \"Authorization token is not valid at the current time.\" \n| stats count by RegionName \n| table RegionName,count",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *ATHENA-STAGING:* Invalid Authorization token error in $result.RegionName$ Region. Please check Splunk for more details using below query: ```index=staginggov_ath_services EventType=Error \"Authorization token is not valid at the current time.\"| table RegionName``` This can be a problem with the Secure Time Seeding Windows service and a clock skew affecting the cosmos db auth tokens. Refer to <https://info.citrite.net/display/CWC/Athena+Regional+Failover+Runbook |This Runbook> to perform failover if this is region specific."
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CustomTrigger": "search count > 0",
+      "TriggerIndividually": false
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "USGovTexas",
+            "USGovVirginia"
+        ]
+    },
+    "Name": "Athena Gov Throttled CosmosDB Request",
+    "Description": "SOP : https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Azure+Cosmos+DB+Throttling+Issue",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>100 | fields RegionName,LayerName,ServiceName,count",
+        "Disabled": false,
+        "Indices": [
+          "staginggov_ath_services",
+          "staginggov_ath_services"
+        ],
+        "Sources": [
+          "ath/StagingGov/USGovTexas/*/Cluster",
+          "ath/StagingGov/USGovVirginia/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">Throttled CosmosDB requests in last 15 mins, <https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Azure+Cosmos+DB+Throttling+Issue|Runbook>\n> *Region:* $result.RegionName$ *Layer:* $result.LayerName$ *Service Name:* $result.ServiceName$ *Count:* $result.count$\n> \n```index=staging*_ath_services cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>100 | fields RegionName,LayerName,ServiceName,count```"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Alert for Invalid Refresh Token Error.",
+    "Description": "To alert for too many invalid Refresh Token Error. SOP: https://info.citrite.net/display/CWC/Invalid+Refresh+Token+Error+Runbook",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(ServiceName=Identity4 Message=\"Invalid refresh token\") OR (ServiceName=DSAuth-Web2 Message=\"Long lived token not found\") | transaction CallerIp OR ClientId | where eventcount > 200",
+      "Disabled": true,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-status",
+        "Message": "Athena: Too many invalid refresh token errors. SOP: https://info.citrite.net/display/CWC/Invalid+Refresh+Token+Error+Runbook"
+      },
+      "PagerDuty": "",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "CronExpression": "0 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Slow HTTP Requests Detected Runbook",
+    "Description": "Alert is triggered whenever 'Reading the request body timed out due to data arriving too slowly.' is detected in a service. Link to Runbook: https://info.citrite.net/display/CWC/Slow+HTTP+Requests+Detected+Runbook",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Identity4 ExceptionMessage=\"Reading the request body timed out due to data arriving too slowly.*\" | stats count | search count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING GOV*: One of the services in Athena is rejecting requests because of the HTTP request data is arriving too slowly\nSplunk Query: ```index=\"staginggov_ath_services\" \"Reading the request body timed out due to data arriving too slowly.\"``` \nPlease execute this <https://info.citrite.net/display/CWC/Slow+HTTP+Requests+Detected+Runbook|Runbook>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Failover Failure (Gov)",
+    "Description": "Alert is triggered when a failover cannot be completed due to a failover requirement not being met or another miscellaneous exception.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"The failover operation could not be completed. Failover requirements not met.\" OR (Method=FailoverManager.Failover exception) | stats count | search count > 0",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Failover Operation Failed * \nThe AutoFailover service has encountered an error while attempting to failover an unhealthy region.\nPlease execute this <https://info.citrite.net/x/s4aVVg>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Failover Notification (Gov)",
+    "Description": "Alert is triggered when a region is failed over.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"The failover operation completed successfully\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=staging_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthEvents)| rex \"HealthEvents=(?<FullHealthEvents>.*) HealthStatus\" | eval MonitoredServiceName = Service | fields TransactionId, FullHealthEvents, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, FullHealthEvents, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Operation Occurred*\nEvent Time: $result.EventTime$\nDisabled Region: $result.RegionCode$ was detected.\nFailover Reason: $result.FullHealthEvents$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Restore Notification (Gov)",
+    "Description": "Alert is triggered when a failed over region is restored.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"The restore operation completed successfully.\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=staging_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthScore)| eval MonitoredServiceName = Service | fields TransactionId, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Restore Operation Occurred*\nEvent Time: $result.EventTime$\nRestored Region: $result.RegionCode$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Dry-Run Failover Notification (Gov)",
+    "Description": "Alert is triggered when a would-be failover is detected in dry-run mode.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"Dry run mode is enabled. Skipping failover operation.\" | stats count | search count > 0",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Dry-Run Failover Detected * \nThe AutoFailover service has detected an unhealthy service in dry-run mode and has logged a would-be failover that would occur in the region the unhealthy service is located in.\nPlease review the health of services and refer to this <https://info.citrite.net/display/CWC/Automatic+Failovers|runbook> for next steps."
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover not allowed",
+    "Description": "Autofailover detects possible FD issues, but for some reason the Failover is not allowed to be performed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode=\"FdFailoverNotAllowed\"\n| rex field=_raw \"Reason=(?<Reason>[^=]+) \" \n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_csgops_services",
+        "staginggov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Possible Frontdoor issues detected at $result.Profile$. Failover was not performed.*\nPlease see the below details, a manual failover might still be necessary.\n\n>*Failover reason:* $result.FailoverReason$\n>*Failover not executed because:*  $result.Reason$\n>*Profile:*   $result.Profile$\n>*Event Time:*  $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover completed",
+    "Description": "Triggered when a Frontdoor automatic failover is completed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode=\"FdFailoverSuccess\"\n| dedup Profile\n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_csgops_services",
+        "staginggov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Automatic Frontdoor failover completed*\n\n>*Failover reason* $result.FailoverReason$\n>*Profile:* $result.Profile$\n>*Event Time:* $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover error",
+    "Description": "Triggered when a Frontdoor automatic failover fails to complete.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode IN (\"FdFailoverFailed\", \"FdFailoverException\")\n| dedup Profile\n| rex field=_raw \"Message=(?<Message>[^=]+)\"\n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_csgops_services",
+        "staginggov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/StagingGov/USGovTexas/*/Cluster",
+        "ccops/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Error trying to failover Frontdoor for $result.Profile$*\nPlease see the below details, a manual failover might still be necessary.\n\n>*Failover reason:* $result.FailoverReason$\n>*Profile:* $result.Profile$\n>*Message:* $result.Message$\n>*Event Time:* $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Csp Violation detected",
+    "Description": "Athena - Staging GOV: This alert is triggered when a csp violation is detected. Runbook: https://info.citrite.net/display/CWC/Csp+Violation+Error+Alerts+Staging+or+Production ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" EventType=Error Message=\"*Csp Violation detected*\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "Emails": [
+        "athena-csp-alert@cloud.com"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-csp-alerts",
+        "Message": ">>> *Athena - Staging GOV:*\r\n A CSP violation is detected. Check splunk to investigate what the violation is about. Runbook: https://info.citrite.net/display/CWC/Csp+Violation+Error+Alerts+Staging+or+Production \r\n```index=staginggov_ath_services sourcetype=\"ath:services\" EventType=Error Message=\"*Csp Violation detected*\"```"
+      },
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "CronExpression": "0 * * * *",
+      "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena: BlockNonFrontDoorTraffic Feature Update fails",
+    "Description": "Shows if the background task to update BlockNonFrontDoorTraffic Feature in Services fail",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ```Get all events in last 5 mins.```\r\n| where ServiceName in (\"ActiveDirectoryWeb\", \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\r\n| stats count by ServiceName, host, source \r\n| join type=left left=L right=R where L.ServiceName=R.ServiceName L.host=R.host L.source=R.source ```Left join to get all Services:hosts```\r\n    [search index=staginggov_ath_services sourcetype=ath:services \"Feature set to\" earliest=-10m ```Get \"Feature set to\" events to track this heartbeat message```\r\n    | where ServiceName in (\"ActiveDirectoryWeb\", \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\r\n    | stats count by ServiceName, host, source]\r\n| rename R.count AS countPerNode\r\n| eval finalcount=if(isnull(countPerNode),0,countPerNode)\r\n| where finalcount < 1\r\n| rename L.source AS source_l\r\n| eval sourcesplit=split(source_l,\"/\") ```Split source to get region and env```\r\n| eval region=mvindex(sourcesplit, 2)\r\n| eval env=mvindex(sourcesplit, 1)\r\n| fields * region env\r\n| rename env AS environment\r\n| strcat \"BlockNonFrontDoorTraffic Feature update issue for \",environment,\":\",region,\":\",L.ServiceName,\" in host \",L.host message\r\n| fields message\r\n| mvcombine message delim=\",\"\r\n| nomv message\r\n| rex mode=sed field=message \"s/,/\\n/g\"",
+      "Disabled": true,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> $result.message$\nPlease execute this <https://info.citrite.net/x/wofyXg|runbook>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-5m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena: FrontDoorVerification blocking requests",
+    "Description": "Shows if the FrontDoor validation in services fails",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services \"Failed FrontDoor Verification\" \"EventType=Error\" | stats count by ServiceName | where count > 500 | strcat \"FrontDoorVerification failed for \",ServiceName,\" with update count: \",count message | fields message | mvcombine message delim=\",\" | nomv message | rex mode=sed field=message \"s/,/\\n/g\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services",
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/*/Cluster",
+        "ath/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ": FrontDoorVerification blocking requests >>> $result.message$\nPlease execute this <https://info.citrite.net/x/vUXIXg|runbook>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena Rotation Plan detected",
+    "Description": "Alert is triggered when a rotation plan is detected.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Rotation plan created.\" OR \"Rotation plan updated.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* New Rotation Plan Detected * \n *ApplicationName*: $result.ApplicationName$ \n *DiscoveryTime*: $result.DiscoveryTime$ \n *AgreementTime*: $result.AgreementTime$ \n *AdvertisementTime*: $result.AdvertisementTime$ \n *ActivationTime*: $result.ActivationTime$ \n *CompletionTime*: $result.CompletionTime$ \n *NewCertThumbprint*: $result.NewCertThumbprint$ \n *OldCertThumbprint*: $result.OldCertThumbprint$"
+      },
+      "CronExpression": "40 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena Rotation Plan invalid",
+    "Description": "Alert is triggered when a rotation plan is not realistic.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"The rotation plan is not realistic.\" OR \"The rotation plan enters Activation phase before certificate is active.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Invalid Rotation Plan Detected * \n The team must validate the content of the detected plan. <https://info.citrite.net/display/CWC/Invalid+Rotation+Plan>."
+      },
+      "CronExpression": "41 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena Rotation Plan advertisement phase",
+    "Description": "Alert is triggered when a rotation plan has entered advertisement phase.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Rotation plan has entered in advertisement phase.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Rotation Plan reached advertisement phase. * \n Customers must be notified about the rotation. <https://info.citrite.net/display/CWC/Notify+Customers+for+Saml+Signing+certificate+Rotation>."
+      },
+      "CronExpression": "42 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena certificate not found after agreement",
+    "Description": "Alert is triggered when a certificate is not found on a VM and agreement phase has passed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Certificate not found on VM and agreement passed.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Athena certificate not found on VM * \n <https://info.citrite.net/display/CWC/KeyManagement+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "43 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena certificate not found after agreement and advertisement",
+    "Description": "Alert is triggered when a certificate is not found on a VM and advertisement phase has passed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Certificate not found on VM and advertisement passed.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Athena certificate not found on VM * \n <https://info.citrite.net/display/CWC/KeyManagement+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "45 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena: SamlWeb unable to retrieve a cert rotation plan.",
+    "Description": "Alert is triggered if the SamlWeb service has failures while retrieving the certificate rotation plan.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=SamlWeb EventType=Error \"Error retrieving rotation plan.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Failures to retrieve a Certificate Rotation Plan for SamlWeb. * \n <https://info.citrite.net/display/CWC/Failures+retrieving+Certificate+Rotation+Plans>."
+      },
+      "CronExpression": "44 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "SamlWeb cannot find the certificate to use for signing",
+    "Description": "Alert is triggered when SamlWeb cannot find a certificate in the local store that matches the thumbprint in the active phase of the current rotation plan.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=SamlWeb SamlCertificateException SamlException \"InnerExceptionMessage=The X.509 certificate with find type FindByThumbprint and value * could not be found in the LocalMachine My X.509 store.\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* SamlWeb cannot find the certificate to use for signing. * \n This will create customer downtime, execute <https://info.citrite.net/display/CWC/SamlWeb+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+  "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+  },
+  "Name": "Athena Staging Gov- Features Circuit Breaker Opened",
+  "Description": "Detects if Features Circuit Breaker Opened for a specified Node",
+  "Type": "Splunk",
+  "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services \"Features Circuit Breaker Opened.\" \"EventType=Information\"",
+      "Disabled": false,
+      "Indices": [
+          "staginggov_ath_services",
+          "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/USGovTexas/Main/Cluster",
+        "ath/StagingGov/USGovVirginia/Main/Cluster"
+      ],
+      "SlackChannel": {
+          "Channel": "#athena-alerts-staging",
+          "Message": "*Features Circuit Breaker Opened*\n\n> *ServiceName*: $result.ServiceName$\n\nPlease execute this Runbook: <https://info.citrite.net/x/KzBiYg|runbook>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+  }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas"
+      ]
+    },
+    "Name": "Athena: Too many email notifications for updates in principals",
+    "Description": "Alert is triggered when too many email notifications were sent for updates in principals accounts.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" Message=\"*Email notification succeeded for change in principal account*\"",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_ath_services"
+      ],
+      "Sources": [
+        "ath/StagingGov/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Too many email notifications were sent for updates in principals accounts.* \n <https://info.citrite.net/display/CWC/Too+Many+Notification+Emails+for+updates+in+principals+accounts>."
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/710ee052b75c480ac00421cc14d4fa3d/enqueue",
+      "CronExpression": "11 */4 * * *",
+      "StartTime": "-240m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "300"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "USGovTexas",
+          "USGovVirginia"
+        ]
+    },
+    "Name": "Athena Staging Gov: UI files are missing - Identity6",
+    "Description": "Alert is triggered when UI files are missing from an Identity6 node, after release",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "EventType=Error \"Unable to find the specified file.\"",
+        "Disabled": false,
+        "Indices": [
+            "staginggov_ath_services",
+            "staginggov_ath_services"
+        ],
+        "Sources": [
+          "ath/StagingGov/USGovTexas/Main/Cluster",
+          "ath/StagingGov/USGovVirginia/Main/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": "* UI files are missing from an Identity6 node * \nPlease execute this Runbook: <https://info.citrite.net/display/CWC/UI+files+are+missing+in+Identity6|runbook>"
+        },
+        "CronExpression": "*/21 * * * *",
+        "StartTime": "-5m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "100"
+    }
+  }
+]

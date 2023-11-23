@@ -1,0 +1,1305 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Client SecretMonitor",
+    "Description": "Please follow the SOP to rotate Athena client secrets: https://info.citrite.net/x/KChZUg",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AthenaClientsMonitorWorker ClientOwner=workspaceadmins@citrix.com | where ClientSecretRemainingDays >= 0 AND ClientSecretRemainingDays <= 30 | dedup ClientApiKey | table ClientName, ClientApiKey, ClientOwner, ClientSecretExpiration, ClientSecretRemainingDays",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "00 1 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Athena Client SecretMonitor Not Working",
+    "Description": "Please check the DMS AthenaClientsMonitorWorker Configuration",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AthenaClientsMonitorWorker Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "00 1 * * *",
+      "StartTime": "-72h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": 0
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Azure AD App SecretMonitor",
+    "Description": "Generates Email and Pagerduty alert when Azure Active Directory App Secret is set to expire in <=10 days\n\nSOP : https://info.citrite.net/display/CWC/Azure+AD+App+Secret+Expiry",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureADSecretMonitorWorker | regex Message=\": The Application.*\" | rex field=Message \": The Application : (?<App_Name>.*) with AppId : (?<App_Id>.*) in Tenant : (?<Tenant_Id>.*) ProductName : (?<Production_Name>.*) has a (?<Key_Id>.*) expiring in(?<DaysRemaining>.*) days.The Expiry date is (?<Expiry_Date>.*).\" | dedup App_Name,App_Id,Tenant_Id,Production_Name,Key_Id,DaysRemaining,Expiry_Date | where Production_Name == \"CC-gov\"| where (App_Name LIKE \"Athena%\" or App_Name LIKE \"Citrix%\" or App_Name LIKE \"ctx%\")|table App_Name,App_Id,Key_Id,Tenant_Id,Production_Name,DaysRemaining,Expiry_Date",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "23 0 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Azure AD App SecretMonitor Not Working",
+    "Description": "Generates Email when Azure Active Directory App Secret is not working/logging",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureADSecretMonitorWorker Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-alerts-expiring-secrets",
+        "Message": "Azure AD App SecretMonitor Not Working.\nAlert generated from: <$view_link$|$name$>"
+      },
+      "CronExpression": "23 0 * * *",
+      "StartTime": "-72h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "IT Web Marketing Key Used Outside of Scope",
+    "Description": "This alert will trigger if the IT Web Marketing Service Key is used outside of the scope which was agreed upon during the key creation.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CallerServiceName=itwebmarketingqagov AND !(\"root/orders/*/notifications RefererHeader\")",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "0 9 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Azure Service Bus topic subscription greater than 1000",
+    "Description": "Azure Service Bus topic subscription greater than 1000",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=cc:services (RoleName={Dms} OR ServiceName={Dms}) Message=* \n| rex field=Message \"Azure Service Bus sb:\\/\\/(?<azureservicebus>.*\\/).*Topic : (?<topic>.*) megabytes: (?<topicsize>\\d{1,15}.\\d{1,15}).*Topic Subscription count: (?<topicsubscriptioncount>\\d{1,5}) out.*Topic Status: (?<topicstatus>.*)\\..* Availability Status: (?<topicavailabilitystatus>.*)\\.}\" \n| where topicsubscriptioncount > 1000\n| fields source, azureservicebus, topic, topicsize, topicsubscriptioncount, topicstatus, topicavailabilitystatus",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "15 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "CoreWorker running more than 1 instance",
+    "Description": "production - CoreWorker running more than 1 instance. Decrease the number of CoreWorkers to 1 instance. This has been known to cause overall platform issues.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=CoreWorker\n| stats dc(NodeName) as count by source, NodeName\n| where count > 1",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "15 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "dashboarddevpetrustefans Making Changes",
+    "Description": "dashboarddevpetrustefans is a dev key we setup for @petrustefans to use for dev work on the CC Dashboard. \n\nThis alert checks to see if he calls any APIs with anything other than a GET call.\n\nPlease make note of what APIs were hit and report this to Robert Hyde/Timothy Moore for further action",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "AND \"CallerServiceName=dashboarddevpetrustefans\" AND (RequestMethod!=GET) \"LoggingType=Performance\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DB Exception",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555 https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "(DdbConcurrencyControlException OR DdbObjectNotFoundException OR DdbException OR DocumentClientException) NOT pre-condition\n| stats  count by source\n| sort  - count",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/Main/Cluster",
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "26 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Administrator queue message count exceeds limitation",
+    "Description": "administratoraddevents queue message count exceeds the limitation Runbook: https://info.citrite.net/x/A9dVXw",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker administrators administratoraddevents | rex \"Active message count: (?<ActiveMessageCount>\\d+).\" | where ActiveMessageCount > 100 | table EnvironmentName, RegionName",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/Main/Cluster",
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "yaqi.zhang@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-alerts",
+        "Message": "> *ProductionGov*: Administratoraddevents queue message count exceeds the limitation!\nSplunk Query: ```HostedRoleName=AzureServiceBusMonitorWorker administrators administratoraddevents | rex \"Active message count: (?<ActiveMessageCount>\\d+).\" | where ActiveMessageCount > 100 | table EnvironmentName, RegionName``` \nRun Book: <https://info.citrite.net/x/A9dVXw>"
+      },
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Completions",
+    "Description": "There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/Main/Cluster",
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "41 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/Main/Cluster",
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "21 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Completions",
+    "Description": "There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "46 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS AzureBlobBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzureBlobBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/Main/Cluster",
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "36 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS AzureBlobBackupWorker Completions",
+    "Description": "There has been no completions of the AzureBlobBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzureBlobBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovVirginia/Main/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "ProductionGov: There has been no completions of the AzureBlobBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "51 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS Service Abnormality Notification   STS QA",
+    "Description": "The STS QA service run into abnormality, please check Splunk logs for details.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=servicesmonitorworker \"Exception occurred\" OR \"failed\" \n| rex field=Message  \"when calling the Api, ServiceName: (?<ServiceName>.+), HttpMethod: (?<Method>.+), ApiUrl: (?<Url>.+), \"\n| search ServiceName=STS_QA\n| dedup ServiceName, Method, Url\n| table ServiceName, Method, Url",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "liang.bao@citrix.com",
+        "wenhui.peng@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "tian.fan@citrix.com",
+        "qiang.xu@citrix.com",
+        "rui.zhu@citrix.com",
+        "wenxi.chen@citrix.com",
+        "sushmita.nad@citrix.com",
+        "#IT-WebOnCall@citrix.com"
+      ],
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "DMS Service is running at or near its maximum capacity",
+    "Description": "Alert when Cloud Service Scaler is triggered (needs formation)",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "HostedRoleName=\"{CloudServiceScaler}\" \n \"is currently running at or near its maximum server capacity of\"",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "* */15 * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "ASB Maximum Topic Size Reached",
+    "Description": "This is signaling that one of the Topics has filled up and can no longer receive messages. This could be caused by one or more subscriptions filling up. I.e., the subscriber isn't picking those messages.\n\nPlease review the following SOP to resolve the issue: https://info.citrite.net/display/CWC/Alert+SOP+-+Topic+Size+Reached",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"The maximum entity size has been reached or exceeded\" NOT (\"RoleName=AgentLogger\" OR \"ServiceName=AgentLogger\") | stats count",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "45 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "search count > 0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "StoreFrontRegistryFeature Unauthorized Calls",
+    "Description": "StoreFrontRegistryFeature service key used for a request other than /featurecustomer (this alert doesn't consider GET requests). Please reach out to StoreFront DevOps team.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CallerServiceName=StoreFrontRegistryFeature Message=* NOT \"*/featurecustomer/*\"\n| spath input=Message \n| search RequestMethod != GET\n| stats count by source, RequestMethod, Uri",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "XenMobile   Unauthorized Calls to",
+    "Description": "Notification to Citrix Cloud Operations and Citrix Cloud CQE that the XenMobile keys of XenMobile-Chrome and XenMobile-rpi are being used outside of the agreed context. Please reach out to the XenMobile Ops team ASAP if this key is being used as it is not agreed upon.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CallerServiceName=xenmobile-rpi OR CallerServiceName=xenmobile-chrome NOT (RequestMethod=PUT AND AbsoluteUri=https://trust-*.ctxwsstgapi.net/root/publickeys/xenmobile-chrome) NOT (RequestMethod=POST AND AbsoluteUri=https://trust-*.ctxwsstgapi.net/*/authorization)",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "ryan.morey@citrix.com"
+      ],
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "RA GRS STORAGE Alert",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "(exception OR error: OR StorageException OR 400 OR 404 OR 503 OR 409) (storage. OR Microsoft.WindowsAzure.Storage.StorageException) NOT (Customer info for customer error) NOT (\"<Update>\" AND \"DdbObjectNotFoundException: Unable to find object with id\") NOT (SourceCode=EntitlementManager.RefreshProductionOrders@1026 OR SourceCode=EntitlementRepository.UpdateAsync@1094) NOT \"DAL:DeleteCustomerForestAgentForProvider ERROR Microsoft.WindowsAzure.Storage.StorageException The remote server returned an error: (404) Not Found\" NOT TrialPackagesController.UpdateTrialPackageById@221 NOT EntitlementsController.Index@394 NOT \"<Index>d__3.MoveNext\" NOT sourcetype=cc:loggerworker NOT (\"There is currently a lease on the blob and no lease ID was specified in the request\" AND \"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\") NOT (sourcetype=cc:cloudservicesstartup) NOT (RequestMethod=PUT AbsoluteUri=*offerings OR SourceCode=OfferingsDataAccess.DeleteOfferingAsync@138)\n| stats  count by source\n| sort  - count",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "45 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "ASB Get ServiceBusConnection failed",
+    "Description": "ServiceBusConnection failed. Please check if the management certificate is valid for the ASB subscription.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"Get ServiceBusConnection failed: Credentials for getting service bus were incorrect.\" | timechart count by source",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Worker Stopped Logging",
+    "Description": "This alert will trigger when any of the workers in the environment fail to log within the past hour.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "| inputlookup cc_sre_stggov_us_workers.csv| search NOT [ search index=productiongov_cc_services sourcetype=cc:services source=\"http:productiongov_cc_services_cc:services\" (\"ServiceName=*Worker ServiceInstanceIp*\" OR \"ServiceName=BlackBoxMonitor\") NOT(ServiceName=NotificationsWorker)| dedup ServiceName| fields ServiceName ]",
+      "Disabled": false,
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "59 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "RA GRS REDIS Alert",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "(Failed OR exception OR error: OR 503 OR 400) redis NOT (Customer info for customer error) NOT (\"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\")\n| stats count by source\n| where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "45 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Invalid connectionString configuration for CC Gov Services",
+    "Description": "This query fetches the connectionString ArgumentNullExceptions raised by CC Gov services. To resolve this issue follow the steps in the SOP : https://info.citrite.net/display/CWC/Verify+and+Update+Cloud+Services+ASB+ConnectionString+configuration+for+Prod",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"ArgumentNullException - Value cannot be null\" AND \"Parameter name: connectionString\"\n| dedup ServiceName, source, CustomerId\n| table ServiceName, source, CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "30 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Name": "Missing Connector Log in Splunk",
+    "Description": "Connector log events are older than 15 minutes in Splunk./nSOP:https://info.citrite.net/x/545wWQ",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Properties": {
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Search": "sourcetype=cc:loggerworker | head 1 | eval elapsed_mins=((now() - _time) / 60) | eval shouldAlert=if(elapsed_mins > 15, 1, 0) | where shouldAlert > 0",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "Emails": [
+        "cloudfas-dev-team@citrix-systems-inc.pagerduty.com",
+        "min.li1@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "SlackChannel": {
+        "Channel": "#hcp-flareon-alerts",
+        "Message": ">>> *ProductionGov*: Connector logs in Splunk are not reported in last 15 minutes"
+      }
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Splunk Log Latency Check",
+    "Description": "The CC services splunk log events are older than 15 minutes.  Login to Splunk, search using cc service index(s) and investigate.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "| head 1 | eval elapsed_mins=((now() - _time) / 60) | eval shouldAlert=if(elapsed_mins > 15, 1, 0) | where shouldAlert > 0",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services",
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "bruno.spinelli@citrix.com",
+        "gregory.grillo@citrix.com",
+        "kiran.malsetty@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "john.cattaneo@citrix.com",
+        "bradley.rowe@citrix.com",
+        "thomas.hammond@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-hyas-alerts",
+        "Message": ">>> *Production* CC services Splunk logs not available last 15 minutes"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Name": "RateLimiting - StoreFrontConfiguration",
+    "Description": "Requests to StoreFront Configuration are being rate-limited",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "Throttling \"Throttled:*\" ServiceName=StoreFrontConfiguration",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services",
+        "productiongov_cc_services"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-notifications-goose",
+        "Message": "$search$ yielded: $job.resultCount$ results."
+      }
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Ticketing health check failure",
+    "Description": "Ticketing health check failures were found. Check the dependency status by search ServiceName=Ticketing CheckHealthAsync",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Ticketing \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services",
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "cc/ProductionGov/USGovTexas/Production/Cluster",
+        "cc/ProductionGov/USGovVirginia/Production/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-cronus-alerts-inquisitor-slack",
+        "Message": "PRODUCTION: Ticketing is experiencing a high count of health check failures in $result.source$, please be on alert for possible failures.\n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "8-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Queue Size Exceeds 80% of Capacity",
+    "Description": "Queue Size Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Queue usage report for\"\n| rex field=_raw \"Azure Service Bus Queue usage report for 'sb://(?<SBLink>.+)/'\\. Queue: '(?<QueuePath>.+)'\\. Queue message count: (?<QueueMessageCount>.+)\\. Active message count: (?<QueueActiveMessageCount>.+)\\. Dead letter message count: (?<QueueDLMessageCount>.+)\\. Scheduled message count: (?<QueueScheduledMessageCount>.+)\\. Transfer message count: (?<QueueTransferMessageCount>.+)\\. Transfer dead letter message count: (?<QueueTransferDLMessageCount>.+)\\. Queue size in megabytes: (?<QueueSizeInMegabytes>.+)\\. Queue status: '(?<QueueStatus>.+)'\\. Queue availability status: '(?<QueueAvailabilityStatus>.+)'\\. Queue max size in megabytes: (?<QueueMaxSizeInMegabytes>.+)\\. \"\n| eval QueueUsagePercentage = QueueSizeInMegabytes/QueueMaxSizeInMegabytes\n| where QueueUsagePercentage > 0.80\n| dedup SBLink, QueuePath\n| table RegionName, SBLink, QueuePath, QueueSizeInMegabytes, QueueMaxSizeInMegabytes, QueueUsagePercentage, _time\n| sort - QueueUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Queue Size Exceeds 95% of Capacity",
+    "Description": "Queue Size Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Queue usage report for\"\n| rex field=_raw \"Azure Service Bus Queue usage report for 'sb://(?<SBLink>.+)/'\\. Queue: '(?<QueuePath>.+)'\\. Queue message count: (?<QueueMessageCount>.+)\\. Active message count: (?<QueueActiveMessageCount>.+)\\. Dead letter message count: (?<QueueDLMessageCount>.+)\\. Scheduled message count: (?<QueueScheduledMessageCount>.+)\\. Transfer message count: (?<QueueTransferMessageCount>.+)\\. Transfer dead letter message count: (?<QueueTransferDLMessageCount>.+)\\. Queue size in megabytes: (?<QueueSizeInMegabytes>.+)\\. Queue status: '(?<QueueStatus>.+)'\\. Queue availability status: '(?<QueueAvailabilityStatus>.+)'\\. Queue max size in megabytes: (?<QueueMaxSizeInMegabytes>.+)\\. \"\n| eval QueueUsagePercentage = QueueSizeInMegabytes/QueueMaxSizeInMegabytes\n| where QueueUsagePercentage > 0.95\n| dedup SBLink, QueuePath\n| table RegionName, SBLink, QueuePath, QueueSizeInMegabytes, QueueMaxSizeInMegabytes, QueueUsagePercentage, _time\n| sort - QueueUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Topic Size Exceeds 80% of Capacity",
+    "Description": "Topic Size Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSizeInMegabytes/TopicMaxSizeInMegabytes\n| where TopicUsagePercentage > 0.80\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSizeInMegabytes, TopicMaxSizeInMegabytes, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Topic Size Exceeds 95% of Capacity",
+    "Description": "Topic Size Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSizeInMegabytes/TopicMaxSizeInMegabytes\n| where TopicUsagePercentage > 0.95\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSizeInMegabytes, TopicMaxSizeInMegabytes, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Number of Subscriptions in Topic Exceeds 80% of Capacity",
+    "Description": "Number of Subscriptions in Topic Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSubscriptionCount/2000\n| where TopicUsagePercentage > 0.80\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSubscriptionCount, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Number of Subscriptions in Topic Exceeds 95% of Capacity",
+    "Description": "Number of Subscriptions in Topic Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSubscriptionCount/2000\n| where TopicUsagePercentage > 0.95\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSubscriptionCount, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_csgops_services",
+        "productiongov_csgops_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovTexas/ProductionUSGovVirginia/Cluster",
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "bruno.spinelli@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Secret Expired for Azure AD Application used by CC-Trust & CC-Encyrption Services",
+    "Description": "Secret rotation SOP - https://info.citrite.net/pages/viewpage.action?pageId=1508305769 . The provided client secret keys are expired. Visit the Azure Portal to create new keys for your app, or consider using certificate credentials for added security: https://docs.microsoft.com/azure/active-directory/develop/active-directory-certificate-credentials",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Trust OR ServiceName=Encryption The provided client secret keys are expired",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services",
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "cc/ProductionGov/USGovTexas/*",
+        "cc/ProductionGov/USGovVirginia/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "Poornachander.Juvvadi@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Secret Expired for Azure AD Application used by CC-Trust & CC-Encyrption Services. Secret rotation SOP - https://info.citrite.net/pages/viewpage.action?pageId=1508305769 "
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Azure AD Application Change Audit",
+    "Description": "Please follow SOP to check audit log: https://info.citrite.net/x/4AjIXw",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ApplicationName=Dms HostedRoleName=AzureADAuditLogMonitorWorker ActivityName=Update-application* OR  ActivityName=Update-service* |eval ActivityTimeStamp=strptime(ActivityDateTime,\"%Y-%m-%dT%H:%M:%S.%NZ\")|eval TimeOffset=(now() - ActivityTimeStamp)/60 | where TimeOffset<15 | table ActivityDateTime,Target,PropertyName,OldValue,NewValue,InitiatedBy,ActivityName",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "ccops/ProductionGov/USGovVirginia/ProductionWestUSGovVirginia/Cluster"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": false
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "FDI - Production GOV inactive customer delete",
+    "Description": "The alert is created to monitor FDI Customer inactivity deletions in Production GOV",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=Customers CustomerInactivityAccountDelete OR CustomerInactivityAccountDeleteSilent",
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "cc/ProductionGov/USGovTexas/*",
+        "cc/ProductionGov/USGovVirginia/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#fdi-delete-prod",
+        "Message": ">>>FDI: Inactive Customer deleted in Production Gov.",
+        "Fields": "EventId, Message, TransactionId, source"
+      },
+      "CronExpression": "10 */2 * * *",
+      "StartTime": "-2h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Production GOV - Error during changing Administrator email",
+    "Description": "Alert will be triggered when a request to change an email fails.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=DelegatedAdministration EventType=Error UpdateAdministratorEmail ",
+      "Disabled": false,
+      "Indices": [ "productiongov_cc_services" ],
+      "Sources": [ 
+        "cc/ProductionGov/USGovTexas/*",
+        "cc/ProductionGov/USGovVirginia/*" 
+      ],
+        "SlackChannel": {
+            "Channel": "#cc-alerts",
+            "Message": "*Production GOV*: Error occured when an admin tried to change their email. Please investigate to make sure all DA admin and secure client records have the same email. \nReach out to the Cronus squad in #cc-cronus-support \n>Splunk Query:\n>```<$results_link|$result.query$>```"
+        },
+      "CronExpression": "*/5 * * * *",
+      "StartTime": "-5m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Updating Administrator email is taking too long",
+    "Description": "Alert will be triggered when a request to update an email takes longer than 30seconds.",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "\"Citrix.CloudServices.DelegatedAdministration.Api.Controllers.AdministratorsController.UpdateEmail\" EventType=Performance Duration | eval duration=json_extract_exact(Message, \"Duration\") | where duration>\"30000\" | stats count | where count > 0",
+        "Disabled": false,
+        "Indices": [ "productiongov_cc_services" ],
+        "Sources": [ "*" ],
+        "SlackChannel": {
+            "Channel": "#cc-alerts",
+            "Message": "*Production GOV*: Requests to update an admin email took longer than 30 seconds.\n>Number of request: $result.count$ \n> \n>Splunk Query:\n>```<$results_link|$result.query$>```"
+        },
+        "CronExpression": "0 13/30 0 ? * * *",
+        "StartTime": "-30m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Encryption Service Keyvault connection failures",
+    "Description": "Encryption service unable to access Gov KeyVault. This could mean Possible onboarding issues to end customers(CINC-457)",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "ServiceName=Encryption AND EventType=Error AND SourceCode=CustomerKeyVaultManager.* AND Forbidden",
+        "Disabled": false,
+        "Indices": [
+          "productiongov_cc_services"
+        ],
+        "Sources": [ 
+          "cc/ProductionGov/USGovTexas/*",
+          "cc/ProductionGov/USGovVirginia/*"
+        ],
+        "Emails": [
+          "ccdevopsalerts@cloud.com"
+        ],
+        "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+        "SlackChannel": {
+          "Channel": "#cc-sre-alert",
+          "Message": "Encryption service unable to access Gov KeyVault. This could mean Possible onboarding issues to end customers(CINC-457)"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  }
+]

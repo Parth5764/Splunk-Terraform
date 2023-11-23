@@ -1,0 +1,1 @@
+{{NameMetadata__Squad}}-{{NameMetadata__Service}}-{{NameMetadata__Issue}}-{{Environment}}

@@ -1,0 +1,145 @@
+[
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-abel-01000",
+                    "ctxwss-abel-01001",
+                    "ctxwss-albatross-01000",
+                    "ctxwss-albatross-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-abel-01000",
+                    "ctxwsp-abel-01001",
+                    "ctxwsp-albatross-01000",
+                    "ctxwsp-albatross-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Atlas",
+            "Service": "ReleasesAndCloudProxy",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.85",
+                    "RunbookUrl": "",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-atlas-alerts"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-abel-01000",
+                    "ctxwss-abel-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-abel-01000",
+                    "ctxwsp-abel-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Atlas",
+            "Service": "abel",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "6"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-atlas-alerts"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-albatross-01000",
+                    "ctxwss-albatross-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-albatross-01000",
+                    "ctxwsp-albatross-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Atlas",
+            "Service": "albatross",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "6"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-atlas-alerts"
+                ]
+            }
+        }
+    }
+]

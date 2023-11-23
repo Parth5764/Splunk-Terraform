@@ -1,0 +1,103 @@
+[
+    {
+      "Filter": {
+        "Regions": [
+          "EastUS",
+          "WestEurope",
+          "AustraliaEast",
+          "JapanEast",
+          "JapanWest"
+        ]
+      },
+      "Name": "WebHooksWorker Unexpected webhook exception",
+      "Description": "The WebhooksWorker is having an exception when trying to process a webhook message. SOP: Check the splunk logs to see the specific exception being thrown. If it is only happening with a single subscription, consider disabling the subscription to prevent it from affecting other subscriptions",
+      "Type": "Splunk",
+      "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "ServiceName=WebhooksWorker \"Unexpected webhook exception\" \n | stats count by minute,source ",
+        "Disabled": false,
+        "Indices": [
+          "production_cc_services",
+          "production_cc_services",
+          "production_cc_services",
+          "productionjp_cc_services",
+          "productionjp_cc_services"
+        ],
+        "Sources": [
+            "cc/Production/EastUS/*",
+            "cc/Production/WestEurope/*",
+            "cc/Production/AustraliaEast/*",
+            "cc/ProductionJP/JapanEast/*",
+            "cc/ProductionJP/JapanWest/*"
+          ],
+        "Emails": [
+          "workspaceadmins@citrix.com",
+          "bradley.rowe@citrix.com",
+          "thomas.hammond@citrix.com",
+          "amit.shah@citrix.com",
+          "xiaojie.yu@citrix.com",
+          "leandro.taset@citrix.com"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-cronus-alerts-inquisitor-slack",
+          "Message": "*Prodution - Unexpected WebhooksWorker exception*\n>*Time* : $result.minute$\n>*Source* : $result.source$ SOP: Check the splunk logs to see the specific exception being thrown. If it is only happening with a single subscription, consider disabling the subscription to prevent it from affecting other subscriptions"
+        },
+        "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "100"
+      }
+    },
+    {
+      "Filter": {
+        "Regions": [
+          "EastUS",
+          "WestEurope",
+          "AustraliaEast",
+          "JapanEast",
+          "JapanWest"
+        ]
+      },
+      "Name": "WebHooksWorker Unable to send message to retry queue",
+      "Description": "The WebHooksWorker is unable to send failed messages to the retry queue. SOP: Check if the CTXWSP-WEBHOOKS-EASTUS:QUEUE:RETRYMESSAGEQUEUE is full. Check if messages are being processed from that queue. Check if an abnormal amount of webhook messages are failing, causing the queue to fill up. Increase the queue size as a temperary measure",
+      "Type": "Splunk",
+      "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "ServiceName=WebhooksWorker \"Unable to send message to retry queue\" \n | stats count by minute,source",
+        "Disabled": false,
+        "Indices": [
+          "production_cc_services",
+          "production_cc_services",
+          "production_cc_services",
+          "productionjp_cc_services",
+          "productionjp_cc_services"
+        ],
+        "Sources": [
+            "cc/Production/EastUS/*",
+            "cc/Production/WestEurope/*",
+            "cc/Production/AustraliaEast/*",
+            "cc/ProductionJP/JapanEast/*",
+            "cc/ProductionJP/JapanWest/*"
+        ],
+        "Emails": [
+            "workspaceadmins@citrix.com",
+            "bradley.rowe@citrix.com",
+            "thomas.hammond@citrix.com",
+            "amit.shah@citrix.com",
+            "xiaojie.yu@citrix.com",
+            "leandro.taset@citrix.com"
+          ],
+          "SlackChannel": {
+            "Channel": "#cc-cronus-alerts-inquisitor-slack",
+            "Message": "*Prodution - WebHooksWorker Unable to send message to retry queue*\n>*Time* : $result.minute$\n>*Source* : $result.source$ SOP: Check if the CTXWSP-WEBHOOKS-EASTUS:QUEUE:RETRYMESSAGEQUEUE is full. Check if messages are being processed from that queue. Check if an abnormal amount of webhook messages are failing, causing the queue to fill up. Increase the queue size as a temperary measure"
+          },
+        "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "100"
+      }
+    }
+  ]
+  

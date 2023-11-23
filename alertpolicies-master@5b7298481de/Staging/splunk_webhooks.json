@@ -1,0 +1,99 @@
+[
+    {
+      "Filter": {
+        "Regions": [
+          "EastUS",
+          "WestEurope",
+          "AustraliaEast",
+          "JapanEast",
+          "JapanWest"
+        ]
+      },
+      "Name": "WebHooksWorker Unexpected webhook exception",
+      "Description": "The WebhooksWorker is having an exception when trying to process a webhook message. SOP: Check the splunk logs to see the specific exception being thrown. If it is only happening with a single subscription, consider disabling the subscription to prevent it from affecting other subscriptions",
+      "Type": "Splunk",
+      "Properties": {
+        "Search": "ServiceName=WebhooksWorker \"Unexpected webhook exception\" \n | stats count by minute,source ",
+        "SplitIndicesByRegionEnv": true,
+        "Disabled": false,
+        "Indices": [
+          "staging_cc_services",
+          "staging_cc_services",
+          "staging_cc_services",
+          "stagingjp_cc_services",
+          "stagingjp_cc_services"
+        ],
+        "Sources": [
+          "cc/Staging/EastUS/*",
+          "cc/Staging/WestEurope/*",
+          "cc/Staging/AustraliaEast/*",
+          "cc/StagingJP/JapanEast/*",
+          "cc/StagingJP/JapanWest/*"
+        ],
+        "Emails": [
+          "workspaceadmins@citrix.com",
+          "bradley.rowe@citrix.com",
+          "thomas.hammond@citrix.com",
+          "amit.shah@citrix.com",
+          "xiaojie.yu@citrix.com",
+          "leandro.taset@citrix.com"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-cronus-staging-alerts-inquisitor-slack",
+          "Message": "*Staging - Unexpected WebhooksWorker exception*\n>*Time* : $result.minute$\n>*Source* : $result.source$ SOP: Check the splunk logs to see the specific exception being thrown. If it is only happening with a single subscription, consider disabling the subscription to prevent it from affecting other subscriptions"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "100"
+      }
+    },
+    {
+      "Filter": {
+        "Regions": [
+          "EastUS",
+          "WestEurope",
+          "AustraliaEast",
+          "JapanEast",
+          "JapanWest"
+        ]
+      },
+      "Name": "WebHooksWorker Unable to send message to retry queue",
+      "Description": "The WebHooksWorker is unable to send failed messages to the retry queue. SOP: Check if the CTXWSS-WEBHOOKS-EASTUS:QUEUE:RETRYMESSAGEQUEUE is full. Check if messages are being processed from that queue. Check if an abnormal amount of webhook messages are failing, causing the queue to fill up. Increase the queue size as a temperary measure",
+      "Type": "Splunk",
+      "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "ServiceName=WebhooksWorker \"Unable to send message to retry queue\" \n | stats count by minute,source ",
+        "Disabled": false,
+        "Indices": [
+          "staging_cc_services",
+          "staging_cc_services",
+          "staging_cc_services",
+          "stagingjp_cc_services",
+          "stagingjp_cc_services"
+        ],
+        "Sources": [
+            "cc/Staging/EastUS/*",
+            "cc/Staging/WestEurope/*",
+            "cc/Staging/AustraliaEast/*",
+            "cc/StagingJP/JapanEast/*",
+            "cc/StagingJP/JapanWest/*"
+        ],
+        "Emails": [
+          "bradley.rowe@citrix.com",
+          "thomas.hammond@citrix.com",
+          "amit.shah@citrix.com",
+          "xiaojie.yu@citrix.com",
+          "leandro.taset@citrix.com"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-cronus-staging-alerts-inquisitor-slack",
+          "Message": "*Staging - WebHooksWorker Unable to send message to retry queue*\n>*Time* : $result.minute$\n>*Source* : $result.source$ SOP: Check if the CTXWSS-WEBHOOKS-EASTUS:QUEUE:RETRYMESSAGEQUEUE is full. Check if messages are being processed from that queue. Check if an abnormal amount of webhook messages are failing, causing the queue to fill up. Increase the queue size as a temperary measure"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "100"
+      }
+    }
+  ]

@@ -1,0 +1,200 @@
+[
+  {
+    "Name": "RateLimiting - StoreFrontConfiguration",
+    "Description": "Requests to StoreFront Configuration are being rate-limited",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "Throttling \"Throttled:*\" ServiceName=StoreFrontConfiguration",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "$search$ yielded: $job.resultCount$ results."
+      }
+    }
+  },
+  {
+    "Name": "Missing auth domain - StoreFrontConfiguration, EastUS",
+    "Description": "Errors reported relating to missing auth domain in region EastUS",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration RegionName=EastUS \"AuthDomain\" \"of customer\" \"could not be read in Athena\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to missing auth domain have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Missing-Auth-Domain.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  },
+  {
+    "Name": "Missing auth domain - StoreFrontConfiguration, AustraliaEast",
+    "Description": "Errors reported relating to missing auth domain in region AustraliaEast",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "AustraliaEast"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration RegionName=AustraliaEast \"AuthDomain\" \"of customer\" \"could not be read in Athena\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to missing auth domain have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Missing-Auth-Domain.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  },
+  {
+    "Name": "Missing auth domain - StoreFrontConfiguration, WestEurope, JapanEast, JapanWest",
+    "Description": "Errors reported relating to missing auth domain in either of the regions WestEurope, JapanEast or JapanWest",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration \"AuthDomain\" \"of customer\" \"could not be read in Athena\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to missing auth domain have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Missing-Auth-Domain.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  },
+  {
+    "Name": "Unsupported WspRegion - StoreFrontConfiguration, EastUS",
+    "Description": "Errors reported relating to unsupported WspRegion in region EastUS",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration RegionName=EastUS \"unsupported hardcoded WSP region\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to an unsupported WspRegion have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Unsupported-WspRegion.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  },
+  {
+    "Name": "Unsupported WspRegion - StoreFrontConfiguration, AustraliaEast",
+    "Description": "Errors reported relating to unsupported WspRegion in region AustraliaEast",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "AustraliaEast"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration RegionName=AustraliaEast \"unsupported hardcoded WSP region\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to an unsupported WspRegion have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Unsupported-WspRegion.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  },
+  {
+    "Name": "Unsupported WspRegion - StoreFrontConfiguration, WestEurope, JapanEast, JapanWest",
+    "Description": "Errors reported relating to unsupported WspRegion in either of the regions WestEurope, JapanEast or JapanWest",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "WestEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=StoreFrontConfiguration \"unsupported hardcoded WSP region\" | dedup CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "SlackChannel": {
+        "Channel": "#wsp-team-quacksalotl-alerts",
+        "Message": "*STAGING: Errors reported relating to unsupported WspRegions have occurred within the last 60 minutes.*\n\nConfirm for the customer IDs in the Splunk logs whether runbook https://code.citrite.net/projects/WSSRE/repos/citrix.workspace.docs/browse/Runbooks/WSP/Unsupported-WspRegion.md needs to be followed.\n\n$search$ yielded: $job.resultCount$ results.\n$results_link$"
+      }
+    }
+  }
+]

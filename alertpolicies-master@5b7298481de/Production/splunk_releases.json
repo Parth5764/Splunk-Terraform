@@ -1,0 +1,45 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Releases redis timeout exception",
+    "Description": "Release service's calls to redis are timing out. https://issues.citrite.net/browse/CINC-22",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "(ServiceName=ReleasesProxy OR ServiceName=Release.Proxy)  \"Exception=StackExchange.Redis.RedisTimeoutException\"| stats count by source",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services",
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "devin.crumb@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-atlas-alerts",
+        "Message": "*Production - Releases redis timeout exception*\n> *Source* : $result.source$"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "20"
+    }
+  }
+]

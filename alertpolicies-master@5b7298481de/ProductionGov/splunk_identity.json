@@ -1,0 +1,41 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Identity health check failure",
+    "Description": "Identity health check failures were found. Check the dependency status by search ServiceName=Identity CheckHealthAsync ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Identity \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "productiongov_cc_services",
+        "productiongov_cc_services"
+      ],
+      "Sources": [
+        "cc/ProductionGov/USGovTexas/Production/Cluster",
+        "cc/ProductionGov/USGovVirginia/Production/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "thomas.hammond@citrix.com",
+        "bruno.spinelli@citrix.com",
+        "kyriakos.kaperonis@citrix.com",
+        "lampros.pappas@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*Production Gov - Identity Health Check Failures*\n>*Time* : $result.minute$\n>*Source* : $result.source$\n>*Runbook* : https://info.citrite.net/display/CWC/CC+Identity+Traffic+Manager+Automatical+failover+SOP"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  }
+]

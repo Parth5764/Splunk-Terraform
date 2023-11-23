@@ -1,0 +1,96 @@
+[
+  {
+    "Filter": {
+      "Name": "ctxaths-",
+      "Type": "Microsoft.Network/frontdoors",
+      "SubscriptionName": "AthenaStaging"
+    },
+	"Name": "Frontdoor rejecting valid requests",
+    "Description": "Alert is to check if Front Door is rejecting valid requests",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "true",
+      "Query": "AzureDiagnostics | where ResourceProvider == \"MICROSOFT.NETWORK\" and Category == \"FrontdoorAccessLog\" | where isReceivedFromClient_b == true | where toint(httpStatusCode_s) >= 400 and (toint(httpStatusCode_s) != 499 or toint(httpStatusCode_s) != 401 or toint(httpStatusCode_s) != 403) | where ErrorInfo_s != \"NoError\"",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 100,
+      "Severity": 1,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_ath_alerts"
+      ],
+      "CustomWebhookPayload": "{}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ctxathjs-",
+      "Type": "Microsoft.Network/frontdoors",
+      "SubscriptionName": "AthenaStaging-JP"
+    },
+	"Name": "Frontdoor rejecting valid requests",
+    "Description": "Alert is to check if Front Door is rejecting valid requests",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "true",
+      "Query": "AzureDiagnostics | where ResourceProvider == \"MICROSOFT.NETWORK\" and Category == \"FrontdoorAccessLog\" | where isReceivedFromClient_b == true | where toint(httpStatusCode_s) >= 400 and (toint(httpStatusCode_s) != 499 or toint(httpStatusCode_s) != 401 or toint(httpStatusCode_s) != 403) | where ErrorInfo_s != \"NoError\"",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 100,
+      "Severity": 1,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_ath_alerts"
+      ],
+      "CustomWebhookPayload": "{}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ctxaths-frontdoor-logs",
+      "Type": "Microsoft.OperationalInsights/workspaces",
+      "SubscriptionName": "AthenaStaging"
+    },
+    "Description": "WAF is Logging Request Body",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "true",
+      "Query": "AzureDiagnostics \n| where ResourceProvider == \"MICROSOFT.NETWORK\" and Category == \"FrontdoorWebApplicationFirewallLog\"\n| where details_matches_s contains \"PostParamValue\"\n",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 0,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_ath_alerts"
+      ],
+      "CustomWebhookPayload": "{}"
+    }
+  },
+  {
+    "Filter": {
+      "Name": "ctxathjs-frontdoor-logs",
+      "Type": "Microsoft.OperationalInsights/workspaces",
+      "SubscriptionName": "AthenaStaging-JP"
+    },
+    "Description": "WAF is Logging Request Body",
+    "Type": "Microsoft.Insights/scheduledQueryRules",
+    "Properties": {
+      "Enabled": "true",
+      "Query": "AzureDiagnostics \n| where ResourceProvider == \"MICROSOFT.NETWORK\" and Category == \"FrontdoorWebApplicationFirewallLog\"\n| where details_matches_s contains \"PostParamValue\"\n",
+      "QueryType": "ResultCount",
+      "FrequencyInMinutes": 5,
+      "TimeWindowInMinutes": 5,
+      "Operator": "GreaterThan",
+      "Threshold": 0,
+      "Severity": 0,
+      "ActionGroups": [
+        "/subscriptions/{{SubscriptionId}}/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/slack_notification_ath_alerts"
+      ],
+      "CustomWebhookPayload": "{}"
+    }
+  }
+]

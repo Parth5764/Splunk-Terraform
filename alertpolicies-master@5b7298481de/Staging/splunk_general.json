@@ -1,0 +1,1336 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CWCService Splunk Data Flow monitor",
+    "Description": "Splunk alert to ensure flow of data into Splunk from CWCServiceRuntime to maintain resiliency.\nLink to SOP: https://info.citrite.net/display/CWC/Splunk+Data+Flow+Monitor",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "| head 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DB Exception",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555 https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(DdbConcurrencyControlException OR DdbObjectNotFoundException OR DdbException OR DocumentClientException) NOT pre-condition| stats  count by source| sort  - count",
+      "Disabled": true,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "13 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "TimeOutException",
+    "Description": "Alert hit on monitoring cc_services for TimeOut Exception for last 15 minutes.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"TimeoutException\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "1000"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast"
+      ]
+    },
+    "Name": "All services Splunk data flow monitor",
+    "Description": "Splunk alert for monitoring data flow into Splunk from all services in Australia to maintain resiliency.\nLink to SOP: https://info.citrite.net/display/CWC/Splunk+Data+Flow+Monitor",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "| head 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/AustraliaEast/release-*/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "All services Splunk data flow monitor",
+    "Description": "Splunk alert for monitoring data flow into Splunk from all services in US to maintain resiliency.\nLink to SOP: https://info.citrite.net/display/CWC/Splunk+Data+Flow+Monitor",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "| head 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/release-*/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "All services Splunk data flow monitor",
+    "Description": "Splunk alert for monitoring data flow into Splunk from all services in JP to maintain resiliency.\nLink to SOP: https://info.citrite.net/display/CWC/Splunk+Data+Flow+Monitor",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "| head 100",
+      "Disabled": false,
+      "Indices": [
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS REDIS Alert",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(Failed OR exception OR error: OR 503 OR 400) redis NOT (Customer info for customer error) NOT (\"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\") NOT (ScrubbedKeyword)| stats count by source, SourceCode| where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS STORAGE Alert",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(exception OR error: OR StorageException OR 400 OR 404 OR 503 OR 409) (storage. OR Microsoft.WindowsAzure.Storage.StorageException) NOT (Customer info for customer error) NOT (\"<Update>\" AND \"DdbObjectNotFoundException: Unable to find object with id\") NOT (SourceCode=EntitlementManager.RefreshProductionOrders@1026 OR SourceCode=EntitlementRepository.UpdateAsync@1094) NOT \"DAL:DeleteCustomerForestAgentForProvider ERROR Microsoft.WindowsAzure.Storage.StorageException The remote server returned an error: (404) Not Found\" NOT TrialPackagesController.UpdateTrialPackageById@221 NOT EntitlementsController.Index@394 NOT \"<Index>d__3.MoveNext\" NOT sourcetype=cc:loggerworker NOT (\"There is currently a lease on the blob and no lease ID was specified in the request\" AND \"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\") NOT (sourcetype=cc:cloudservicesstartup) NOT (RequestMethod=PUT AbsoluteUri=*offerings OR SourceCode=OfferingsDataAccess.DeleteOfferingAsync@138)| stats  count by source| sort  - count",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS COSMO DB Alert",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(DdbConcurrencyControlException OR DdbObjectNotFoundException OR DdbException OR DocumentClientException) NOT (AdministratorRepository.Update*) NOT (Level=INFO) NOT (\"Update\" AND \"DdbObjectNotFoundException\") NOT (\"match assemblyName=\\\"Citrix.DataAccess.DocumentDB.Core\\\" className=\\\"Citrix.DataAccess.DocumentDB.DdbException\\\"\") | stats count by source| where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS REDIS Alert CWCServiceRuntime",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(Failed OR exception OR error: OR 503 OR 400) redis NOT (Customer info for customer error) NOT (\"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\") NOT (ScrubbedKeyword)| stats count by source, SourceCode| where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS STORAGE Alert CWCServiceRuntime",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(exception OR error: OR StorageException OR 400 OR 404 OR 503 OR 409) (storage. OR Microsoft.WindowsAzure.Storage.StorageException) NOT (Customer info for customer error) NOT (\"<Update>\" AND \"DdbObjectNotFoundException: Unable to find object with id\") NOT (SourceCode=EntitlementManager.RefreshProductionOrders@1026 OR SourceCode=EntitlementRepository.UpdateAsync@1094) NOT \"DAL:DeleteCustomerForestAgentForProvider ERROR Microsoft.WindowsAzure.Storage.StorageException The remote server returned an error: (404) Not Found\" NOT TrialPackagesController.UpdateTrialPackageById@221 NOT EntitlementsController.Index@394 NOT \"<Index>d__3.MoveNext\" NOT sourcetype=cc:loggerworker NOT (\"There is currently a lease on the blob and no lease ID was specified in the request\" AND \"Citrix.CloudServices.AgentHub.Api.CoreProxy.MessagesProxy\") NOT (sourcetype=cc:cloudservicesstartup) NOT (RequestMethod=PUT AbsoluteUri=*offerings OR SourceCode=OfferingsDataAccess.DeleteOfferingAsync@138)| stats  count by source| sort  - count",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "RA GRS COSMO DB Alert CWCServiceRuntime",
+    "Description": "The alert is created to monitor RA-GRS activity as under CCOPS 4402/4555\n\nSOP: https://info.citrite.net/x/VzLcT",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(DdbConcurrencyControlException OR DdbObjectNotFoundException OR DdbException OR DocumentClientException) NOT (AdministratorRepository.Update*) NOT (Level=INFO) NOT (\"Update\" AND \"DdbObjectNotFoundException\") NOT (\"match assemblyName=\\\"Citrix.DataAccess.DocumentDB.Core\\\" className=\\\"Citrix.DataAccess.DocumentDB.DdbException\\\"\") | stats count by source| where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "7d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena Logging onto CC Indices",
+    "Description": "This query monitors for if Athena logs are being sentto CC Indices. If alerted try to identify what could be the reason for Athena sending logs to the incorrect index. Maybe a wrong configuration was pushed in during a recent deployment",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "RequestUri=\"https://accounts.cloud*.com/citrix/ping\" | head 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "WorkspaceAdmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "21 0 * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [ "EastUS", "AustraliaEast", "WestEurope" ]
+    },
+    "Name": "CC-SRE Azure Blob Storage Alert",
+    "Description": "Healthcheck for Azure Blob",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"Connectivity Check Result from AgentWatchDog for uri https://cws*.blob.core.windows.net/downloads/ : Failed\" ",
+      "Disabled": false,
+      "Indices": [ "staging_cc_services" ],
+      "Sources": [ "*" ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-splunk-alerts",
+        "Message": "Please check Azure blobs throttling issues."
+      },
+      "PagerDuty": "",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [ "JapanEast", "JapanWest" ]
+    },
+    "Name": "CC-SRE Azure Blob Storage Alert",
+    "Description": "Healthcheck for Azure Blob",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"Connectivity Check Result from AgentWatchDog for uri https://ccjstgjp.blob.core.windows.net/downloads/ : Failed\" ",
+      "Disabled": false,
+      "Indices": [ "stagingjp_cc_services", "stagingjp_cc_services" ],
+      "Sources": [ "*" ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-splunk-alerts",
+        "Message": "Please check Azure blobs throttling issues."
+      },
+      "PagerDuty": "",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [ "EastUS", "AustraliaEast", "WestEurope", "JapanEast", "JapanWest" ]
+    },
+    "Name": " Alert for improper Load balancing for DA service.",
+    "Description": "Improper Load balancing for Delegated Administration services.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Delegated\" host=\"*\"| bucket _time span=10m | stats count by host | eventstats sum(count) as total | eval percent=((count/total)*100)| Dedup host | where percent > 20",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/Staging/WestEurope/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-splunk-alerts",
+        "Message": "The Delegated Administration requests are not properly load balanced."
+      },
+      "PagerDuty": "",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "FasHub ServiceClient Failures",
+    "Description": "Refer https://info.citrite.net/display/WinAppDelivery/Alert+SOP+-+FasHub+ServiceClient+Failures",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=FasHub EventType=Error SourceCode=HttpHandler.LogResponse | rex field=Message \"^https://(?<calledservice>[A-Za-z0-9]*).*status code (?<httpcode>[0-9]*).*$\" | where NOT httpcode=\"404\" | where NOT (calledservice=\"messaging\" AND httpcode=\"408\")",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#hcp-flareon-alerts",
+        "Message": "Staging (alertpolicies) - FasHub ServiceClient Failures"
+      },
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan":"20"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "FasHub FAS Server Failures",
+    "Description": "Refer https://info.citrite.net/pages/viewpage.action?spaceKey=WinAppDelivery&title=Alert+SOP+-+FAS+Server+Failures",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=FasHub EventType=Error SourceCode=FasServersManager.LogFailed NOT FasServersFailureReason=ServiceNotAvailable NOT FasServersFailureReason=\"The read-by-id failed because the item was not found.\" NOT HealthCheckError=\"Citrix.CloudServices.FasHub.ApiModels.CcMessages.Exceptions.FasHubMessageException: Expecting message response to be a health check message\" ",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#hcp-flareon-alerts",
+        "Message": "Staging (alertpolicies) - FasHub FAS Server Failures"
+      },
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan":"1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "FasHub Exceptions",
+    "Description": "Refer https://info.citrite.net/pages/viewpage.action?spaceKey=WinAppDelivery&title=Alert+SOP+-+FasHub+Exceptions",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=FasHub EventType=Error SourceCode=HttpHandler.LogException",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#hcp-flareon-alerts",
+        "Message": "Staging (alertpolicies) - FasHub Exceptions"
+      },
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan":"1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "CC LUI Nanjing team service log count outlier alert",
+    "Description": "Alert will be triggered when log amount increased too much in the past 10 mins compared with last hour.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "| search ServiceName IN (CloudLicense, Licensing, LicensingConsole, Partner, RateCard, LuiDashboardApi, LuiDashboard)| bin _time span=5m | stats count as number by  _time, ServiceName | streamstats window=100 avg(number) as avg stdev(number) as stdev count by ServiceName| eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by ServiceName | search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "CC LUI Nanjing team worker log count outlier alert",
+    "Description": "Alert will be triggered when log amount increased too much in the past 10 mins compared with last hour",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "| search ServiceName IN (CloudLicenseStatisticsWorker, CloudLicenseCalculationWorker, LicensingWorker, MeteringCalculationWorker, PartnerWorker, LuiDashboardWorker)| bin _time span=5m | stats count as number by  _time, ServiceName | streamstats window=100 avg(number) as avg stdev(number) as stdev count by ServiceName| eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") |search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by ServiceName | search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "CC LUI Nanjing team service dependencies call outlier alert",
+    "Description": "Alert will be triggered when log amount increased too much in the past 10 mins compared with last hour",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "LuiExternalApiTrackIndex | search ServiceName IN (CloudLicense, Licensing, LicensingConsole, Partner, RateCard, LuiDashboardApi, LuiDashboard)| bin _time span=5m | stats count as number by  _time, ServiceName | streamstats window=100 avg(number) as avg stdev(number) as stdev count by ServiceName| eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by ServiceName | search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "CC LUI Nanjing team worker dependencies call outlier alert",
+    "Description": "Alert will be triggered when log amount increased too much in the past 10 mins compared with last hour",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "LuiExternalApiTrackIndex | search ServiceName IN (CloudLicenseStatisticsWorker, CloudLicenseCalculationWorker, LicensingWorker, MeteringCalculationWorker, PartnerWorker, LuiDashboardWorker)| bin _time span=5m | stats count as number by  _time, ServiceName | streamstats window=100 avg(number) as avg stdev(number) as stdev count by ServiceName| eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") |search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by ServiceName | search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team Sql DB dead lock alert",
+    "Description": "CC LUI Nanjing team Sql DB dead lock alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AzureMetricCollectorWorker\" Sql_Database_Metrics | eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | table Time, deadlock, ServerName, Database| search deadlock > 0",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team Sql DB dtu outlier alert",
+    "Description": "CC LUI Nanjing team Sql DB dtu outlier alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AzureMetricCollectorWorker\" Sql_Database_Metrics | bin _time span=5m| stats max(dtu_used) as dtu_used by _time, ServerName, Database |search dtu_used > 0| streamstats window=100 avg(dtu_used) as avg stdev(dtu_used) as stdev count by ServerName, Database| eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('dtu_used' > upperBound, 1, 0) | table _time, dtu_used, ServerName, Database, count, isOutlier, avg, stdev, upperBound | eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") |search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team service cpu outlier alert",
+    "Description": "CC LUI Nanjing team cpu outlier alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"NewRelicMetricCollectorWorker\" | search Type=ProcessSample | search commandName IN (Citrix.CloudServices.CloudLicense.Api.exe, Citrix.CloudServices.Licensing.Api.exe,Citrix.CloudServices.MeteringCalculation.Api.exe,Citrix.CloudServices.LuiDashboard.Api.exe,Citrix.CloudServices.Partner.Api.exe,Citrix.CloudServices.RateCard.Api.exe,Citrix.Cloud.LicensingConsole.exe,Citrix.CloudServices.LuiDashboard.exe) | eval hostname = clusterName+\"_\"+hostname | streamstats window=100 avg(CpuPercent) as avg stdev(CpuPercent) as stdev count by hostname, commandName| eval upperBound=avg+2*stdev, lowerBound = 0 | eval isOutlier=if('CpuPercent' > upperBound, 1, 0) | eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search isOutlier=1 AND count > 10 | table Time, CpuPercent, commandName, hostname, isOutlier, avg, stdev, upperBound",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by commandName, hostname| search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team worker cpu outlier alert",
+    "Description": "CC LUI Nanjing team cpu outlier alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"NewRelicMetricCollectorWorker\" | search Type=ProcessSample | search commandName IN (Citrix.CloudServices.CloudLicenseStatisticsWorker.Service.exe, Citrix.CloudServices.CloudLicenseCalculationWorker.Service.exe,Citrix.CloudServices.LicensingWorker.Service.exe,Citrix.CloudServices.MeteringCalculationWorker.Service.exe,Citrix.CloudServices.PartnerWorker.Service.exe,Citrix.Cloud.LuiDashboardWorker.Service.exe) | eval hostname = clusterName+\"_\"+hostname | streamstats window=90 avg(CpuPercent) as avg stdev(CpuPercent) as stdev count by hostname, commandName| eval upperBound=avg+2*stdev, lowerBound = 0| eval isOutlier=if('CpuPercent' > upperBound, 1, 0) | eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search isOutlier=1 AND count > 10| table Time, CpuPercent, commandName, hostname, isOutlier, avg, stdev, upperBound",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "| stats count by commandName, hostname| search count > 1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team Cosmos DB RU outlier alert",
+    "Description": "CC LUI Nanjing team Cosmos DB RU outlier alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AzureMetricCollectorWorker\" Cosmos_Database_Metrics  | search DatabaseName IN (CloudLicense, Licensing, ActiveUse)| bin _time span=5m | stats avg(TotalRequestUnits) as number by  _time, DatabaseAccount, DatabaseName, CollectionName | streamstats window=500 avg(number) as avg stdev(number) as stdev count by DatabaseAccount, DatabaseName, CollectionName | eval upperBound=avg+3*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\")|search count > 11 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing team ServiceBus queue deadletter outlier alert",
+    "Description": "CC LUI Nanjing team ServiceBus message queue deadletter outlier alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AzureMetricCollectorWorker\" ServiceBus_Metrics | bin _time span=5m | stats max(DeadletteredMessages) as number by  _time, Namespace, Queue | streamstats window=500 avg(number) as avg stdev(number) as stdev count by Namespace, Queue| eval upperBound=avg+2*stdev, lowerBound = 0| eval isOutlier=if('number' > upperBound, 1, 0)| eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search count > 10 AND isOutlier=1",
+      "Disabled": true,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing Team Multiple Workers Heartbeat Alert",
+    "Description": "CC LUI Nanjing Team Multiple Workers Heartbeat Alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName IN (ActiveUseWorker, CloudLicenseCalculationWorker, CloudLicenseStatisticsWorker, LicensingWorker, SchedulerWorker) | stats count as cnt by ServiceName | append [| makeresults | eval ServiceName=mvappend(\"ActiveUseWorker\", \"CloudLicenseCalculationWorker\", \"CloudLicenseStatisticsWorker\", \"LicensingWorker\", \"SchedulerWorker\") | mvexpand ServiceName | eval cnt=0] | stats max(cnt) as cnt by ServiceName | search cnt=0 | stats values(*) as * by cnt | makemv delim=\",\" ServiceName",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#lui-alerts-stg",
+        "Message": ">>> LUI Worker(s) heartbeat failed. \n>*ServiceName*=$result.ServiceName$",
+        "Fields": "ServiceName"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "CC LUI Nanjing Team LuiDashboardWorker Heartbeat Alert",
+    "Description": "CC LUI Nanjing Team LuiDashboardWorker Heartbeat Alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName = LuiDashboardWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#lui-alerts-stg",
+        "Message": ">>> *LuiDashboardWorker* heartbeat failed."
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenLessThan": "1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "CC LUI Nanjing Team MeteringCalculationWorker Heartbeat Alert",
+    "Description": "CC LUI Nanjing Team MeteringCalculationWorker Heartbeat Alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName = MeteringCalculationWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#lui-alerts-stg",
+        "Message": ">>> *MeteringCalculationWorker* heartbeat failed."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenLessThan": "1"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CoreWorker not working in ASF",
+    "Description": "Please go to the service fabric explorer and look for the application and check to see if the application is up. Also notify the developer on it to see if something is wrong so that they can also look at Splunk for it.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=coreworker\n| stats count by source",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Cluster",
+        "cc/Staging/WestEurope/*/Cluster",
+        "cc/Staging/AustraliaEast/*/Cluster",
+        "cc/StagingJP/JapanEast/*/Cluster",
+        "cc/StagingJP/JapanWest/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#cc-sre-splunk-alerts",
+        "Message": "CoreWorker not working in ASF. Check AlertPolicies repository for alert description."
+      },
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "FDI - Staging inactive customer delete",
+    "Description": "The alert is created to monitor FDI Customer inactivity deletions in Staging",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Customers CustomerInactivityAccountDelete OR CustomerInactivityAccountDeleteSilent",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "SlackChannel": {
+        "Channel": "#fdi-delete-staging",
+        "Message": ">>>FDI: Inactive Customer deleted in Staging.",
+        "Fields": "EventId, Message, TransactionId, source"
+      },
+      "CronExpression": "10 */2 * * *",
+      "StartTime": "-2h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Abnormal request count from a single client per service",
+    "Description": "Alert will be triggered when request count increased too much in the past 30 mins compared with last 100 window.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "User=* CustomerId=* CallerIp=* ServiceName=* | bin _time span=30m | stats count AS cnt by _time, ServiceName, User, CustomerId, CallerIp | sort _time, ServiceName | streamstats window=100 avg(cnt) AS avg stdev(cnt) AS stdev | eval upperBound=avg+10*stdev | eval isOutlier=if(cnt > upperBound, 1, 0) | eval Time = strftime(_time,\"%Y-%m-%dT%H:%M:%S\") | search isOutlier=1",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Cluster",
+        "cc/Staging/WestEurope/*/Cluster",
+        "cc/Staging/AustraliaEast/*/Cluster",
+        "cc/StagingJP/JapanEast/*/Cluster",
+        "cc/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-alerts-stg",
+        "Message": "*Staging*: Abnormal request count in the past 30 minutes.\n>*Since*=<!date^$result._time$^{date_num} {time}|$result.Time$>\n>*Request Count*=$result.cnt$\n>*Service Name*=$result.ServiceName$\n>*User*=$result.User$\n>*Customer ID*=$result.CustomerId$\n>*Caller IP*=$result.CallerIp$\nClick <$results_link$|here> to see the alert details.\nAlert generated from: <$view_link$|$name$>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Error during changing Administrator email",
+    "Description": "Alert will be triggered when a request to change an email fails.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=DelegatedAdministration EventType=Error UpdateAdministratorEmail",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Cluster",
+        "cc/Staging/WestEurope/*/Cluster",
+        "cc/Staging/AustraliaEast/*/Cluster",
+        "cc/StagingJP/JapanEast/*/Cluster",
+        "cc/StagingJP/JapanWest/*/Cluster"
+      ],
+        "SlackChannel": {
+            "Channel": "#cc-alerts-stg",
+            "Message": "*Staging*: Error occured when an admin tried to change their email. Please investigate to make sure all DA admin and secure client records have the same email.  \nReach out to the Cronus squad in #cc-cronus-support \n>Splunk Query:\n>```<$results_link|$result.query$>```"
+        },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Updating Administrator email is taking too long",
+    "Description": "Alert will be triggered when a request to update an email takes longer than 30seconds.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Citrix.CloudServices.DelegatedAdministration.Api.Controllers.AdministratorsController.UpdateEmail\" EventType=Performance Duration | eval duration=json_extract_exact(Message, \"Duration\") | where duration>\"30000\" | stats count | where count > 0",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Cluster",
+        "cc/Staging/WestEurope/*/Cluster",
+        "cc/Staging/AustraliaEast/*/Cluster",
+        "cc/StagingJP/JapanEast/*/Cluster",
+        "cc/StagingJP/JapanWest/*/Cluster"
+      ],
+        "SlackChannel": {
+            "Channel": "#cc-alerts-stg",
+            "Message": "*Staging*: Requests to update an admin email took longer than 30 seconds.\n>Number of request: $result.count$ \n>Splunk Query:\n>```<$results_link|$result.query$>```"
+        },
+      "CronExpression": "0 16/30 0 ? * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Encryption Service Keyvault connection failures",
+    "Description": "Encryption service unable to access Gov KeyVault. This could mean Possible onboarding issues to end customers(CINC-457)",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "ServiceName=Encryption AND EventType=Error AND SourceCode=CustomerKeyVaultManager.* AND Forbidden",
+        "Disabled": false,
+        "Indices": [
+            "staging_cc_services",
+            "staging_cc_services",
+            "staging_cc_services",
+            "stagingjp_cc_services",
+            "stagingjp_cc_services"
+        ],
+        "Sources": [
+            "cc/Staging/EastUS/*/Cluster",
+            "cc/Staging/WestEurope/*/Cluster",
+            "cc/Staging/AustraliaEast/*/Cluster",
+            "cc/Staging/JapanEast/*/Cluster",
+            "cc/Staging/JapanWest/*/Cluster"
+        ],
+        "Emails": [
+          "ccdevopsalerts@cloud.com"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-sre-alert",
+          "Message": "Encryption service unable to access KeyVault. This could mean Possible onboarding issues to end customers(CINC-457)"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  }
+]

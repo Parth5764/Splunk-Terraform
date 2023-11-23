@@ -1,0 +1,318 @@
+[
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-caliber-01000",
+                    "ctxwss-caliber-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-caliber-01000",
+                    "ctxwsp-caliber-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "caliber",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.7",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/Low+Apdex+Score+Mitigation",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-caliber-01000",
+                    "ctxwss-caliber-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-caliber-01000",
+                    "ctxwsp-caliber-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "caliber",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "OpenViolationOnExpiration": false,
+                    "ThresholdDuration": "300",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction",
+                    "Threshold": "20",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/High+Error+Rate+Mitigation"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-centurion-01000",
+                    "ctxwss-centurion-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-centurion-01000",
+                    "ctxwsp-centurion-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "centurion",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.7",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/Low+Apdex+Score+Mitigation",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-centurion-01000",
+                    "ctxwss-centurion-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-centurion-01000",
+                    "ctxwsp-centurion-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "centurion",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "OpenViolationOnExpiration": false,
+                    "ThresholdDuration": "300",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction",
+                    "Threshold": "20",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/High+Error+Rate+Mitigation"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        }
+    },
+	{
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-champange-01000",
+                    "ctxwss-champange-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-champange-01000",
+                    "ctxwsp-champange-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "champange",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "ThresholdDuration": "600",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-apollo-alerts",
+                    "cc-apollo-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-champange-01000",
+                    "ctxwss-champange-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-champange-01000",
+                    "ctxwsp-champange-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "champange",
+            "Issue": "ResponseTime",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time (excluding noisy endpoints)",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND name NOT LIKE '%/Features/Update' AND name NOT LIKE '%/FeatureCustomer/GetEnabledCustomerFeatures'",
+                    "Threshold": "10"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time (/Features/Update Only)",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "OpenViolationOnExpiration": false,
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND name LIKE '%/Features/Update'",
+                    "Threshold": "10"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time (/FeatureCustomer/GetEnabledCustomerFeatures Only)",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "OpenViolationOnExpiration": false,
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND name LIKE '%/FeatureCustomer/GetEnabledCustomerFeatures'",
+                    "Threshold": "15",
+                    "ThresholdDuration": "600"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-apollo-alerts"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-apollo-alerts",
+                    "cc-apollo-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-champange-01000",
+                    "ctxwss-champange-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-champange-01000",
+                    "ctxwsp-champange-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Apollo",
+            "Service": "champange",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Enabled": true,
+                    "MetricName": "apdex",
+                    "MetricType": "apm_app_metric",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.7"
+                }
+            ],
+            "Channels": [
+                "cc-apollo-alerts"
+            ]
+        }
+    }
+]

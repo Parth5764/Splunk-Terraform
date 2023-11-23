@@ -1,0 +1,2041 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena Pen Test user delete calls",
+    "Description": "Alert is triggered whenever the athena pentest users make a delete call.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ClientName=ath_pen_testuser_2019_* HTTP/* DELETE\n| bin span=5m _time",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Staging Athena: Alert is triggered whenever the athena pentest users make a delete call : $result.ErrorMessage$"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena Alert for DSAuth throttling.",
+    "Description": "To alert throttling customers too aggressively in Athena. If alerted Correlate log's ServiceInstanceIp key to its respective value for scaleset and node ID, restart nodeID through CC Dashboard.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Not building the domain contexts due to throttling\" | stats count by ServiceInstanceIp | where count > 50",
+      "Disabled": true,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Athena: DSAuth throttling customers too aggressively."
+      },
+      "PagerDuty": "",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Alert for Athena AuthDomain.",
+    "Description": "AuthDomain not found in Athena Customer.\n Link to SOP - https://info.citrite.net/pages/viewpage.action?pageId=1381595811",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"sourcetype=ath:services ServiceName=DSAuth* Message=\"not found in athena customer AuthDomains\" | stats count by AuthDomain\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "Staging Athena: One or more auth domains not found in an athena customer : $result.ErrorMessage$"
+      },
+      "PagerDuty": "",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "CronExpression": "*/30 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena not redirecting to Logon Page",
+    "Description": "Athena - Staging: Failing to redirect from DSAuth-Web to Identity to show the Logon Page: Error looking up auth domain. See: https://info.citrite.net/display/CWC/DSAuthWeb2+Logon+page+not+available+cross-geo",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=DSAuth-Web2 RequestUri=\"*webview*\" Message=\"Error looking up auth domain:*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena - Staging:*\r\nThere are an abnormal count of failures to get redirect to the Logon Page: $result.ErrorMessage$\r\n```index=staging_ath_services ServiceName=DSAuth-Web2 RequestUri=\"*webview*\" Message=\"Error looking up auth domain:*\"```\r\nPossible issue with redirecting from DSAuth-Web to Identity to display the Logon page, please review splunk and follow <https://info.citrite.net/display/CWC/DSAuthWeb2+Logon+page+not+available+cross-geo | this runbook>"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "25"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Signing key not found in DSAuthWeb2",
+    "Description": "Athena - Staging: This alert is triggered when DSAuthWeb2 cannot find appropriate signing key in the discovery document. Possible root cause could be an upgrade in Identity4 causing changes in kid. Please check <https://accounts.cloud.com/core/.well-known/openid-configuration/jwks>",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" ServiceName=DSAuth-Web2 EventType=Error \"No appropriate signing key found in the discovery document.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena - Staging:*\r\n There are failures in DSAuthWeb2 when trying to find signing key in the discovery document: $result.ErrorMessage$\r\n```index=staging_ath_services sourcetype=\"ath:services\" ServiceName=DSAuth-* EventType=Error \"No appropriate signing key found in the discovery document.\"```\r\nPossible root cause could be an upgrade in Identity4 causing changes in kid. Please check <https://accounts.cloudburrito.com/core/.well-known/openid-configuration/jwks>.\nPlease execute this <https://info.citrite.net/x/lkfJWg|runbook>"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "100"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "AustraliaEast",
+          "AustraliaSoutheast",
+          "EastUS",
+          "WestUS",
+          "JapanEast",
+          "JapanWest"
+        ]
+    },
+    "Name": "Athena: DSAuthWeb 500 Errors",
+    "Description": "Shows if the number of errors in DSAuthWeb is at an increased level of 500",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500 | stats count AS number_of_issues |\neval alertMessage=\"*Staging Athena: \nAlertType = Error \n Showing an increased level of 500 errors in DSAuthWeb.  Check in Splunk and warn the @cc-athena-squad\". \n\"`staging_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500`\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "stagingjp_ath_services",
+          "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/Staging/AustraliaEast/*/Cluster",
+          "ath/Staging/AustraliaSoutheast/*/Cluster",
+          "ath/Staging/EastUS/*/Cluster",
+          "ath/Staging/WestUS/*/Cluster",
+          "ath/StagingJP/JapanEast/*/Cluster",
+          "ath/StagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "WestEurope",
+          "NorthEurope"
+        ]
+    },
+    "Name": "Athena: DSAuthWeb 500 Errors",
+    "Description": "Shows if the number of errors in DSAuthWeb is at an increased level of 500",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500 | stats count AS number_of_issues |\neval alertMessage=\"*Staging Athena: \nAlertType = Error \n Showing an increased level of 500 errors in DSAuthWeb.  Check in Splunk and warn the @cc-athena-squad\". \n\"`index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth-Web2 500`\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services"
+        ],
+        "Sources": [
+            "ath/Staging/WestEurope/*/Cluster",
+            "ath/Staging/NorthEurope/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "AustraliaEast",
+            "AustraliaSoutheast",
+            "EastUS",
+            "WestUS",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "Athena: DSAuthWeb is failing to get the OIDC token",
+    "Description": "Shows if OpenID Connect Token request returned Http status code: BadRequest",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": " sourcetype=ath:services ServiceName=DSAuth* Message=\"The OpenID Connect Token request, returned Http status code: BadRequest\" | dedup AuthDomain | top limit=1 AuthDomain |\neval alertMessage=\"*Staging Athena*: DSAuthWeb is failing to get the OIDC token for one or more customers.\n AlertType=Error \n```index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth* Message=\\\"The OpenID Connect Token request, returned Http status code: BadRequest\\\"```\n\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "stagingjp_ath_services",
+            "stagingjp_ath_services"
+        ],
+        "Sources": [
+            "ath/Staging/AustraliaEast/*/Cluster",
+            "ath/Staging/AustraliaSoutheast/*/Cluster",
+            "ath/Staging/EastUS/*/Cluster",
+            "ath/Staging/WestUS/*/Cluster",
+            "ath/StagingJP/JapanEast/*/Cluster",
+            "ath/StagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$\nPlease execute this <https://info.citrite.net/x/s4aVVg|runbook>"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "WestEurope",
+            "NorthEurope"
+        ]
+    },
+    "Name": "Athena:DSAuthWeb is failing to get the OIDC token",
+    "Description": "Shows if OpenID Connect Token request returned Http status code: BadRequest",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth* Message=\"The OpenID Connect Token request, returned Http status code: BadRequest\" | dedup AuthDomain | top limit=1 AuthDomain |\neval alertMessage=\"*Staging Athena*: DSAuthWeb is failing to get the OIDC token for one or more customers.\n AlertType=Error \n```index=staging_ath_services sourcetype=ath:services ServiceName=DSAuth* Message=\\\"The OpenID Connect Token request, returned Http status code: BadRequest\\\"```\n\"  | stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services"
+        ],
+        "Sources": [
+            "ath/Staging/WestEurope/*/Cluster",
+            "ath/Staging/NorthEurope/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">>> $result.alertMessage$\nPlease execute this <https://info.citrite.net/x/s4aVVg|runbook>"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Failed to process cip_cred in DSAuthWeb2",
+    "Description": "Athena - Staging: This alert is triggered when DSAuthWeb2 cannot process the cip_cred provided in the ID Token. Please review the Splunk query for more details",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" ServiceName=DSAuth-Web2 EventType=Error Method=\"*OidcRequestTokenResponseFactory.CreateCredentialWalletReferenceFromCipCred*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *Athena - Staging:*\r\n DSAuthWeb2 cannot process the cip_cred: $result.ErrorMessage$\r\n Check Splunk to determine what the error is. If there is a decryption error and there has been a recent roll-out, then a service roll back may be required \r\n```index=staging_ath_services sourcetype=\"ath:services\" ServiceName=DSAuth-* EventType=Error Method=\"*OidcRequestTokenResponseFactory.CreateCredentialWalletReferenceFromCipCred*\"```"
+      },
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CronExpression": "*/15 * * * *",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: Invalid Autorization token",
+    "Description": "If you receive this alert it means Token is Expired or start date is set to future date. please check token's validity and reachout to Athena Squad",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "EventType=Error \"Authorization token is not valid at the current time.\" \n| stats count by RegionName \n| table RegionName,count",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *ATHENA-STAGING:* Invalid Authorization token error in $result.RegionName$ Region. Please check Splunk for more details using below query: ```index=staging_ath_services EventType=Error \"Authorization token is not valid at the current time.\"| table RegionName``` This can be a problem with the Secure Time Seeding Windows service and a clock skew affecting the cosmos db auth tokens. Refer to <https://info.citrite.net/display/CWC/Athena+Regional+Failover+Runbook |This Runbook> to perform failover if this is region specific."
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "CustomTrigger": "search count > 0",
+      "TriggerIndividually": false
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "AustraliaEast",
+            "AustraliaSoutheast",
+            "EastUS",
+            "WestUS",
+            "WestEurope",
+            "NorthEurope",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "Athena Throttled CosmosDB Request",
+    "Description": "SOP : https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Azure+Cosmos+DB+Throttling+Issue",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>100 | fields RegionName,LayerName,ServiceName,count",
+        "Disabled": false,
+        "Indices": [
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "stagingjp_ath_services",
+          "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/Staging/AustraliaEast/*/Cluster",
+          "ath/Staging/AustraliaSoutheast/*/Cluster",
+          "ath/Staging/EastUS/*/Cluster",
+          "ath/Staging/WestUS/*/Cluster",
+          "ath/Staging/WestEurope/*/Cluster",
+          "ath/Staging/NorthEurope/*/Cluster",
+          "ath/StagingJP/JapanEast/*/Cluster",
+          "ath/StagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ">Throttled CosmosDB requests in last 15 mins, <https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Azure+Cosmos+DB+Throttling+Issue|Runbook>\n> *Region:* $result.RegionName$ *Layer:* $result.LayerName$ *Service Name:* $result.ServiceName$ *Count:* $result.count$\n> \n```index=staging*_ath_services cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>100 | fields RegionName,LayerName,ServiceName,count```"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Synthetic Client Secret Expiration Monitoring",
+    "Description": "Please follow the SOP to rotate Athena client secrets: https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Athena+Client+Secret+Rotation",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AthenaClientsMonitorWorker\"  | search Owner = \"athena-squad@cloud.com\"  ExpirationDate!=\"1/1/0001\" | eval od = strptime(ExpirationDate,\"%m/%d/%Y\") | eval td = now() | eval daysLeft = round(( od-td )/86400,0) | where daysLeft >= 0 AND daysLeft <= 30 | dedup APIKey | table ClientName, APIKey, Owner, ExpirationDate",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *STAGING*: Warning! Athena client is due rotation.\n>*ClientName* : $result.ClientName$\n>*APIKey* : $result.APIKey$\n>*Owner* : $result.Owner$\n>*ExpirationDate* : $result.ExpirationDate$\n>Please review Splunk($results_link$) and follow <https://info.citrite.net/pages/viewpage.action?spaceKey=CWC&title=Athena+Client+Secret+Rotation | Runbook>"
+      },
+      "CronExpression": "00 11 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Japan",
+        "Europe"
+      ]
+    },
+    "Name": "Athena Failover Failure",
+    "Description": "Alert is triggered when a failover cannot be completed due to a failover requirement not being met or another miscellaneous exception.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"The failover operation could not be completed. Failover requirements not met.\" OR (Method=FailoverManager.Failover exception) | stats count | search count > 0",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Failover Operation Failed * \nThe AutoFailover service has encountered an error while attempting to failover an unhealthy region.\nPlease execute this <https://info.citrite.net/x/s4aVVg>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Europe"
+      ]
+    },
+    "Name": "Athena Failover Notification Staging",
+    "Description": "Alert is triggered when a region is failed over.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover Product=Athena \"The failover operation completed successfully\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=staging_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthEvents)| rex \"HealthEvents=(?<FullHealthEvents>.*) HealthStatus\" | eval MonitoredServiceName = Service | fields TransactionId, FullHealthEvents, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, FullHealthEvents, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Operation Occurred*\nEvent Time: $result.EventTime$\nDisabled Region: $result.RegionCode$ was detected.\nFailover Reason: $result.FullHealthEvents$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Japan"
+      ]
+    },
+    "Name": "Athena Failover Notification Staging Japan",
+    "Description": "Alert is triggered when a region is failed over.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover Product=AthenaJP \"The failover operation completed successfully\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=stagingjp_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthEvents)| rex \"HealthEvents=(?<FullHealthEvents>.*) HealthStatus\" | eval MonitoredServiceName = Service | fields TransactionId, FullHealthEvents, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, FullHealthEvents, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Operation Occurred*\nEvent Time: $result.EventTime$\nDisabled Region: $result.RegionCode$ was detected.\nFailover Reason: $result.FullHealthEvents$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Europe"
+      ]
+    },
+    "Name": "Athena Restore Notification Staging",
+    "Description": "Alert is triggered when a failed over region is restored.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover Product=Athena \"The restore operation completed successfully.\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=staging_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthScore)| eval MonitoredServiceName = Service | fields TransactionId, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Restore Operation Occurred*\nEvent Time: $result.EventTime$\nRestored Region: $result.RegionCode$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Japan"
+      ]
+    },
+    "Name": "Athena Restore Notification Staging Japan",
+    "Description": "Alert is triggered when a failed over region is restored.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover Product=AthenaJP \"The restore operation completed successfully.\" | table TransactionId, ServiceName, EventTime, RegionCode | join type=inner TransactionId [search (index=stagingjp_ath_services ServiceName=\"HealthCheckMonitorWorker\" HealthScore)| eval MonitoredServiceName = Service | fields TransactionId, MonitoredServiceName, HealthScore] | table TransactionId, RegionCode, MonitoredServiceName, HealthScore, EventTime",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*A Failover Restore Operation Occurred*\nEvent Time: $result.EventTime$\nRestored Region: $result.RegionCode$\nHealth Score: $result.HealthScore$\nTransactionId: $result.TransactionId$\nRunbook: <https://info.citrite.net/x/cvhLWg>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Japan",
+        "Europe"
+      ]
+    },
+    "Name": "Athena Dry-Run Failover Notification",
+    "Description": "Alert is triggered when a would-be failover is detected in dry-run mode.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=AutoFailover \"Dry run mode is enabled. Skipping failover operation.\" | stats count | search count > 0",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Dry-Run Failover Detected * \nThe AutoFailover service has detected an unhealthy service in dry-run mode and has logged a would-be failover that would occur in the region the unhealthy service is located in.\nPlease review the health of services and refer to this <https://info.citrite.net/display/CWC/Automatic+Failovers|runbook> for next steps."
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Japan",
+        "Europe"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover not allowed",
+    "Description": "Autofailover detects possible FD issues, but for some reason the Failover is not allowed to be performed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode=\"FdFailoverNotAllowed\"\n| rex field=_raw \"Reason=(?<Reason>[^=]+) \" \n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Possible Frontdoor issues detected at $result.Profile$. Failover was not performed.*\nPlease see the below details, a manual failover might still be necessary.\n\n>*Failover reason:* $result.FailoverReason$\n>*Failover not executed because:*  $result.Reason$\n>*Profile:*   $result.Profile$\n>*Event Time:*  $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Japan",
+        "Europe"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover completed",
+    "Description": "Triggered when a Frontdoor automatic failover is completed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode=\"FdFailoverSuccess\"\n| dedup Profile\n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Automatic Frontdoor failover completed*\n\n>*Failover reason* $result.FailoverReason$\n>*Profile:* $result.Profile$\n>*Event Time:* $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "Australia",
+        "US",
+        "Japan",
+        "Europe"
+      ]
+    },
+    "Name": "Autofailover - Frontdoor failover error",
+    "Description": "Triggered when a Frontdoor automatic failover fails to complete.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": false,
+      "Search": "ServiceName=\"Autofailover\" MsgCode IN (\"FdFailoverFailed\", \"FdFailoverException\")\n| dedup Profile\n| rex field=_raw \"Message=(?<Message>[^=]+)\"\n| rex field=splunk_server \"[^\\.]+\\.(?<splunk_host>.+)\" \n| eval FailoverReason=case(Trigger == \"FrontdoorHealthReport\", \"High latency detected\", Trigger == \"RegionalFailover\", \"Multiple regions are unhealthy\")",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Error trying to failover Frontdoor for $result.Profile$*\nPlease see the below details, a manual failover might still be necessary.\n\n>*Failover reason:* $result.FailoverReason$\n>*Profile:* $result.Profile$\n>*Message:* $result.Message$\n>*Event Time:* $result.EventTime$\n>*Helpful TransactionId:* $result.TransactionId$ \n\n*:confluence2: <https://info.citrite.net/x/PLvpYQ|View Runbook>  :splunk: <https://$result.splunk_host$/app/search_citrixcloud/search?q=search%20index%3D$result.index$%20TransactionId%3D$result.TransactionId$&earliest=-15m&latest=now|Search by TransactionId>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Excessive Failure to Authenticate Customers",
+    "Description": "Alert is triggered whenever too many 'attempt to authenticate user failed' requests take place in Active Directory. Link to Runbook: https://info.citrite.net/display/CWC/Excessive+Failure+to+Authenticate+Customers",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=ActiveDirectory Message=\"Attempt to authenticate user failed\" | stats count | search count > 180",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster",
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: AD is Showing Excessive Failure to Authenticate Customers!\nSplunk Query: ```index=\"staging_ath_services\" ServiceName=ActiveDirectory Message=\"Attempt to authenticate user failed\"``` \nPlease execute this <https://info.citrite.net/x/w-JLWg|Runbook>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena Alert for Invalid Refresh Token Error.",
+    "Description": "To alert for too many invalid Refresh Token Error. SOP: https://info.citrite.net/display/CWC/Invalid+Refresh+Token+Error+Runbook",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(ServiceName=Identity4 Message=\"Invalid refresh token\") OR (ServiceName=DSAuth-Web2 Message=\"Long lived token not found\") | transaction CallerIp OR ClientId | where eventcount > 200",
+      "Disabled": true,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-status",
+        "Message": "Athena: Too many invalid refresh token errors. SOP: https://info.citrite.net/display/CWC/Invalid+Refresh+Token+Error+Runbook"
+      },
+      "PagerDuty": "",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "CronExpression": "0 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Slow HTTP Requests Detected Runbook",
+    "Description": "Alert is triggered whenever 'Reading the request body timed out due to data arriving too slowly.' is detected in a service. Link to Runbook: https://info.citrite.net/display/CWC/Slow+HTTP+Requests+Detected+Runbook",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Identity4 ExceptionMessage=\"Reading the request body timed out due to data arriving too slowly.*\" | stats count | search count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster",
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: One of the services in Athena is rejecting requests because of the HTTP request data is arriving too slowly\nSplunk Query: ```index=\"staging_ath_services\" \"Reading the request body timed out due to data arriving too slowly.\"``` \nPlease execute this <https://info.citrite.net/display/CWC/Slow+HTTP+Requests+Detected+Runbook|Runbook>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: User Conversion from IT to Athena",
+    "Description": "Shows daily summary of number of user alias converted from IT to Athena",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "\"External User with IT alias was successfully converted to athena\" | stats count as UsersConverted \n\n| appendcols[search index=staging*_ath_services \"Exception while converting login alias from IT to Athena\" \n| stats count as Failed]\n\n| eval alertMessage=\"Number of users converted alias from IT to Athena: \" . UsersConverted . \"Number of failures in the attempt: \" . Failed\n\n| stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "stagingjp_ath_services",
+            "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/staging/AustraliaEast/*/Cluster",
+          "ath/staging/AustraliaSoutheast/*/Cluster",
+          "ath/staging/EastUS/*/Cluster",
+          "ath/staging/WestUS/*/Cluster",
+          "ath/staging/WestEurope/*/Cluster",
+          "ath/staging/NorthEurope/*/Cluster",
+          "ath/stagingJP/JapanEast/*/Cluster",
+          "ath/stagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-status",
+            "Message": ">>> $result.alertMessage$"
+        },
+        "CronExpression": "0 9 * * *",
+        "StartTime": "-1d",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Too many SendGrid Email Validation requests",
+    "Description": "Alert is triggered whenever there are too many SendGrid Email Validation requests to check for a disposable email. Link to Runbook: https://info.citrite.net/display/CWC/Too+many+SendGrid+Email+Validation+requests+for+disposable+email",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Email Message=\"The SendGrid Email Validation request was performed with the disposable result to*\" | stats count | search count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster",
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: Excessive API calls to SendGrid Email Validation API\nSplunk Query: ```index=\"staging_ath_services\" ServiceName=Email Message=\"The SendGrid Email Validation request was performed with the disposable result to*\"``` \nPlease execute this <https://info.citrite.net/display/CWC/Too+many+SendGrid+Email+Validation+requests+for+disposable+email>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: Logins with very large number of groups",
+    "Description": "Shows daily summary of users with very large groups.",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "\"Group claimed from cache.\" | stats count as LargeGroupsHandled\n| appendcols[search index=\"staging*_ath_services\" \"Cached group key * is not found in cache.\" | stats count as CacheMisses]\n| appendcols[search index=\"staging*_ath_services\" \"Creating cache item for Compressed groups failed.\" | stats count as CacheItemNotCeated]\n\n| eval alertMessage=\"Number of successful very large groups logins: \" . LargeGroupsHandled . \"\nNumber of cache keys not found : \" . CacheMisses . \"\nNumber of cache items not created : \" . CacheItemNotCeated\n\n| stats list(alertMessage) as alertMessage",
+        "Disabled": false,
+        "Indices": [
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "stagingjp_ath_services",
+          "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/staging/AustraliaEast/*/Cluster",
+          "ath/staging/AustraliaSoutheast/*/Cluster",
+          "ath/staging/EastUS/*/Cluster",
+          "ath/staging/WestUS/*/Cluster",
+          "ath/staging/WestEurope/*/Cluster",
+          "ath/staging/NorthEurope/*/Cluster",
+          "ath/stagingJP/JapanEast/*/Cluster",
+          "ath/stagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-status",
+            "Message": ">>> $result.alertMessage$"
+        },
+        "CronExpression": "0 9 * * *",
+        "StartTime": "-1d",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "EastUS",
+        "JapanEast",
+        "WestEurope"
+      ]
+    },
+    "Name": "Athena: Autofailover race condition",
+    "Description": "Autofailover race condition has occurred. Need manual validation.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=\"AutoFailover\" \"Conflicting changes were detected when processing the request. This can happen when there are multiple requests trying to update one profile at the same time.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> *STAGING*: Race condition occurred while attempting to perform an autofailover operation.\nSplunk Query: ```index=\"staging_csgops_services\" ServiceName=\"AutoFailover\"  \"Conflicting changes were detected when processing the request. This can happen when there are multiple requests trying to update one profile at the same time.\"``` \nPlease execute this <https://info.citrite.net/display/CWC/Automatic+Failover+Race+Condition>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: Enumerate resources for a user failed",
+    "Description": "Enumerate resources for a user failed due to duplicate entities",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=BrokerService DalDuplicateRecordException: TX$EnumerateResources",
+      "Disabled": false,
+      "Indices": [
+        "staging_xaxd_services",
+        "staging_xaxd_services",
+        "staging_xaxd_services",
+        "staging_xaxd_services",
+        "staging_xaxd_services",
+        "staging_xaxd_services",
+        "stagingjp_xaxd_services",
+        "stagingjp_xaxd_services"
+      ],
+      "Sources": [
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices",
+        "BrokerXmlServices"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: Enumerate resources for a user failed due to duplicate entities. \nSOP: Please use this runbook <https://info.citrite.net/display/CWC/Enumerate+resources+for+a+user+failed+due+to+duplicate+entities>"
+      },
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "AustraliaEast",
+            "AustraliaSoutheast",
+            "EastUS",
+            "WestUS",
+            "WestEurope",
+            "NorthEurope",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "Athena Authorization Code Is Too Long",
+    "Description": "Alerts if the authorization code used is longer than what is configured",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": " IdentityServer4.Validation.TokenRequestValidator \"Message=Authorization code is too long\"",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "stagingjp_ath_services",
+            "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/staging/AustraliaEast/*/Cluster",
+          "ath/staging/AustraliaSoutheast/*/Cluster",
+          "ath/staging/EastUS/*/Cluster",
+          "ath/staging/WestUS/*/Cluster",
+          "ath/staging/WestEurope/*/Cluster",
+          "ath/staging/NorthEurope/*/Cluster",
+          "ath/StagingJP/JapanEast/*/Cluster",
+          "ath/StagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": " *Authorization Code is too Long Error(s)* \nThe authorization code during the token exchange is larger than what was configured and was rejected by IdentityServer4. Please review logs with Athena squad and if necessary start a call: \n<https://citrixsys.splunkcloud.com/en-US/app/search_citrixcloud/search?q=search%20index%3Dstaging_ath_services%20%22Message%3DAuthorization%20code%20is%20too%20long%22&&earliest=-60m%40m&latest=now | US Splunk Logs>\n<https://citrixeu.splunkcloud.com/en-US/app/search_citrixcloud/search?q=search%20index%3Dstaging_ath_services%20%22Message%3DAuthorization%20code%20is%20too%20long%22&=&earliest=-60m%40m&latest=now&sid=1660081276.19293796&display.page.search.mode=smart&dispatch.sample_ratio=1 | EU Splunk Logs>\nSplunk Query: ```index=staging_ath_services IdentityServer4.Validation.TokenRequestValidator \"Message=Authorization code is too long\"```\n\n<https://info.citrite.net/x/xB_eXg|Confluence SOP>"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "AustraliaEast",
+          "AustraliaSoutheast",
+          "EastUS",
+          "WestUS",
+          "WestEurope",
+          "NorthEurope",
+          "JapanEast",
+          "JapanWest"
+        ]
+    },
+    "Name": "Athena: FrontDoorVerification blocking requests",
+    "Description": "Shows if the FrontDoor validation in services fails",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "sourcetype=ath:services \"Failed FrontDoor Verification\" \"EventType=Error\" | stats count by ServiceName | where count > 50 | strcat \"FrontDoorVerification failed for \",ServiceName,\" with update count: \",count message | fields message | mvcombine message delim=\",\" | nomv message | rex mode=sed field=message \"s/,/\\n/g\"",
+        "Disabled": false,
+        "Indices": [
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "staging_ath_services",
+          "stagingjp_ath_services",
+          "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/staging/AustraliaEast/*/Cluster",
+          "ath/staging/AustraliaSoutheast/*/Cluster",
+          "ath/staging/EastUS/*/Cluster",
+          "ath/staging/WestUS/*/Cluster",
+          "ath/staging/WestEurope/*/Cluster",
+          "ath/staging/NorthEurope/*/Cluster",
+          "ath/stagingJP/JapanEast/*/Cluster",
+          "ath/stagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": ": FrontDoorVerification blocking requests >>> $result.message$\nPlease execute this <https://info.citrite.net/x/vUXIXg|runbook>"
+        },
+        "CronExpression": "*/5 * * * *",
+        "StartTime": "-5m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "AustraliaEast",
+          "AustraliaSoutheast",
+          "EastUS",
+          "WestUS",
+          "WestEurope",
+          "NorthEurope"
+        ]
+    },
+    "Name": "Athena: BlockNonFrontDoorTraffic Feature Update fails",
+    "Description": "Shows if the background task to update BlockNonFrontDoorTraffic Feature in Services fail",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ```Get all events in last 5 mins.```\n| where ServiceName in (\"ActiveDirectoryWeb\",  \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\n| stats count by ServiceName, host, source \n| join type=left left=L right=R where L.ServiceName=R.ServiceName L.host=R.host L.source=R.source ```Left join to get all Services:hosts```\n\t[search index=staging_ath_services sourcetype=ath:services \"Feature set to\" earliest=-10m ```Get \"Feature set to\" events to track this heartbeat message```\n\t| where ServiceName in (\"ActiveDirectoryWeb\",  \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\n\t| stats count by ServiceName, host, source]\n| rename R.count AS countPerNode\n| eval finalcount=if(isnull(countPerNode),0,countPerNode)\n| where finalcount < 1\n| rename L.source AS source_l\n| eval sourcesplit=split(source_l,\"/\") ```Split source to get region and env```\n| eval region=mvindex(sourcesplit, 2)\n| eval env=mvindex(sourcesplit, 3)\n| fields * region env\n| join type=left left=X right=Y where X.region=Y.region_l X.env=Y.env ```Get a list of inprogress VMSS upgrade environments & regions```\n\t[search index=production_csgops_services ServiceName=ReleaseWorkflowAgent Product=\"Athena\" Project=VmssImageUpgrade \"Message=Deployment starting.\" earliest=\"-20h\"\n\t| stats latest(EventTime) AS starttime by Layer, Region\n\t| join type=left left=S right=E where S.Layer=E.Layer S.Region=E.Region  \n\t\t[search index=production_csgops_services ServiceName=ReleaseWorkflowAgent Product=\"Athena\" Project=VmssImageUpgrade \"Message=Deployment completed.\" earliest=\"-20h\"\n\t\t| stats latest(EventTime) AS endtime by Layer, Region]\n\t| rename S.starttime AS starttime_l\n\t| rename E.endtime AS endtime_l\n\t| rename S.Layer AS layer_l\n\t| rename S.Region AS region_l\n\t| eval isvalid=if(starttime_l>endtime_l,\"NO\",\"YES\")\n\t| eval env=case(like(layer_l,\"%ProductionInternal%\"),\"AthenaProductionInternal\",like(layer_l,\"%JapanProduction%\"),\"AthenaJapanProduction\",like(layer_l,\"%Production%\"),\"AthenaProduction\",like(layer_l,\"%JapanStaging%\"),\"AthenaStagingJP\",like(layer_l,\"%Staging%\"),\"AthenaStaging\",1=1,\"\") ```Map layer to environment```\n\t| where isvalid=\"NO\" OR isnull(endtime_l)\n\t| fields env region_l]\n| rename Y.region_l AS region_f\n| rename X.env AS environment\n| where isnull(region_f)\n| strcat \"BlockNonFrontDoorTraffic Feature update issue for \",environment,\":\",X.region,\":\",X.L.ServiceName,\" in host \",X.L.host message\n| fields message\n| mvcombine message delim=\",\"\n| nomv message\n| rex mode=sed field=message \"s/,/\\n/g\"",
+      "Disabled": true,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> $result.message$\nPlease execute this <https://info.citrite.net/x/wofyXg|runbook>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-5m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+          "JapanEast",
+          "JapanWest"
+        ]
+    },
+    "Name": "Athena: BlockNonFrontDoorTraffic Feature Update fails",
+    "Description": "Shows if the background task to update BlockNonFrontDoorTraffic Feature in Services fail",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ```Get all events in last 5 mins.```\n| where ServiceName in (\"ActiveDirectoryWeb\",  \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\n| stats count by ServiceName, host, source \n| join type=left left=L right=R where L.ServiceName=R.ServiceName L.host=R.host L.source=R.source ```Left join to get all Services:hosts```\n\t[search index=stagingjp_ath_services sourcetype=ath:services \"Feature set to\" earliest=-10m ```Get \"Feature set to\" events to track this heartbeat message```\n\t| where ServiceName in (\"ActiveDirectoryWeb\",  \"CertAuthWeb\", \"DSAuth-Web2\", \"Identity4\", \"SamlWeb\", \"ShareFileWeb\")\n\t| stats count by ServiceName, host, source]\n| rename R.count AS countPerNode\n| eval finalcount=if(isnull(countPerNode),0,countPerNode)\n| where finalcount < 1\n| rename L.source AS source_l\n| eval sourcesplit=split(source_l,\"/\") ```Split source to get region and env```\n| eval region=mvindex(sourcesplit, 2)\n| eval env=mvindex(sourcesplit, 3)\n| fields * region env\n| join type=left left=X right=Y where X.region=Y.region_l X.env=Y.env ```Get a list of inprogress VMSS upgrade environments & regions```\n\t[search index=production_csgops_services ServiceName=ReleaseWorkflowAgent Product=\"Athena\" Project=VmssImageUpgrade \"Message=Deployment starting.\" earliest=\"-20h\"\n\t| stats latest(EventTime) AS starttime by Layer, Region\n\t| join type=left left=S right=E where S.Layer=E.Layer S.Region=E.Region  \n\t\t[search index=production_csgops_services ServiceName=ReleaseWorkflowAgent Product=\"Athena\" Project=VmssImageUpgrade \"Message=Deployment completed.\" earliest=\"-20h\"\n\t\t| stats latest(EventTime) AS endtime by Layer, Region]\n\t| rename S.starttime AS starttime_l\n\t| rename E.endtime AS endtime_l\n\t| rename S.Layer AS layer_l\n\t| rename S.Region AS region_l\n\t| eval isvalid=if(starttime_l>endtime_l,\"NO\",\"YES\")\n\t| eval env=case(like(layer_l,\"%ProductionInternal%\"),\"AthenaProductionInternal\",like(layer_l,\"%JapanProduction%\"),\"AthenaJapanProduction\",like(layer_l,\"%Production%\"),\"AthenaProduction\",like(layer_l,\"%JapanStaging%\"),\"AthenaStagingJP\",like(layer_l,\"%Staging%\"),\"AthenaStaging\",1=1,\"\") ```Map layer to environment```\n\t| where isvalid=\"NO\" OR isnull(endtime_l)\n\t| fields env region_l]\n| rename Y.region_l AS region_f\n| rename X.env AS environment\n| where isnull(region_f)\n| strcat \"BlockNonFrontDoorTraffic Feature update issue for \",environment,\":\",X.region,\":\",X.L.ServiceName,\" in host \",X.L.host message\n| fields message\n| mvcombine message delim=\",\"\n| nomv message\n| rex mode=sed field=message \"s/,/\\n/g\"",
+      "Disabled": true,
+      "Indices": [
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": ">>> $result.message$\nPlease execute this <https://info.citrite.net/x/wofyXg|runbook>"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-5m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: Customer AuthDomain Cleanup Failed",
+    "Description": "Customer authdomain cleanup failed in customer worker",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=CustomersWorker ProcessMessage | stats count by IdToCleanup | where count > 10",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster",
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: Customer AuthDomain Cleanup Unsuccessful. \nSOP: Please use this runbook <https://info.citrite.net/display/CWC/Customer+AuthDomain+Cleanup+Failed>"
+      },
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Athena: Invalid Domain SID",
+    "Description": "validate CSP customer cross tenant login",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ath:services ServiceName IN (Okta, Google, Saml, AzureAD, Cip) \"ValidSids=False\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster",
+        "ath/stagingJP/JapanEast/*/Cluster",
+        "ath/stagingJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: Invalid Domain SID found. \nSOP: Please use this runbook <https://info.citrite.net/display/CWC/Invalid+Domain+SID+found>"
+      },
+      "CronExpression": "0 */4 * * *",
+      "StartTime": "-4h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope"
+      ]
+    },
+    "Name": "Athena employee login Okta errors",
+    "Description": "Okta authentication errors during employee login",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Identity4 RequestUri=\"https://accounts.cloudburrito.com/core/login-okta\" (Message=\"Error from RemoteAuthentication:*\" OR citritelogin) | transaction TransactionId maxspan=60s | search Message=\"Error from RemoteAuthentication:*\" citritelogin | stats count | where count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services"
+      ],
+      "Sources": [
+        "ath/staging/AustraliaEast/*/Cluster",
+        "ath/staging/AustraliaSoutheast/*/Cluster",
+        "ath/staging/EastUS/*/Cluster",
+        "ath/staging/WestUS/*/Cluster",
+        "ath/staging/WestEurope/*/Cluster",
+        "ath/staging/NorthEurope/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "> *STAGING*: Okta authentication errors during employee login. Source: $result.source$\nPlease execute this: <https://info.citrite.net/x/m7NVXw>"
+      },
+      "CronExpression": "0 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "AustraliaEast",
+        "AustraliaSoutheast",
+        "EastUS",
+        "WestUS",
+        "WestEurope",
+        "NorthEurope",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Csp Violation detected",
+    "Description": "Athena - Staging: This alert is triggered when a csp violation is detected. Runbook: https://info.citrite.net/display/CWC/Csp+Violation+Error+Alerts+Staging+or+Production ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" EventType=Error Message=\"*Csp Violation detected*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/AustraliaEast/*/Cluster",
+        "ath/Staging/AustraliaSoutheast/*/Cluster",
+        "ath/Staging/EastUS/*/Cluster",
+        "ath/Staging/WestUS/*/Cluster",
+        "ath/Staging/WestEurope/*/Cluster",
+        "ath/Staging/NorthEurope/*/Cluster",
+        "ath/StagingJP/JapanEast/*/Cluster",
+        "ath/StagingJP/JapanWest/*/Cluster"
+      ],
+      "PagerDuty": "",
+      "SlackChannel": {
+        "Channel": "#athena-csp-alerts",
+        "Message": ">>> *Athena - Staging:*\r\n A CSP violation is detected. Check splunk to investigate what the violation is about. Runbook: https://info.citrite.net/display/CWC/Csp+Violation+Error+Alerts+Staging+or+Production (For japan use stagingjp index) \r\n```index=staging_ath_services sourcetype=\"ath:services\" EventType=Error Message=\"*Csp Violation detected*\"```"
+      },
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "CronExpression": "0 * * * *",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Rotation Plan detected",
+    "Description": "Alert is triggered when a rotation plan is detected.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Rotation plan created.\" OR \"Rotation plan updated.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* New Rotation Plan Detected * \n *ApplicationName*: $result.ApplicationName$ \n *DiscoveryTime*: $result.DiscoveryTime$ \n *AgreementTime*: $result.AgreementTime$ \n *AdvertisementTime*: $result.AdvertisementTime$ \n *ActivationTime*: $result.ActivationTime$ \n *CompletionTime*: $result.CompletionTime$ \n *NewCertThumbprint*: $result.NewCertThumbprint$ \n *OldCertThumbprint*: $result.OldCertThumbprint$"
+      },
+      "CronExpression": "40 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Rotation Plan invalid",
+    "Description": "Alert is triggered when a rotation plan is not realistic.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"The rotation plan is not realistic.\" OR \"The rotation plan enters Activation phase before certificate is active.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Invalid Rotation Plan Detected * \n The team must validate the content of the detected plan. <https://info.citrite.net/display/CWC/Invalid+Rotation+Plan>."
+      },
+      "CronExpression": "41 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Rotation Plan advertisement phase",
+    "Description": "Alert is triggered when a rotation plan has entered advertisement phase.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Rotation plan has entered in advertisement phase.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Rotation Plan reached advertisement phase. * \n Customers must be notified about the rotation. <https://info.citrite.net/display/CWC/Notify+Customers+for+Saml+Signing+certificate+Rotation>."
+      },
+      "CronExpression": "42 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena certificate not found after agreement",
+    "Description": "Alert is triggered when a certificate is not found on a VM and agreement phase has passed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Certificate not found on VM and agreement passed.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Athena certificate not found on VM * \n <https://info.citrite.net/display/CWC/KeyManagement+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "43 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena certificate not found after agreement and advertisement",
+    "Description": "Alert is triggered when a certificate is not found on a VM and advertisement phase has passed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=KeyManagement \"Certificate not found on VM and advertisement passed.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Athena certificate not found on VM * \n <https://info.citrite.net/display/CWC/KeyManagement+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "45 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena: SamlWeb unable to retrieve a certificate rotation plan.",
+    "Description": "Alert is triggered if the SamlWeb service has failures while retrieving the certificate rotation plan.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=SamlWeb EventType=Error \"Error retrieving rotation plan.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* Failures to retrieve a Certificate Rotation Plan for SamlWeb. * \n <https://info.citrite.net/display/CWC/Failures+retrieving+Certificate+Rotation+Plans>."
+      },
+      "CronExpression": "44 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "SamlWeb cannot find the certificate to use for signing",
+    "Description": "Alert is triggered when SamlWeb cannot find a certificate in the local store that matches the thumbprint in the active phase of the current rotation plan.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=SamlWeb SamlCertificateException SamlException \"InnerExceptionMessage=The X.509 certificate with find type FindByThumbprint and value * could not be found in the LocalMachine My X.509 store.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* SamlWeb cannot find the certificate to use for signing. * \n This will create customer downtime, execute <https://info.citrite.net/display/CWC/SamlWeb+failing+to+access+the+signing+certificate>."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "AustraliaEast",
+            "AustraliaSoutheast",
+            "EastUS",
+            "WestUS",
+            "WestEurope",
+            "NorthEurope",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "Athena Staging - Features Circuit Breaker Opened",
+    "Description": "Detects if Features Circuit Breaker Opened for a specified Node",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "sourcetype=ath:services \"Features Circuit Breaker Opened.\" \"EventType=Information\"",
+        "Disabled": false,
+        "Indices": [
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "staging_ath_services",
+            "stagingjp_ath_services",
+            "stagingjp_ath_services"
+        ],
+        "Sources": [
+          "ath/Staging/AustraliaEast/*/Cluster",
+          "ath/Staging/AustraliaSoutheast/*/Cluster",
+          "ath/Staging/EastUS/*/Cluster",
+          "ath/Staging/WestUS/*/Cluster",
+          "ath/Staging/WestEurope/*/Cluster",
+          "ath/Staging/NorthEurope/*/Cluster",
+          "ath/StagingJP/JapanEast/*/Cluster",
+          "ath/StagingJP/JapanWest/*/Cluster"
+        ],
+        "SlackChannel": {
+            "Channel": "#athena-alerts-staging",
+            "Message": "*Features Circuit Breaker Opened*\n\n> *ServiceName*: $result.ServiceName$\n\nPlease execute this Runbook: <https://info.citrite.net/x/KzBiYg|runbook>"
+        },
+        "CronExpression": "*/30 * * * *",
+        "StartTime": "-30m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena: Too many email notifications for updates in principals",
+    "Description": "Alert is triggered when too many email notifications were sent for updates in principals accounts.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=\"ath:services\" Message=\"*Email notification succeeded for change in principal account*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "*Too many email notifications were sent for updates in principals accounts.* \n <https://info.citrite.net/display/CWC/Too+Many+Notification+Emails+for+updates+in+principals+accounts>."
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/710ee052b75c480ac00421cc14d4fa3d/enqueue",
+      "CronExpression": "11 */4 * * *",
+      "StartTime": "-240m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "300"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena: UI files are missing - Identity6",
+    "Description": "Alert is triggered when UI files are missing from an Identity6 node, after release",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "EventType=Error \"Unable to find the specified file.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_ath_services",
+        "staging_ath_services",
+        "stagingjp_ath_services"
+      ],
+      "Sources": [
+        "ath/Staging/*/Cluster",
+        "ath/Staging/*/Cluster",
+        "ath/StagingJP/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts-staging",
+        "Message": "* UI files are missing from an Identity6 node * \nPlease execute this Runbook: <https://info.citrite.net/display/CWC/UI+files+are+missing+in+Identity6|runbook>"
+      },
+      "CronExpression": "*/21 * * * *",
+      "StartTime": "-5m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "100"
+    }
+  }
+]

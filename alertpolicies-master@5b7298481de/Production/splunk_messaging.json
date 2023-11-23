@@ -1,0 +1,454 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging Exception Registering Connections",
+    "Description": "Messaging exceptions detected while registering connections. Prepare for a Geo failover to restore normal baseline performance COUT-2016. \n\nSOP: https://info.citrite.net/x/uAqEZ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=Messaging \"Exception while registering connection\"",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "devin.michaels@citrix.com",
+        "gaurav.gireesh@citrix.com",
+        "jaganmohan.m@citrix.com",
+        "james.kilts@citrix.com",
+        "jorge.cifuentes@citrix.com",
+        "michael.sun@citrix.com",
+        "sudheer.bangera@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "Messaging Timeouts exceeded normal levels. Start a warm call to monitor and prepare for failover. SOP: https://info.citrite.net/x/uAqEZ \n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/3435731506d3400bd0524e16fe2d814d/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Redis Client Connection Issues",
+    "Description": "Redis connectivity issues that have proven to cause issues with messaging service. SOP: https://info.citrite.net/display/CWC/Redis+Connection+Exception",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "StackExchange.Redis.RedisConnectionException | bucket _time span=30s | stats count by _time,ServiceName | where count > 50 | eventstats dc(_time) as RepeatationCount by ServiceName | where RepeatationCount > 1 | fields - RepeatationCount",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "bradley.rowe@citrix.com",
+        "thomas.hammond@citrix.com",
+        "amit.shah@citrix.com",
+        "xiaojie.yu@citrix.com",
+        "leandro.taset@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "*Prodution - StackExchange.Redis.RedisConnectionException*\n>*Time* : $result.minute$\n>*Source* : $result.source$ Redis connectivity issues that have proven to cause issues with messaging service. SOP: https://info.citrite.net/display/CWC/Redis+Connection+Exception"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging Redis Stale Entries",
+    "Description": "Redis creates stale entries in REDIS cache.\n\nWorkAround:\nIf we get this alert a Devops enginner should be able to identify which messaging instance the  connection ID resides and only restart that particular instance. If in case multiple connectionID's are stale on multiple messaging instances then do not restart all the impacted instances at one shot, instead restart one by one.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"transitioned into an invalid state\"\n| stats range(_time) as duration by ConnectionId, CustomerId\n| where duration > 300",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging Throttling (429)",
+    "Description": "Messaging error 429 throttling alert",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "Error \n| spath input=messageJSON \n| search StatusCode!=OK AND StatusCode!=SwitchingProtocols \n| bin _time span=1m \n| stats count by _time, source\n| streamstats window=19 avg(\"count\") as \n   avg stdev(\"count\") as stdev count\n| eval upperBound=avg+2*stdev\n| eval isOutlier=if('count' > upperBound, 1, 0) \n| fields \"source\", \"_time\", \"count\", \"upperBound\", \"isOutlier\", \"count\"\n| sort - _time\n| streamstats window=2 avg(isOutlier) as Ovalue\n| search count=19 AND Ovalue=1",
+      "Disabled": true,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging Instance in bad state (Error rate percentage above normal levels)",
+    "Description": "Please refer to the SOP in https://info.citrite.net/display/CWC/Alert+SOP+-+Messaging+Timeout",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Messaging LoggingType=Performance \n| bin _time span=5m \n| rex field=_raw \"\"StatusCode\":\"(?<apiStatus>[a-zA-Z0-9:/\\.]+)\"\" \n| stats count(eval(apiStatus==\"RequestTimeout\")) as RequestTimeoutCount,Count as TotalCount, by_time,source,RoleId \n| eval CriticalErrorPercentage=20 \n| where ((RequestTimeoutCount)/(TotalCount)*100) > CriticalErrorPercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "bradley.rowe@citrix.com",
+        "amit.shah@citrix.com",
+        "xiaojie.yu@citrix.com",
+        "leandro.taset@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "*PRODUCTION - \"Messaging Instance in bad state (Error rate percentage above normal levels)\"\n>*Time* : $result._Time$\n>*Source* : $result.source$\n>*Fail Count*: $result.count$\n>*Bad Instance* : $result.RoleId"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "MessagingWorker not working in ASF",
+    "Description": "Please go to the service fabric explorer and look for the application and check to see if the application is up. Also notify the developer on it to see if something is wrong so that they can also look at Splunk for it.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=MessagingWorker\n| stats count by source",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "39 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging: Number of connections exceeded 90%",
+    "Description": "The number of connections in the listed instances is reaching out the limit.\n\nFollow the following SOP to troubleshoot: https://info.citrite.net/pages/viewpage.action?pageId=1289493162",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"ConnectionManager.ProcessWebSocketAsync\"\n| rex \"ConnectionCount\\=(?<ConnectionCount>\\d+) MaxConnectionCount\\=(?<MaxConnectionCount>\\d+)\\.\"\n| where ConnectionCount >= (MaxConnectionCount * 0.9)\n| stats count by source, RoleId, host",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging: Timeout waiting for response",
+    "Description": "Messaging Timeout waiting for response.\n\n Follow the following SOP to troubleshoot: https://info.citrite.net/x/N4vfX",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Messaging \"Timeout waiting for response\" | stats count by CustomerId",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/Production/JapanEast/*/Cluster",
+        "cc/Production/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alerts",
+        "Message": "Messaging Timeout waiting for response.\n\n Follow the following SOP to troubleshoot: https://info.citrite.net/x/N4vfX"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "1500"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Potential Failover Scenario For Messaging Service",
+    "Description": "Potential Failover Scenario For Messaging Service; see Splunk results for more information.\n\nSOP: https://info.citrite.net/x/Gd7qY",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Messaging \n EventType=Performance OR EventType=ApiPerformance \n | eval RequestUri = json_extract(Message, \"Uri\") \n | where NOT LIKE(RequestUri, \"%-direct-%\") AND NOT LIKE(RequestUri, \"%-asfdirect-%\") \n | rex field=source \".+\\/(?<LoggingLayer>.+)\\/(?<LoggingRegion>.+)\\/(?<release>.+)\\/\" \n | rex field=RequestUri \"\\/(?<RequestService>\\w+)-(?<RequestRegion>\\w+)-(?<RequestLayer>\\w+)-\" \n | where lower(LoggingRegion) != lower(RequestRegion) \n | stats count by ServiceName, source, LoggingRegion, RequestRegion \n | where count > 100",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "PRODUCTION: Potential failover scenario for $result.ServiceName$ in $result.RequestRegion$!\n\nThe service in $result.LoggingRegion$ handled $result.count$ requests originally meant for $result.RequestRegion$\n\nSee all results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "6-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Messaging health check failure",
+    "Description": "Messaging health check failures were found. Check the dependency status by search ServiceName=Messaging CheckHealthAsync ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Messaging \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "devin.michaels@citrix.com",
+        "gaurav.gireesh@citrix.com",
+        "jaganmohan.m@citrix.com",
+        "james.kilts@citrix.com",
+        "jorge.cifuentes@citrix.com",
+        "michael.sun@citrix.com",
+        "sowmya.nittala@citrix.com",
+        "sudheer.bangera@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "PRODUCTION: Messaging is experiencing a high count of health check failures in $result.source$, please be on alert for possible failover of Messaging service.\n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast"
+      ]
+    },
+    "Name": "Staging - Abnormally low onboarding completions",
+    "Description": "Alert on abnormally low onboarding completions per 48 hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Core (CallerServiceName=OnboardingApi OR CallerServiceName=Cws) AND \"Message=OnboardingManager.CompleteOnboardingInternal\" ",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*"
+      ],
+      "Emails": [
+        "cc-apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "Staging - No onboarding completed in last 48 hours. \n>>>For action details, please refer to: <https://info.citrite.net/display/CWC/Abnormal+Onboarding+Completions+Alert|SOP>"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/4da1f4c9b7d04a04c0dddfc8227b7d2b/enqueue",
+      "CronExpression": "0 10 * * *",
+      "StartTime": "-48h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Staging (Japan) - Abnormally low onboarding completions",
+    "Description": "Alert on abnormally low onboarding completions in last seven days",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Core (CallerServiceName=OnboardingApi OR CallerServiceName=Cws) AND \"Message=OnboardingManager.CompleteOnboardingInternal\" ",
+      "Disabled": false,
+      "Indices": [
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "cc-apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "Staging (Japan) - No onboarding completed in last seven days. \n>>>For action details, please refer to: <https://info.citrite.net/display/CWC/Abnormal+Onboarding+Completions+Alert|SOP>"
+      },
+      "PagerDuty": "https://events.pagerduty.com/integration/4da1f4c9b7d04a04c0dddfc8227b7d2b/enqueue",
+      "CronExpression": "0 10 * * *",
+      "StartTime": "-7d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  }  
+]

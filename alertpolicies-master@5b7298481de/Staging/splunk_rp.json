@@ -1,0 +1,42 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CredentialWallet service for XM",
+    "Description": "Splunk Alerts for XM calls to CredentialWallet. Link to SOP - https://info.citrite.net/display/CWC/CredentialWallet+service+for+XM",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=CredentialWallet CallerServiceName=\"xms\" EventType=Error NOT (\"(409) Conflict\" OR \"Please see the HTTP response returned by the 'Response' property of this exception for details.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "uce-sre-cem@citrix.com"
+      ],
+      "CronExpression": "13 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

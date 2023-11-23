@@ -1,0 +1,494 @@
+[
+    {
+        "NameMetadata": {
+            "Squad": "Athena_Hercules",
+            "Service": "Directory",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate For US Customer (s4fkcvgwv9ci)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-directory-%' WHERE request.uri LIKE '/s4fkcvgwv9ci/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For EU Customer (nidi93yk6mu1)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-directory-%' WHERE request.uri LIKE '/nidi93yk6mu1/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For APS Customer (4corhg4781jt)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-directory-%' WHERE request.uri LIKE '/4corhg4781jt/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwssj-directory-japaneast' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwssj-directory-japanwest' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For US Customer (partnersheal)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-directory-%' WHERE request.uri LIKE '/partnersheal/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For EU Customer (adnoc7)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-directory-%' WHERE request.uri LIKE '/adnoc7/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For APS Customer (nswdep993148)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-directory-%' WHERE request.uri LIKE '/nswdep993148/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwspj-directory-japaneast' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwspj-directory-japanwest' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Athena_Hercules",
+            "Service": "Directory",
+            "Issue": "SpecificCustomerResponseTime",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For US Customer (s4fkcvgwv9ci)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-directory-%' AND request.uri LIKE '/s4fkcvgwv9ci/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For EU Customer (nidi93yk6mu1)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-directory-%' AND request.uri LIKE '/nidi93yk6mu1/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For APS Customer (4corhg4781jt)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-directory-%' AND request.uri LIKE '/4corhg4781jt/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ctxwssj-directory-japaneast' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ctxwssj-directory-japanwest' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For US Customer (partnersheal)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-directory-%' AND request.uri LIKE '/partnersheal/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For EU Customer (adnoc7)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-directory-%' AND request.uri LIKE '/adnoc7/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For APS Customer (nswdep993148)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-directory-%' AND request.uri LIKE '/nswdep993148/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwspj-directory-japaneast' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwspj-directory-japanwest' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Athena_Hercules",
+            "Service": "Identity",
+            "Issue": "SpecificCustomerErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate For US Customer (s4fkcvgwv9ci)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-identity-%' WHERE request.uri LIKE '/s4fkcvgwv9ci/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For EU Customer (6be3z8rjrfra)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-identity-%' WHERE request.uri LIKE '/6be3z8rjrfra/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For APS Customer (maupltuzeipf)",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwss-identity-%' WHERE request.uri LIKE '/maupltuzeipf/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwssj-identity-japaneast' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwssj-identity-japanwest' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For US Customer (rogersshared)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-identity-%' WHERE request.uri LIKE '/rogersshared/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For EU Customer (adnoc7)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-identity-%' WHERE request.uri LIKE '/adnoc7/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For APS Customer (phjwa2onr6f0)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-identity-%' WHERE request.uri LIKE '/phjwa2onr6f0/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwspj-identity-japaneast' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwspj-identity-japanwest' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Athena_Hercules",
+            "Service": "Identity",
+            "Issue": "SpecificCustomerResponseTime",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For US Customer (s4fkcvgwv9ci)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-identity-%' AND request.uri LIKE '/s4fkcvgwv9ci/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For EU Customer (6be3z8rjrfra)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-identity-%' AND request.uri LIKE '/6be3z8rjrfra/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For APS Customer (maupltuzeipf)",
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwss-identity-%' AND request.uri LIKE '/maupltuzeipf/%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "1800",
+                    "OpenViolationOnExpiration": false,
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwssj-identity-japaneast' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwssj-identity-japanwest' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For US Customer (rogersshared)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-identity-%' AND request.uri LIKE '/rogersshared/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For EU Customer (adnoc7)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-identity-%' AND request.uri LIKE '/adnoc7/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For APS Customer (phjwa2onr6f0)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-identity-%' AND request.uri LIKE '/phjwa2onr6f0/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanEast (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwspj-identity-japaneast' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For JapanWest (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwspj-identity-japanwest' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    }
+]

@@ -1,0 +1,228 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Identity health check failure",
+    "Description": "Identity health check failures were found. Check the dependency status by search ServiceName=Identity CheckHealthAsync ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Identity \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "thomas.hammond@citrix.com",
+        "kyriakos.kaperonis@citrix.com",
+        "lampros.pappas@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*Production - CC Identity Health Check Failures*\n>*Time* : $result.minute$\n>*Source* : $result.source$\n>*Runbook* : https://info.citrite.net/x/zhaUWw"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "10"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Identity throttled requests per customer exceeded limit",
+    "Description": "Identity is throttling too many requests for a specific customer. Runbook: https://info.citrite.net/x/AefQWw",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=Identity Message=\"Current pending_request=*\" | bucket span=5m _time | stats count by _time CustomerId | where count > 50 | xyseries _time,CustomerId,count",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*/Cluster",
+        "cc/Production/WestEurope/*/Cluster",
+        "cc/Production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "konstantinos.voulgaris@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*Production - CC Identity throttled requests per customer exceeded limit*\n>*Time* : $result._time$\n>*Runbook*: https://info.citrite.net/x/AefQWw"
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "IdentityMonitorWorker not working in ASF",
+    "Description": "Identity Monitorworker not working in ASF",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=IdentityMonitorWorker\n| stats count by source,index",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/production/EastUS/*/Cluster",
+        "cc/production/WestEurope/*/Cluster",
+        "cc/production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*PRODUCTION* - IdentityMonitorWorker stopped logging to splunk. Worker may be down in $result.index$ \nLink to SOP: https://info.citrite.net/display/CWC/CC+IdentityMonitorWorker+Alert"
+      },
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "35 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "IdentityMonitorWorker is not receiving any messages",
+    "Description": "IdentityMonitorWorker is not receiving any messages",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=IdentityMonitorWorker \"Message=QueueMessageHandler:DoHello\" | eval fields=split(source, \"/\") | eval RegionName=mvindex(fields,2) | stats count by index,RegionName",
+      "Disabled": true,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/production/EastUS/*/Cluster",
+        "cc/production/WestEurope/*/Cluster",
+        "cc/production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*PRODUCTION* - IdentityMonitorWorker is not receiving any messages. Worker may be down in $result.index$ \nLink to SOP: https://info.citrite.net/display/CWC/CC+IdentityMonitorWorker+Alert"
+      },
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "0 3 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "IdentityMonitorWorker failed to process message",
+    "Description": "All re-attempts to process a message by IdentityMonitorWorker failed.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=IdentityMonitorWorker Message=\"IdentityMonitor * message moved to dead letter queue.\" \n| stats count by source,index",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/production/EastUS/*/Cluster",
+        "cc/production/WestEurope/*/Cluster",
+        "cc/production/AustraliaEast/*/Cluster",
+        "cc/ProductionJP/JapanEast/*/Cluster",
+        "cc/ProductionJP/JapanWest/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#athena-alerts",
+        "Message": "*Production* - IdentityMonitorWorker failed to process message in $result.source$. \nLink to SOP: https://info.citrite.net/x/oGSKXQ"
+      },
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "0 4 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  }
+]

@@ -1,0 +1,60 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "ResourceLocationManagement health check failure",
+    "Description": "ResourceLocationManagement health checks failed to contact a critical dependency. Check the dependency status by searching for ServiceName=ResourceLocationManagement CheckHealthAsync ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=ResourceLocationManagement \n | spath input=Message path=RequiredService \n | search RequiredService=true \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "gabor.igloi@citrix.com",
+        "nathanael.davison@citrix.com",
+        "elias.calocane@citrix.com",
+        "stefano.panella@citrix.com",
+        "aaron.robson@citrix.com",
+        "min.li1@citrix.com",
+        "qi.wang@citrix.com",
+        "xiaodong.yang1@citrix.com",
+        "qiuye.she@citrix.com",
+        "kacper.jurczak@citrix.com",
+        "david.williams@citrix.com",
+        "edwin.fajardo@citrix.com",
+        "stuart.mathews@citrix.com",
+        "xiaoliang.zhang@citrix.com",
+        "syed.ahmad@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-asgard-alerts",
+        "Message": "*Production - ResourceLocationManagement Health Check Failures: Cannot Contact Critical Dependency*\n>*Time* : $result.minute$\n>*Source* : $result.source$"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  }
+]

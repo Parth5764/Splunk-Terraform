@@ -1,0 +1,462 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Topic ChangeEvents High Message Count",
+    "Description": "Topic ChangeEvents High Message Count",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureMetricsMonitorWorker Message=*\n| regex Message=\"TopicName=(.+), Subscription=(.+), MessageCount=(\\d*?.{0,1}\\d{1,15}), LastAccess=(\\d*?.{0,1}\\d{1,15}) days ago\"\n| rex field=Message \"TopicName=(?<topicName>.+), Subscription=(?<subscription>.+), MessageCount=(?<messageCount>\\d*?.{0,1}\\d{1,15}), LastAccess=(?<lastAccessDaysAgo>\\d*?.{0,1}\\d{1,15})\"\n| where topicName=\"changeevents\" AND messageCount > 2000\n| table source,topicName,subscription,messageCount,lastAccessDaysAgo\n| sort by messageCount DESC",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "peter.long@citrix.com"
+      ],
+      "CronExpression": "59 */3 * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "ASB Subscription Message Count Unexpectedly Increase",
+    "Description": "Azure Service Bus Topic Subscription Message Count unexpectedly increase",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureMetricsMonitorWorker Message=*\n| regex Message=\"TopicName=(.+), Subscription=(.+), MessageCount=(\\d*?.{0,1}\\d{1,15}), LastAccess=(\\d*?.{0,1}\\d{1,15}) days ago\"\n| rex field=Message \"Namespace=(?<namespace>.+), TopicName=(?<topicName>.+), Subscription=(?<subscription>.+), MessageCount=(?<messageCount>\\d*?.{0,1}\\d{1,15}), LastAccess=(?<lastAccessDaysAgo>\\d*?.{0,1}\\d{1,15})\"\n| where topicName=\"changeevents\" \n| table _time, namespace, Subscription, MessageCount, LastAccess, source\n| eval timeH=strftime(_time, \"%m-%d %H:%M\") \n| stats sum(MessageCount) as TotalCount by namespace, timeH, source\n| streamstats window=19 avg(\"TotalCount\") as \n   avg stdev(\"TotalCount\") as stdev count by namespace\n| eval upperBound=avg+2*stdev\n| eval isOutlier=if('count' > upperBound, 1, 0) \n| fields \"_time\", \"source\", \"count\", \"upperBound\", \"isOutlier\", \"count\"\n| sort - _time\n| streamstats window=2 avg(isOutlier) as Ovalue\n| search count=19 AND Ovalue=1",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "36 * * * *",
+      "StartTime": "-20h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "ASB Maximum Topic Size Reached",
+    "Description": "This is signaling that one of the Topics has filled up and can no longer receive messages. This could be caused by one or more subscriptions filling up. I.e., the subscriber isn't picking those messages.\n\nPlease review the following SOP to resolve the issue: https://info.citrite.net/display/CWC/Alert+SOP+-+Topic+Size+Reached",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"The maximum entity size has been reached or exceeded\" NOT (\"RoleName=AgentLogger\" OR \"ServiceName=AgentLogger\" ) NOT \"SourceCode=CaseServiceClient\" | stats count",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "CustomTrigger": "search count > 0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Service Bus creation is failing",
+    "Description": "Service Bus creation is failing, please refer to the SOP https://info.citrite.net/display/CWC/404+is+Received+When+Attempting+to+Create+a+Service+Bus",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Level=WARN\" AND \"Creation of service bus namespace \" AND \" for customer \" AND \" on subscription \" AND \" failed after 5 retries.\"",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Queue Size Exceeds 80% of Capacity",
+    "Description": "Queue Size Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Queue usage report for\"\n| rex field=_raw \"Azure Service Bus Queue usage report for 'sb://(?<SBLink>.+)/'\\. Queue: '(?<QueuePath>.+)'\\. Queue message count: (?<QueueMessageCount>.+)\\. Active message count: (?<QueueActiveMessageCount>.+)\\. Dead letter message count: (?<QueueDLMessageCount>.+)\\. Scheduled message count: (?<QueueScheduledMessageCount>.+)\\. Transfer message count: (?<QueueTransferMessageCount>.+)\\. Transfer dead letter message count: (?<QueueTransferDLMessageCount>.+)\\. Queue size in megabytes: (?<QueueSizeInMegabytes>.+)\\. Queue status: '(?<QueueStatus>.+)'\\. Queue availability status: '(?<QueueAvailabilityStatus>.+)'\\. Queue max size in megabytes: (?<QueueMaxSizeInMegabytes>.+)\\. \"\n| eval QueueUsagePercentage = QueueSizeInMegabytes/QueueMaxSizeInMegabytes\n| where QueueUsagePercentage > 0.80\n| dedup SBLink, QueuePath\n| table RegionName, SBLink, QueuePath, QueueSizeInMegabytes, QueueMaxSizeInMegabytes, QueueUsagePercentage, _time\n| sort - QueueUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Queue Size Exceeds 95% of Capacity",
+    "Description": "Queue Size Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Queue usage report for\"\n| rex field=_raw \"Azure Service Bus Queue usage report for 'sb://(?<SBLink>.+)/'\\. Queue: '(?<QueuePath>.+)'\\. Queue message count: (?<QueueMessageCount>.+)\\. Active message count: (?<QueueActiveMessageCount>.+)\\. Dead letter message count: (?<QueueDLMessageCount>.+)\\. Scheduled message count: (?<QueueScheduledMessageCount>.+)\\. Transfer message count: (?<QueueTransferMessageCount>.+)\\. Transfer dead letter message count: (?<QueueTransferDLMessageCount>.+)\\. Queue size in megabytes: (?<QueueSizeInMegabytes>.+)\\. Queue status: '(?<QueueStatus>.+)'\\. Queue availability status: '(?<QueueAvailabilityStatus>.+)'\\. Queue max size in megabytes: (?<QueueMaxSizeInMegabytes>.+)\\. \"\n| eval QueueUsagePercentage = QueueSizeInMegabytes/QueueMaxSizeInMegabytes\n| where QueueUsagePercentage > 0.95\n| dedup SBLink, QueuePath\n| table RegionName, SBLink, QueuePath, QueueSizeInMegabytes, QueueMaxSizeInMegabytes, QueueUsagePercentage, _time\n| sort - QueueUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Topic Size Exceeds 80% of Capacity",
+    "Description": "Topic Size Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSizeInMegabytes/TopicMaxSizeInMegabytes\n| where TopicUsagePercentage > 0.80\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSizeInMegabytes, TopicMaxSizeInMegabytes, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Topic Size Exceeds 95% of Capacity",
+    "Description": "Topic Size Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSizeInMegabytes/TopicMaxSizeInMegabytes\n| where TopicUsagePercentage > 0.95\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSizeInMegabytes, TopicMaxSizeInMegabytes, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Number of Subscriptions in Topic Exceeds 80% of Capacity",
+    "Description": "Number of Subscriptions in Topic Exceeds 80% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSubscriptionCount/2000\n| where TopicUsagePercentage > 0.80\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSubscriptionCount, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },  
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Number of Subscriptions in Topic Exceeds 95% of Capacity",
+    "Description": "Number of Subscriptions in Topic Exceeds 95% of Capacity. Runbook: https://info.citrite.net/x/T7zmWQ",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker \"Azure Service Bus Topic usage report for\"\n| rex field=_raw \"Azure Service Bus Topic usage report for 'sb:\\/\\/(?<SBLink>.+)\\/'\\. Topic: '(?<TopicPath>.+)'\\. Topic size in megabytes: (?<TopicSizeInMegabytes>.+)\\. Topic subscription count: (?<TopicSubscriptionCount>.+)\\. Active message count: (?<TopicActiveMessageCount>.+)\\. Dead letter message count: (?<TopicDLMessageCount>.+)\\. Scheduled message count: (?<TopicScheduledMessageCount>.+)\\. Transfer message count: (?<TopicTransferMessageCount>.+)\\. Transfer dead letter message count: (?<TopicTransferDLMessageCount>.+)\\. Topic status: '(?<TopicStatus>.+)'\\. Topic availability status: '(?<TopicAvailabilityStatus>.+)'\\. Topic max size in megabytes: (?<TopicMaxSizeInMegabytes>.+)\\. \"\n| eval TopicUsagePercentage = TopicSubscriptionCount/2000\n| where TopicUsagePercentage > 0.95\n| dedup SBLink, TopicPath\n| table RegionName, SBLink, TopicPath, TopicSubscriptionCount, TopicUsagePercentage, _time\n| sort - TopicUsagePercentage",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Administrator queue message count exceeds limitation",
+    "Description": "administratoraddevents queue message count exceeds the limitation Runbook: https://info.citrite.net/x/A9dVXw",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AzureServiceBusMonitorWorker administrators administratoraddevents | rex \"Active message count: (?<ActiveMessageCount>\\d+).\" | where ActiveMessageCount > 100 | table EnvironmentName, RegionName",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services",
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Production/EastUS/ProductionEastUS/Cluster",
+        "ccops/Production/WestEurope/ProductionWestEurope/Cluster",
+        "ccops/Production/AustraliaEast/ProductionAustraliaEast/Cluster",
+        "ccops/Production/JapanEast/ProductionJapanEast/Cluster",
+        "ccops/Production/JapanWest/ProductionJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "yaqi.zhang@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-alerts",
+        "Message": "> *PRODUCTION*: Administratoraddevents queue message count exceeds the limitation!\nSplunk Query: ```HostedRoleName=AzureServiceBusMonitorWorker administrators administratoraddevents | rex \"Active message count: (?<ActiveMessageCount>\\d+).\" | where ActiveMessageCount > 100 | table EnvironmentName, RegionName``` \nRun Book: <https://info.citrite.net/x/A9dVXw>"
+      },
+      "CronExpression": "55 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue"
+    }
+  }
+]

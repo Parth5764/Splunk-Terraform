@@ -1,0 +1,34 @@
+﻿[
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Potential Failover Scenario For Cronus Services",
+    "Description": "For a list of services, detect when services in a region have been handling requests meant to reach a different region, indicating a potential failover scenario.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName IN (Ticketing, Trust, CredentialWallet, DelegatedAdministration, PolicySets, ServicePrincipals) \n EventType=Performance OR EventType=ApiPerformance \n | eval RequestUri = json_extract(Message, \"Uri\") \n | where NOT LIKE(RequestUri, \"%-direct-%\") AND NOT LIKE(RequestUri, \"%-asfdirect-%\") \n | rex field=source \".+\\/(?<LoggingLayer>.+)\\/(?<LoggingRegion>.+)\\/(?<release>.+)\\/\" \n | rex field=RequestUri \"\\/(?<RequestService>\\w+)-(?<RequestRegion>\\w+)-(?<RequestLayer>\\w+)-\" \n | where lower(LoggingRegion) != lower(RequestRegion) \n | stats count by ServiceName, source, LoggingRegion, RequestRegion \n | where count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_cc_services",
+        "staginggov_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingGov/USGovTexas/Staging/Cluster",
+        "cc/StagingGov/USGovVirginia/Staging/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-cronus-staging-alerts-inquisitor-slack",
+        "Message": "STAGING GOV: Potential failover scenario for $result.ServiceName$ in $result.RequestRegion$!\n\nThe service in $result.LoggingRegion$ handled $result.count$ requests originally meant for $result.RequestRegion$\n\nSee all results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "7-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

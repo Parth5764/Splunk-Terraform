@@ -1,0 +1,95 @@
+[
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-dingo-01000",
+                    "ctxwss-dingo-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-dingo-01000",
+                    "ctxwsp-dingo-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Asgard",
+            "Service": "dingo",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate (Error Code: 429)",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode = 429) FROM Transaction",
+                    "Threshold": "9"
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate (Error Code: 5xx)",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500) FROM Transaction",
+                    "Threshold": "9"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-asgard-alerts"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-buffalo-01000",
+                    "ctxwss-buffalo-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-buffalo-01000",
+                    "ctxwsp-buffalo-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Asgard",
+            "Service": "buffalo",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "9",
+                    "ThresholdDuration": "480"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-asgard-alerts"
+            ]
+        }
+    }
+]

@@ -1,0 +1,578 @@
+[
+    {
+        "Filter": {
+            "Type": "web/serverFarms",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "CPU Percentage greater than 70 for App service",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "CpuPercentage",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":70.0,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+     {
+        "Filter": {
+            "Type": "web/serverFarms",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Memory Percentage greater than 70 for App service",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "MemoryPercentage",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":70.0,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "web/sites",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Http 4xx erros exceeded threshold of 25",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "Http4xx",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":25.0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "web/sites", 
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+            
+        },
+        "Description": "HTTP 5xx Server Errors exceed threshold",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "Http5xx",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope": "{{InstanceId}}",
+            "Severity": 1,
+            "Threshold": 5,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup": "/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "web/sites",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "HTTP Request Count exceeds threshold",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "Requests",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":100,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "web/sites",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Average HTTP Response Time exceed threshold",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "HttpResponseTime",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":3,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "documentDb",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "CosmosDB table deleted",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "TableTableDelete",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 1,
+            "Threshold":0,
+            "TimeAggregation": "Count",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "documentDb",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "CosmosDB Table throughput updated",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "TableTableThroughputUpdate",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":0,
+            "TimeAggregation": "Count",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "documentDb",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "CosmosDB RU Limit Reached",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "TotalRequestUnits",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 1,
+            "Threshold":1000.0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventgrid/topics",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops audit delivery failed",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "DeliveryAttemptFailCount",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":1,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventgrid/topics",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops audit publish failed",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "PublishFailCount",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":1,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventhub/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Event Hub delivery failed-ServerErrors",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "ServerErrors",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventhub/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Event Hub delivery failed-ThrottledRequests",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "ThrottledRequests",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventhub/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Event Hub delivery failed-UserErrors",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "UserErrors",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "eventhub/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Event Hub delivery failed-QuotaExceededErrors",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "QuotaExceededErrors",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "network/frontdoors",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Front Door request count exceeds the set threshold",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "RequestCount",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":100,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "keyvault",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "KV Latency greater than 200 ms",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "ServiceApiLatency",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":200.0,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "logic/workflows",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "ServiceBus to EvenHub Delivery Failing",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "RunsFailed",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "logic/workflows",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "ServiceBus to EvenHub Delivery Failing-Runs Throttled",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "RunThrottledEvents",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "ServiceBus/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops Build or Bucket Event Delivery Failed-DeadletteredMessages",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "DeadletteredMessages",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "ServiceBus/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops Build or Bucket Event Delivery Failed-ServerErrors",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "ServerErrors",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "ServiceBus/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops Build or Bucket Event Delivery Failed-ThrottledRequests",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "ThrottledRequests",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "ServiceBus/namespaces",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Azure Devops Build or Bucket Event Delivery Failed-UserErrors",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "UserErrors",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 2,
+            "Threshold":0,
+            "TimeAggregation": "Total",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "storageaccount",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Storage Account is not meeting availability SLO",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "Availability",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":99.9,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT5M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+    {
+        "Filter": {
+            "Type": "storageaccount",
+            "SubscriptionId": "e23276bc-f812-41c3-bdbf-31f3b9ee22a6"
+        },
+        "Description": "Storage Service Latency exceeds threshold",
+        "Type": "Microsoft.Insights/metricAlerts",
+        "Properties": {
+            "CriteriaName": "Metric1",
+            "Enabled": "true",
+            "EvaluationFrequency": "PT1M",
+            "Location": "global",
+            "MetricName": "SuccessServerLatency",
+            "MonitorTemplateType": 8,
+            "Operator": "GreaterThan",
+            "Scope":"{{InstanceId}}",
+            "Severity": 3,
+            "Threshold":2000,
+            "TimeAggregation": "Average",
+            "WindowSize": "PT15M",
+            "ActionGroup":"/subscriptions/{{SubscriptionId}}/resourcegroups/branding-us-prod/providers/microsoft.insights/actiongroups/Branding-Alerts"
+        }
+    },
+]

@@ -1,0 +1,316 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "dashboarddevpetrustefans Making Changes",
+    "Description": "dashboarddevpetrustefans is a dev key we setup for @petrustefans to use for dev work on the CC Dashboard. \n\nThis alert checks to see if he calls any APIs with anything other than a GET call.\n\nPlease make note of what APIs were hit and report this to Robert Hyde/Timothy Moore for further action",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "AND \"CallerServiceName=dashboarddevpetrustefans\" AND (RequestMethod!=GET) \"LoggingType=Performance\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Workstreams Unauthorized calls to",
+    "Description": "Alert around Workstreams calls to Staging environment to alert if any calls to DELETE endpoints are performed",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=workstreams delete| stats count by AbsoluteUri| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "andrey.yushkov@citrix.com",
+        "liam.leane@citrix.com"
+      ],
+      "CronExpression": "13 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XenMobile   Unauthorized Calls to",
+    "Description": "Notification to Citrix Cloud Operations and Citrix Cloud CQE that the XenMobile keys of XenMobile-Chrome and XenMobile-rpi are being used outside of the agreed context. Please reach out to the XenMobile Ops team ASAP if this key is being used as it is not agreed upon.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=xenmobile-rpi OR CallerServiceName=xenmobile-chrome NOT (RequestMethod=PUT AND AbsoluteUri=https://trust-*.ctxwsstgapi.net/root/publickeys/xenmobile-chrome) NOT (RequestMethod=POST AND AbsoluteUri=https://trust-*.ctxwsstgapi.net/*/authorization)",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_StagingCwcServiceRuntime",
+        "http:CC_APS_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime",
+        "http:CC_JP_StagingCwcServiceRuntime"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "ryan.morey@citrix.com"
+      ],
+      "CronExpression": "13 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "StoreFrontRegistryFeature Unauthorized Calls",
+    "Description": "StoreFrontRegistryFeature service key used for a request other than /featurecustomer (this alert doesn't consider GET requests). Please reach out to StoreFront DevOps team.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=StoreFrontRegistryFeature Message=* NOT \"*/featurecustomer/*\"| spath input=Message | search RequestMethod != GET| stats count by source, RequestMethod, Uri",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "NetScaler EverGreen using elevated privileges",
+    "Description": "Tracking of NetScaler DNBU EverGreen service to only be using GET API calls.\nReach out to NGS DevOps team, Ken Bell, and Mugdha to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=dnbu-evergreen NOT (changeevents OR auhtorization OR root/trust/v1/instance/edge OR download/v1/downloadurl OR \"root/customers/*\")| bin _time span=10m| stats count by _time, AbsoluteUri| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Core",
+        "cc/Staging/WestEurope/*/Core",
+        "cc/Staging/AustraliaEast/*/Core",
+        "cc/StagingJP/JapanEast/*/Core",
+        "cc/StagingJP/JapanWest/*/Core"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "Mugdha.Agarwal@citrix.com",
+        "Kenneth.Bell@citrix.com",
+        "hrushikesh.paralikar@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "SfaasSys2 using elevated privileges",
+    "Description": "Tracking of SfaasSys2 API calls.\nReach out to \"XD DevOps, Ross Large, James Weldrake, James Price, Modesto Tabares, Shamitha Ranasinghe\" to understand why their service made the call(s).",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=SfaasSys2 DELETE| bin _time span=10m| stats count by _time, AbsoluteUri| sort - count",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "48 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XenMobile GoogleConfig key used out of scope",
+    "Description": "Contact XenMobile Operations and jaikrishnan.ravindranath@citrix.com if this key is used in Staging.\nPlease execute Delete this key if it is being used in Staging. This key is not to be used to call any Citrix Cloud APIs.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName| where CallerServiceName=xenmobile-googleconfig",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "jaikrishnan.ravindranath@citrix.com"
+      ],
+      "CronExpression": "13 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "IT Web Marketing Key Used Outside of Scope",
+    "Description": "This alert will trigger if the IT Web Marketing Service key is used outside of the scope which was agreed upon during the key creation.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "CallerServiceName=itwebmarketing AND !(\"root/orders/*/notifications RefererHeader\")",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "0 9 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

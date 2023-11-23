@@ -1,0 +1,194 @@
+[
+    {
+        "NameMetadata": {
+            "Squad": "Hercules",
+            "Service": "cafe",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-cafe-01000' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-cafe-01001' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01000 Customer (ovh2guqx1oya)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-cafe-%' WHERE request.uri LIKE '/ovh2guqx1oya/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwsp-cafe-01001' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Hercules",
+            "Service": "cafe",
+            "Issue": "SpecificCustomerResponseTime",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ctxwss-cafe-01000' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ctxwss-cafe-01001' AND request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For 01000 Customer (ovh2guqx1oya)",
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName LIKE 'ctxwsp-cafe-%' AND request.uri LIKE '/ovh2guqx1oya/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'ctxwsp-cafe-01001' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Hercules",
+            "Service": "backfire",
+            "Issue": "SpecificCustomerErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-backfire-01000' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-backfire-01001' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "Athena Alerts Staging"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01000 Customer (ovh2guqx1oya)",
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName LIKE 'ctxwsp-backfire-%' WHERE request.uri LIKE '/ovh2guqx1oya/%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "1800",
+                        "OpenViolationOnExpiration": false,
+                        "RunbookUrl": "https://info.citrite.net/display/CWC/What+to+do+when+an+alert+for+specific+customer+is+triggered"
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwsp-backfire-01001' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "Athena-Alerts"
+                ]
+            }
+        }
+    }
+]

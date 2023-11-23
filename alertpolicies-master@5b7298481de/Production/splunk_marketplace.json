@@ -1,0 +1,237 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "Azure Marketplace Password Error",
+    "Description": "Error notifying CItrix Cloud Operations and Azure Marketplace Operations if Azure Marketplace, which is responsible for fulfilling orders via Azure is unable to process orders with Citrix IT due to the wrong password.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": " \"ExceptionMessage=`Permission denied (password).`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Marketplace - ResourceProvider Certificate Thumbprint Authorization Errors",
+    "Description": "Failed to authorize certificate thumbprint on requests to Marketplace Resourceprovider APIs",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"ServiceName=`ResourceProvider`\" \"ExceptionMessage=`Failed to authorize certificate thumbprint of the request`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "CC-Apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "[Marketplace] ResourceProvider: Request Thumbprint Authorization Errors"
+      },
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Marketplace - Failure exchanging authorization code",
+    "Description": "Failed to exchange authorization code from Athena with CC Trust",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"ServiceName=`Resources`\" \"ExceptionMessage=`Failure exchanging authorization code`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "CC-Apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "[Marketplace] Resources: Failure exchanging authorization code"
+      },
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Marketplace - FTP folders does not exist",
+    "Description": "FTP folders used by Marketplace to drop order xmls does not exist",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"ServiceName=`Orders`\" EventType=\"`Error`\" \"ExceptionMessage=`Path does not exist`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "CC-Apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "[Marketplace] Orders: FTP folders does not exist"
+      },
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "5"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Marketplace - Unable to connect to FTP folders",
+    "Description": "Error connecting FTP folders used by Marketplace",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"ServiceName=`Orders`\" \"ExceptionMessage=`Server response does not contain SSH protocol identification.`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "CC-Apollo@citrite.net"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "[Marketplace] Orders: Unable to connect to FTP folders"
+      },
+      "CronExpression": "0 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "5"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "MarketPlace Orders with wrong end date",
+    "Description": "This alert indicate that orders have been sent by IT with the wrong EndDate. We need to reach out to \"Yamir Flores\". Refer to https://issues.citrite.net/browse/COUT-294",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"/root/blackbox/orders\" \"EndDate\" \"EntitlementQueue.EnqueueDeliveryInternal\" (\"000000000002003226\" OR \"000000000002003150\")\n| spath input=messageJSON\n| eval EndDateDay=strftime(strptime(EndDate,\"%Y-%m-%dT%H:%M:%S\"),\"%d\")\n| convert num(EndDateDay)\n| eval EndDateMonth=strftime(strptime(EndDate,\"%Y-%m-%dT%H:%M:%S\"),\"%m\")\n| convert num(EndDateMonth)\n| search EndDateDay >= 1 AND EndDateDay <= 27\n| stats dc(OrderId) as \"Number of Orders\" by EndDate, EndDateDay, EndDateMonth",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com",
+        "Yamir.Flores@citrix.com",
+        "alejandro.carrasquilla@citrix.com",
+        "Ryan.Morey@citrix.com",
+        "nishil.prajapati@citrix.com"
+      ],
+      "CronExpression": "18 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Marketplace failed orders",
+    "Description": "Alejandro and team are working on a SOP for this alert",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"State=`Failed`\"",
+      "Disabled": false,
+      "Indices": [
+        "production_xaxd_services"
+      ],
+      "Sources": [
+        "http:XAXD_ProductionAzureMarketplace"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "alejandro.carrasquilla@citrix.com",
+        "Ryan.Morey@citrix.com",
+        "nishil.prajapati@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

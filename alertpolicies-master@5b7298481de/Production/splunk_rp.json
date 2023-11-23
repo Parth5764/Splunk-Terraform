@@ -1,0 +1,235 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CredentialWallet service for XM",
+    "Description": "Splunk Alerts for XM calls to CredentialWallet.\nLink to SOP - https://info.citrite.net/display/CWC/CredentialWallet+service+for+XM",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=CredentialWallet CallerServiceName=\"xms\" EventType=Error NOT (\"(409) Conflict\" OR \"Please see the HTTP response returned by the 'Response' property of this exception for details.\")",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "http:CC_ProductionCwcServiceRuntime",
+        "http:CC_APS_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime",
+        "http:CC_JP_ProductionCwcServiceRuntime"
+      ],
+      "Emails": [
+        "uce-sre-cem@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/2d4f2f438ce94f08bd6c868ccddbb186/enqueue",
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "WestEurope"
+      ]
+    },
+    "Name": "CredentialWallet service for XM",
+    "Description": "Splunk Alerts for XM calls to CredentialWallet.\nLink to SOP - https://info.citrite.net/display/CWC/CredentialWallet+service+for+XM",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=CredentialWallet CallerServiceName=\"xms\" EventType=Error NOT (\"(409) Conflict\" OR \"Please see the HTTP response returned by the 'Response' property of this exception for details.\")",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services"
+      ],
+      "Sources": [
+        "http:CC_ProductionCwcServiceRuntime"
+      ],
+      "Emails": [
+        "uce-sre-cem@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a663c0d961ad47d5912674d5584e291b/enqueue",
+      "CronExpression": "42 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "20"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Resource Provider Errors",
+    "Description": "Check which Resource Provider is failing in the results, confirm that you are not able to go to the RP via the Console and reach out to the team. Excluded AppLayering due to CC Item : https://issues.citrite.net/browse/CC-9260",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(RoleName=Cws OR ServiceName=RoleName) \"Exception of type 'Citrix.CloudServices.ResourceProviderClient.ResourceProviderException\" \"ProviderDetailsService\" NOT applayering\n| rex field=AbsoluteUri \"citrixworkspacesapi.net\\/(?<customer>[^\\/]*)\\/resourceproviders\\/(?<service>[^\\/]*)\\/\"\n| stats count by source, service",
+      "Disabled": true,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-10m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "WebRelay Agent Not Running in Customer DataCenter",
+    "Description": "This is a WebRelay soft alert that will be sent if the WebRelay Agent is not running in a customer's environment. Information to deal with this can be found here: https://info.citrite.net/display/CWC/WebRelayTroubleshooting",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "(\"RoleName=WebRelay\" OR \"ServiceName=WebRelay\") AND \"An error occurred in the service bus to agent transport layer - check the configuration\"",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "maqsood.mohammed@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "WebRelay Credential Wallet Error",
+    "Description": "This is a WebRelay soft alert that will be sent if the there is a Credential Wallet issue. Information to deal with this can be found here: https://info.citrite.net/display/CWC/WebRelayTroubleshooting",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"The request is invalid with message 'serverId:\" AND \"is not defined in credential wallet or does not conform to undefined serverid format\"",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "maqsood.mohammed@citrix.com",
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "47 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "XM details within CWS takes longer than 10s to respond",
+    "Description": "XenMobile details within CWS takes longer than 10 seconds to respond",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=cc:services Level=INFO LoggingType=PERFORMANCE *resourceproviders/*/details\n|rex field=AbsoluteUri \"\\/resourceproviders\\/(?<resourceProvider>.*)\\/detail\"\n|spath input=messageJSON\n|search Service=CWS AND resourceProvider=\"xenmobile\"\n|bin _time span=1m |stats avg(Duration) as responseTime BY _time\n|eval responseTime=responseTime/1000\n|where responseTime > 10 \n|table responseTime, _time\n|sort -_time",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*",
+        "cc/Production/AustraliaEast/*",
+        "cc/ProductionJP/JapanEast/*",
+        "cc/ProductionJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com",
+        "nicholas.ceballos@citrix.com"
+      ],
+      "CronExpression": "23 * * * *",
+      "StartTime": "-60m@m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

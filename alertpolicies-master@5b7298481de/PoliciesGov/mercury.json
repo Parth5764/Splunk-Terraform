@@ -1,0 +1,528 @@
+[
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "AllOwnedServices",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.85",
+                    "RunbookUrl": "",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-bear-01000",
+                    "ctxwss-bear-01001",
+                    "ctxwss-blackjack-01000",
+                    "ctxwss-blackjack-01001",
+                    "ctxwss-bengal-01000",
+                    "ctxwss-bengal-01001",
+                    "ctxwss-dealfish-01000",
+                    "ctxwss-dealfish-01001",
+                    "ctxwss-egypt-01000",
+                    "ctxwss-egypt-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-bear-01000",
+                    "ctxwsp-bear-01001",
+                    "ctxwsp-blackjack-01000",
+                    "ctxwsp-blackjack-01001",
+                    "ctxwsp-bengal-01000",
+                    "ctxwsp-bengal-01001",
+                    "ctxwsp-dealfish-01000",
+                    "ctxwsp-dealfish-01001",
+                    "ctxwsp-egypt-01000",
+                    "ctxwsp-egypt-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-bear-01000",
+                    "ctxwss-bear-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-bear-01000",
+                    "ctxwsp-bear-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "bear",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30",
+                    "ThresholdDuration": "600"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "blackjack",
+            "Issue": "429ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error (429) Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode = 429) FROM Transaction",
+                    "Threshold": "8",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/Error+Rate+Troubleshooting+Guide"
+
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-blackjack-01000",
+                    "ctxwss-blackjack-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-blackjack-01000",
+                    "ctxwsp-blackjack-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "blackjack",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "ThresholdDuration": "600",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500) FROM Transaction",
+                    "Threshold": "30",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/Error+Rate+Troubleshooting+Guide"
+
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-blackjack-01000",
+                    "ctxwss-blackjack-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-blackjack-01000",
+                    "ctxwsp-blackjack-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "dealfish",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "ThresholdDuration": "600",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-dealfish-01000",
+                    "ctxwss-dealfish-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-dealfish-01000",
+                    "ctxwsp-dealfish-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "beholder",
+            "Issue": "SpecificCustomerErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-beholder-01000' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwss-beholder-01001' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwsp-beholder-01000' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} Error Rate For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentage(count(*), WHERE errorType is not NULL) FROM Transaction WHERE appName = 'ctxwsp-beholder-01001' WHERE request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "beholder",
+            "Issue": "SpecificCustomerResponseTIme",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwss-beholder-01000' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                },
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwss-beholder-01001' WHERE request.uri LIKE '/root/health%'",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Threshold": "5",
+                    "ThresholdDuration": "300",
+                    "OpenViolationOnExpiration": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Conditions": [
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For 01000 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwsp-beholder-01000' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    },
+                    {
+                        "Name": "{{ApplicationName}} 95th Percentile Response Time For 01001 (Health Check Endpoint)", // Using health check endpoint as we currently don't seem to have a suitable customer to use
+                        "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL AND appName = 'ctxwsp-beholder-01001' AND request.uri LIKE '/root/health%'",
+                        "BaselineDirection": "UPPER_ONLY",
+                        "Enabled": true,
+                        "Threshold": "5",
+                        "ThresholdDuration": "300",
+                        "OpenViolationOnExpiration": true
+                    }
+                ],
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "bengal",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "ThresholdDuration": "600",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-bengal-01000",
+                    "ctxwss-bengal-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-bengal-01000",
+                    "ctxwsp-bengal-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "egypt",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "ThresholdDuration": "600",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/egypt+High+Error+Rate+SOP"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS"
+            ]
+        },
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-egypt-01000",
+                    "ctxwss-egypt-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-egypt-01000",
+                    "ctxwsp-egypt-01001"
+                ]
+            }
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-bear-01000",
+                    "ctxwss-bear-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-bear-01000",
+                    "ctxwsp-bear-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "bear",
+            "Issue": "ResponseTime",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} 95th Percentile Response Time",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentile(duration, 95) FROM Transaction WHERE errorType is NULL",
+                    "Threshold": "10"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    }
+]

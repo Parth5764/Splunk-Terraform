@@ -1,0 +1,114 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS", // WestEurope and AustraliaEast orders are both processed in EastUs
+        "JapanEast"
+      ]
+    },
+    "Name": "Pending Orders With More Than 6 Hours",
+    "Description": "List of pending orders for more than 6 hours or orders that took more than 6 hours to be processed. User journey: https://info.citrite.net/display/CWC/Order+Processed+In+Less+Than+6+Hours",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=BlackBoxMonitor \"Store order =\"
+                 | rex field=_raw \"Store order = (?<OrderId>\\d+)\"
+                 | eval OrderIdLength = len(OrderId)
+                 | where OrderIdLength >= 10
+                 | rename EventTime AS CreationTimestamp
+                 | table OrderId, CreationTimestamp
+                 | join type=left OrderId [search index={{index}} ServiceName=BlackBoxMonitor \"MonitorFulFilledOrderQueueAsync completed the process of fulfill order\" | rex field=_raw \"MonitorFulFilledOrderQueueAsync completed the process of fulfill order (?<OrderId>\\d+)\" | rename EventTime AS FulfillmentTimestamp]
+                 | eval CreationTimestampEpoch=strptime(CreationTimestamp,\"%Y-%m-%dT%H:%M:%S.%7N\")
+                 | eval FulfillmentTimestampEpoch=if(isnull(FulfillmentTimestamp),0,strptime(FulfillmentTimestamp,\"%Y-%m-%dT%H:%M:%S.%7N\"))
+                 | eval CurrentEpoch=now()
+                 | where FulfillmentTimestampEpoch - CreationTimestampEpoch > 21600 OR (FulfillmentTimestampEpoch = 0 AND CreationTimestampEpoch + 21600 < CurrentEpoch)
+                 | table OrderId, CreationTimestamp, FulfillmentTimestamp
+                 | sort CreationTimestamp",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*/Cluster",
+        "cc/StagingJP/JapanEast/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "*Staging order `$result.OrderId$` not fulfilled or fulfilled after 6 hours.*\nGo to https://ccdashboard.eng.citrite.net/staging/orderTracker for Commercial or https://ccjpdashboard.eng.citrite.net/staging/orderTracker for Japan and enter the order number to see more details about this order.\nClick <$results_link$|here> to see the alert details.\nAlert generated from: <$view_link$|$name$>"
+      },
+      "CronExpression": "25 * * * *",
+      "StartTime": "-7h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true,
+    },
+    "EnvironmentPropertiesOverride": {
+      "Production": {
+        "Indices": [
+          "production_cc_services",
+          "productionjp_cc_services"
+        ],
+        "Sources": [
+          "cc/Production/EastUS/*/Cluster",
+          "cc/ProductionJP/JapanEast/*/Cluster"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-user-journey-alerts",
+          "Message": "*Production order `$result.OrderId$` not fulfilled or fulfilled after 6 hours.*\nGo to https://ccdashboard.eng.citrite.net/production/orderTracker for Commercial or https://ccjpdashboard.eng.citrite.net/production/orderTracker for Japan and enter the order number to see more details about this order.\nClick <$results_link$|here> to see the alert details.\nAlert generated from: <$view_link$|$name$>"
+        }
+      }
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS", // One alert for all commercial regions as CVAD Smoke Tests log into the same Splunk instance.
+        "JapanEast"
+      ]
+    },
+    "Name": "CVAD Enumeration and Launch Failures",
+    "Description": "List failures from CVAD Smoke Tests. User journey: https://info.citrite.net/display/CWC/CVAD+Service+Enumeration+And+Application+Launch+Via+On-Premise+StoreFront",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=xaxd:soaktest StoreFrontType=* StoreFrontType!=\"NA\" \"Failure\"
+                 | eval Region = \"us\"
+                 | rex field=controlPlaneId \"(prod|stg)cp[0-9]+(?<Region>[a-z]+)\"
+                 | eval Region = upper(Region)
+                 | eval FrontEnd = if(upper(StoreFrontType) == \"ONPREM\", \"STOREFRONT\", upper(StoreFrontType))
+                 | stats dc(customerId) as FailedCustomers by FrontEnd, Region",
+      "Disabled": true,
+      "Indices": [
+        "production_xaxd_services controlPlaneId=stg*",
+        "productionjp_xaxd_services controlPlaneId=stg*"
+      ],
+      "Sources": [
+        "soaktest"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-user-journey-alerts-staging",
+        "Message": "`$result.FailedCustomers$` Staging customer(s) failed to enumerate or launch in CVAD Smoke Tests.\n*FrontEnd:* `$result.FrontEnd$`.\n*Region:* `$result.Region$`.\nClick <$results_link$|here> to see the alert details.\nAlert generated from: <$view_link$|$name$>"
+      },
+      "CronExpression": "*/7 * * * *",
+      "StartTime": "-7m",
+      "EndTime": "now",
+      "TriggerIndividually": true,
+      "CustomTrigger": "search FailedCustomers > 1",
+      "EnvironmentName": "Staging"
+    },
+    "EnvironmentPropertiesOverride": {
+      "Production": {
+        "Indices": [
+          "production_xaxd_services controlPlaneId=prod*",
+          "productionjp_xaxd_services controlPlaneId=prod*"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-user-journey-alerts",
+          "Message": "`$result.FailedCustomers$` Production customer(s) failed to enumerate or launch in CVAD Smoke Tests.\n*FrontEnd:* `$result.FrontEnd$`.\n*Region:* `$result.Region$`.\nClick <$results_link$|here> to see the alert details.\nAlert generated from: <$view_link$|$name$>"
+        },
+        "EnvironmentName": "Production"
+      }
+    }
+  }
+]

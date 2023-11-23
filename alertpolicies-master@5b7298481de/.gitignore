@@ -1,0 +1,9 @@
+*
+!*/
+!*.json
+!*.md
+!*.js
+!.gitignore
+!Templates/*.txt
+/.vs
+/.idea

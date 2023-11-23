@@ -1,0 +1,91 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "Splunk Log Latency Check",
+    "Description": "The CC services splunk log events are older than 15 minutes.  Login to Splunk, search using cc service index(s) and investigate.",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "| head 1 | eval elapsed_mins=((now() - _time) / 60) | eval shouldAlert=if(elapsed_mins > 15, 1, 0) | where shouldAlert > 0",
+        "Disabled": false,
+        "Indices": [
+          "production_cc_services",
+          "production_cc_services",
+          "production_cc_services",
+          "productionjp_cc_services",
+          "productionjp_cc_services"
+        ],
+        "Sources": [
+          "*"
+        ],
+        "Emails": [
+          "workspaceadmins@citrix.com",
+          "bruno.spinelli@citrix.com",
+          "gregory.grillo@citrix.com",
+          "kiran.malsetty@citrix.com",
+          "nicholas.ceballos@citrix.com",
+          "john.cattaneo@citrix.com",
+          "bradley.rowe@citrix.com",
+          "thomas.hammond@citrix.com"
+        ],
+        "SlackChannel": {
+          "Channel": "#cc-hyas-alerts",
+          "Message": ">>> *Production* CC services Splunk logs not available last 15 minutes"
+        },
+		"PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Name": "Missing Connector Logs in Splunk",
+    "Description": "Connector log events are older than 15 minutes in Splunk./nSOP:https://info.citrite.net/x/545wWQ",
+    "Type": "Splunk",
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Indices": [
+        "production_cc_services",
+        "production_cc_services",
+        "production_cc_services",
+        "productionjp_cc_services",
+        "productionjp_cc_services"
+      ],
+	  "Sources": [
+          "*"
+        ],
+      "Search": "sourcetype=cc:loggerworker | head 1 | eval elapsed_mins=((now() - _time) / 60) | eval shouldAlert=if(elapsed_mins > 15, 1, 0) | where shouldAlert > 0",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "Emails": [
+        "cloudfas-dev-team@citrix-systems-inc.pagerduty.com",
+        "min.li1@citrix.com"
+      ],
+	  "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "SlackChannel": {
+        "Channel": "#hcp-flareon-alerts",
+        "Message": ">>> *Production*: Connector logs in Splunk are not reported in last 15 minutes"
+      }
+    }
+  }
+]

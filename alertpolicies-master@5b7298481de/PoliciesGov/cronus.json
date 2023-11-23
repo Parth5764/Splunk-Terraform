@@ -1,0 +1,471 @@
+[
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-avocet-01000",
+                    "ctxwss-avocet-01001",
+                    "ctxwss-caiman-01000",
+                    "ctxwss-caiman-01001",
+                    "ctxwss-bullfrog-01000",
+                    "ctxwss-bullfrog-01001",
+                    "ctxwss-banker-01000",
+                    "ctxwss-banker-01001",
+                    "ctxwss-eclipse-01000",
+                    "ctxwss-eclipse-01001",
+                    "ctxwss-eda-01000",
+                    "ctxwss-eda-01001",
+                    "ctxwss-bengal-01000",
+                    "ctxwss-bengal-01001",
+                    "ctxwss-egypt-01000",
+                    "ctxwss-egypt-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-avocet-01000",
+                    "ctxwsp-avocet-01001",
+                    "ctxwsp-caiman-01000",
+                    "ctxwsp-caiman-01001",
+                    "ctxwsp-bullfrog-01000",
+                    "ctxwsp-bullfrog-01001",
+                    "ctxwsp-banker-01000",
+                    "ctxwsp-banker-01001",
+                    "ctxwsp-eclipse-01000",
+                    "ctxwsp-eclipse-01001",
+                    "ctxwsp-eda-01000",
+                    "ctxwsp-eda-01001",
+                    "ctxwsp-bengal-01000",
+                    "ctxwsp-bengal-01001",
+                    "ctxwsp-egypt-01000",
+                    "ctxwsp-egypt-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "MostOwnedServices",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.85",
+                    "RunbookUrl": "",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-addax-01000",
+                    "ctxwss-addax-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-addax-01000",
+                    "ctxwsp-addax-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "addax",
+            "Issue": "Apdex",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/Metric",
+        "Properties": {
+            "Conditions": [
+                {
+                    "MetricType": "apm_app_metric",
+                    "MetricName": "apdex",
+                    "Duration": "5",
+                    "Operator": "below",
+                    "Threshold": "0.80",
+                    "RunbookUrl": "",
+                    "Enabled": true
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-addax-01000",
+                    "ctxwss-addax-01001",
+                    "ctxwss-eda-01000",
+                    "ctxwss-eda-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-addax-01000",
+                    "ctxwsp-addax-01001",
+                    "ctxwsp-eda-01000",
+                    "ctxwsp-eda-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "addax",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "Duration": "10",
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30",
+                    "ThresholdDuration": "600",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/DelegatedAdministration+-+Error+rate+Troubleshooting+Guide"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-avocet-01000",
+                    "ctxwss-avocet-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-avocet-01000",
+                    "ctxwsp-avocet-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "avocet",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Duration": "10",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "20",
+                    "RunbookUrl": "https://info.citrite.net/display/CWC/Cronus-Trust-ErrorRate-Production"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-bullfrog-01000",
+                    "ctxwss-bullfrog-01001",
+                    "ctxwss-eclipse-01000",
+                    "ctxwss-eclipse-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-bullfrog-01000",
+                    "ctxwsp-bullfrog-01001",
+                    "ctxwsp-eclipse-01000",
+                    "ctxwsp-eclipse-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "bullfrog",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30",
+                    "ThresholdDuration": "600"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-banker-01000",
+                    "ctxwss-banker-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-banker-01000",
+                    "ctxwsp-banker-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "banker",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "20"
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack",
+                    "cc-cronus-alerts-inquisitor-pagerduty"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-avocet-01000",
+                    "ctxwss-avocet-01001",
+                    "ctxwss-caiman-01000",
+                    "ctxwss-caiman-01001",
+                    "ctxwss-bullfrog-01000",
+                    "ctxwss-bullfrog-01001",
+                    "ctxwss-banker-01000",
+                    "ctxwss-banker-01001",
+                    "ctxwss-eclipse-01000",
+                    "ctxwss-eclipse-01001",
+                    "ctxwss-addax-01000",
+                    "ctxwss-addax-01001",
+                    "ctxwss-eda-01000",
+                    "ctxwss-eda-01001",
+                    "ctxwss-bengal-01000",
+                    "ctxwss-bengal-01001",
+                    "ctxwss-egypt-01000",
+                    "ctxwss-egypt-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-avocet-01000",
+                    "ctxwsp-avocet-01001",
+                    "ctxwsp-caiman-01000",
+                    "ctxwsp-caiman-01001",
+                    "ctxwsp-bullfrog-01000",
+                    "ctxwsp-bullfrog-01001",
+                    "ctxwsp-banker-01000",
+                    "ctxwsp-banker-01001",
+                    "ctxwsp-eclipse-01000",
+                    "ctxwsp-eclipse-01001",
+                    "ctxwsp-addax-01000",
+                    "ctxwsp-addax-01001",
+                    "ctxwsp-eda-01000",
+                    "ctxwsp-eda-01001",
+                    "ctxwsp-bengal-01000",
+                    "ctxwsp-bengal-01001",
+                    "ctxwsp-egypt-01000",
+                    "ctxwsp-egypt-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "AllOwnedServices",
+            "Issue": "Throughput",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Requests per minute",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT rate(count(*), 1 minute) AS 'Requests per minute' FROM Transaction",
+                    "Threshold": "30",
+                    "ThresholdDuration": "600",
+                    "RunbookUrl": ""
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    },
+    {
+        "EnvironmentFilterOverride": {
+            "Staging": {
+                "Applications": [
+                    "ctxwss-caiman-01000",
+                    "ctxwss-caiman-01001",
+                    "ctxwss-bengal-01000",
+                    "ctxwss-bengal-01001",
+                    "ctxwss-egypt-01000",
+                    "ctxwss-egypt-01001"
+                ]
+            },
+            "Production": {
+                "Applications": [
+                    "ctxwsp-caiman-01000",
+                    "ctxwsp-caiman-01001",
+                    "ctxwsp-bengal-01000",
+                    "ctxwsp-bengal-01001",
+                    "ctxwsp-egypt-01000",
+                    "ctxwsp-egypt-01001"
+                ]
+            }
+        },
+        "NameMetadata": {
+            "Squad": "Cronus",
+            "Service": "AllOwnedServices",
+            "Issue": "ErrorRate",
+            "Template": "{{File:./AlertPolicies/Templates/nr-policy-name-template.txt}}"
+        },
+        "Type": "NewRelic/NrqlBaseline",
+        "Properties": {
+            "ConditionPerApplication": true,
+            "Conditions": [
+                {
+                    "Name": "{{ApplicationName}} Error Rate",
+                    "BaselineDirection": "UPPER_ONLY",
+                    "Enabled": true,
+                    "NrqlQuery": "SELECT percentage(count(*), WHERE http.statusCode >= 500 OR http.statusCode = 429) FROM Transaction",
+                    "Threshold": "30",
+                    "ThresholdDuration": "600",
+                    "RunbookUrl": ""
+                }
+            ],
+            "Channels": [
+                "SLOR_ALERTS",
+                "cc-cronus-staging-alerts-inquisitor-slack"
+            ]
+        },
+        "EnvironmentPropertiesOverride": {
+            "Production": {
+                "Channels": [
+                    "SLOR_ALERTS",
+                    "cc-cronus-alerts-inquisitor-slack"
+                ]
+            }
+        }
+    }
+]

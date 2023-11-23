@@ -1,0 +1,125 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "CoreWorker running more than 1 instance",
+    "Description": "Staging - CoreWorker running more than 1 instance. Decrease the number of CoreWorkers to 1 instance. This has been known to cause overall platform issues.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=CoreWorker| stats dc(NodeName) as count by source, NodeName| where count > 1",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "27 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "VMSS failed to Auto-Scale",
+    "Description": "If you receive this alert it means that VMSS autoscaling failed, Check the VMSS on azure portal for any error and try to scale manually based on timebased scaling node count. if it still fails, please open a ticket with Mictosoft.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "sourcetype=ccops:services HostedRoleName=AzureActivityLogsMonitorWorker \n| regex Message=\"Azure VMSS Scaling operation failed for resource:*\"\n| table Message\n| rex field=Message \"Azure VMSS Scaling operation failed for resource:(?<VMSS>.*) in subscription:(?<subscription>.*) *\"\n| table VMSS",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "staging_csgops_services",
+        "stagingjp_csgops_services",
+        "stagingjp_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/JapanWest/StagingJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "",
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+        "Regions": [
+            "EastUS",
+            "WestEurope",
+            "AustraliaEast",
+            "JapanEast",
+            "JapanWest"
+        ]
+    },
+    "Name": "CC Throttled ComosDB Request",
+    "Description": "SOP : https://info.citrite.net/display/CWC/CC+Azure+Cosmos+DB+Throttling+Issue",
+    "Type": "Splunk",
+    "Properties": {
+        "SplitIndicesByRegionEnv": true,
+        "Search": "cosmosdb-error-429 ServiceName!=NULL ServiceName!=CloudLicense | stats count by ServiceName,RegionName,LayerName | where count>200 | fields RegionName,LayerName,ServiceName,count",
+        "Disabled": false,
+        "Indices": [
+            "staging_cc_services",
+            "staging_cc_services",
+            "staging_cc_services",
+            "stagingjp_cc_services",
+            "stagingjp_cc_services"
+        ],
+        "Sources": [
+          "cc/Staging/EastUS/*",
+          "cc/Staging/WestEurope/*",
+          "cc/Staging/AustraliaEast/*",
+          "cc/StagingJP/JapanEast/*",
+          "cc/StagingJP/JapanWest/*"
+        ],
+        "SlackChannel": {
+            "Channel": "#cc-cosmosdb-alerts",
+            "Message": ">Throttled CosmosDB requests in last 15 mins, <https://info.citrite.net/display/CWC/CC+Azure+Cosmos+DB+Throttling+Issue|Runbook>\n> *Region:* $result.RegionName$ *Layer:* $result.LayerName$ *Service Name:* $result.ServiceName$ *Count:* $result.count$\n> \n```index=staging_cc_services cosmosdb-error-429 ServiceName!=NULL | stats count by ServiceName,RegionName,LayerName | where count>200 | fields RegionName,LayerName,ServiceName,count```"
+        },
+        "CronExpression": "*/15 * * * *",
+        "StartTime": "-15m",
+        "EndTime": "now",
+        "AlertWhenGreaterThan": "0",
+        "TriggerIndividually": true
+    }
+  }
+]

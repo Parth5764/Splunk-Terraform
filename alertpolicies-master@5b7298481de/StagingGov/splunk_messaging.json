@@ -1,0 +1,126 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Messaging Redis Connection Exception",
+    "Description": "Redis connectivity issues that have proven to cause issues with messaging service. SOP: https://info.citrite.net/display/CWC/Redis+Connection+Exception",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"StackExchange.Redis.RedisConnectionException\" \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingGov/USGovTexas/*/Cluster",
+        "cc/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "*Staging Gov - StackExchange.Redis.RedisConnectionException*\n>*Time* : $result.fTime$\n>*Source* : $result.source$"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "GOV Staging Messaging Timeout",
+    "Description": "Please refer to the SOP in https://info.citrite.net/display/CWC/Alert+SOP+-+Messaging+Timeout",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "ServiceName=Messaging LoggingType=Performance \n| bin _time span=5m \n| rex field=_raw \"\"StatusCode\":\"(?<apiStatus>[a-zA-Z0-9:/\\.]+)\"\" \n| stats count(eval(apiStatus==\"RequestTimeout\")) as RequestTimeoutCount,Count as TotalCount, by_time,source,RoleId \n| eval CriticalErrorPercentage=20 \n| where ((RequestTimeoutCount)/(TotalCount)*100) > CriticalErrorPercentage",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_cc_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "*Staging Gov- \"Messaging Timeout\"\n>*Time* : $result._Time$\n>*Source* : $result.source$\n>*Fail Count*: $result.count$"
+      },
+      "PagerDuty": "",
+      "CronExpression": "*/10 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Potential Failover Scenario For Messaging Service",
+    "Description": "Potential Failover Scenario For Messaging Service; see Splunk results for more information.\n\nSOP: https://info.citrite.net/x/Gd7qY",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "ServiceName=Messaging \n EventType=Performance OR EventType=ApiPerformance \n | eval RequestUri = json_extract(Message, \"Uri\") \n | where NOT LIKE(RequestUri, \"%-direct-%\") AND NOT LIKE(RequestUri, \"%-asfdirect-%\") \n | rex field=source \".+\\/(?<LoggingLayer>.+)\\/(?<LoggingRegion>.+)\\/(?<release>.+)\\/\" \n | rex field=RequestUri \"\\/(?<RequestService>\\w+)-(?<RequestRegion>\\w+)-(?<RequestLayer>\\w+)-\" \n | where lower(LoggingRegion) != lower(RequestRegion) \n | stats count by ServiceName, source, LoggingRegion, RequestRegion \n | where count > 100",
+      "Disabled": false,
+      "Indices": [
+        "staginggov_cc_services",
+        "staginggov_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingGov/USGovTexas/*/Cluster",
+        "cc/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "STAGING GOV: Potential failover scenario for $result.ServiceName$ in $result.RequestRegion$!\n\nThe service in $result.LoggingRegion$ handled $result.count$ requests originally meant for $result.RequestRegion$\n\nSee all results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "6-59/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "USGovTexas",
+        "USGovVirginia"
+      ]
+    },
+    "Name": "Messaging health check failure",
+    "Description": "Messaging health check failures were found. Check the dependency status by search ServiceName=Messaging CheckHealthAsync ",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "CheckHealthAsync ServiceName=Messaging \n | eval minute=strftime(_time,\"%M\") \n | stats count by minute,source ",
+      "SplitIndicesByRegionEnv": true,
+      "Disabled": false,
+      "Indices": [
+        "staginggov_cc_services",
+        "staginggov_cc_services"
+      ],
+      "Sources": [
+        "cc/StagingGov/USGovTexas/*/Cluster",
+        "cc/StagingGov/USGovVirginia/*/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-apollo-alerts",
+        "Message": "STAGING GOV: Messaging is experiencing a high count of health check failures in $result.source$, please be on alert for possible failover of Messaging service.\n\nSee Splunk results <$results_link$|here>. Alert generated from <$view_link$|$name$>"
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "2"
+    }
+  }
+]

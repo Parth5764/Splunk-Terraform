@@ -1,0 +1,259 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/JapanWest/StagingJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: There has been unexpected exceptions in the AzCopyBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "26 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS AzCopyBackupWorker Completions",
+    "Description": "There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzCopyBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: There has been no completions of the AzCopyBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "41 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/JapanWest/StagingJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: There has been unexpected exceptions in the KeyVaultBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "21 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS KeyVaultBackupWorker Completions",
+    "Description": "There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"KeyVaultBackupWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: There has been no completions of the KeyVaultBackupWorker in the past 3 days. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "46 14 * * *",
+      "StartTime": "-3d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "DMS AzureBlobBackupWorker Exceptions",
+    "Description": "There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=\"AzureBlobBackupWorker\" EventType=\"Error\" NOT \"*A task was canceled*\" NOT \"*The operation was canceled*\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/WestEurope/StagingWestEurope/Cluster",
+        "ccops/Staging/AustraliaEast/StagingAustraliaEast/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster",
+        "ccops/Staging/JapanWest/StagingJapanWest/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: There has been unexpected exceptions in the AzureBlobBackupWorker. Please review the Splunk logs and take any action as nessicary."
+      },
+      "CronExpression": "36 */3 * * *",
+      "StartTime": "-3h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "AlertSuppressionDuration": "1d"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "Athena Client Secret Expiration Monitoring",
+    "Description": "Please follow the SOP to rotate Athena client secrets: https://info.citrite.net/x/KChZUg",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=AthenaClientsMonitorWorker ClientOwner=workspaceadmins@citrix.com | where ClientSecretRemainingDays >= 0 AND ClientSecretRemainingDays <= 30 | dedup ClientApiKey | table ClientName, ClientApiKey, ClientOwner, ClientSecretExpiration, ClientSecretRemainingDays",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: Warning! Athena Clients expiring."
+      },
+      "CronExpression": "30 13 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0",
+      "TriggerIndividually": true
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "JapanEast"
+      ]
+    },
+    "Name": "DMS AthenaClientsMonitorWorker is not logging",
+    "Description": "Please check the DMS AthenaClientsMonitorWorker Configuration",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "HostedRoleName=\"AthenaClientsMonitorWorker\" Message=\"A scheduled item completed execution.\"",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services",
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster",
+        "ccops/Staging/JapanEast/StagingJapanEast/Cluster"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-alert",
+        "Message": "Staging: Warning! \nDMS AthenaClientsMonitorWorker is not logging to splunk. No logs found in last 72 hrs \n```index=staging_csgops_services HostedRoleName=\"AthenaClientsMonitorWorker\"```"
+      },
+      "CronExpression": "00 1 * * *",
+      "StartTime": "-72h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": 0
+    }
+  }
+]

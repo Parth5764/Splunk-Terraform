@@ -1,0 +1,69 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope",
+        "AustraliaEast",
+        "JapanEast",
+        "JapanWest"
+      ]
+    },
+    "Name": "ASB Get ServiceBusConnection failed",
+    "Description": "ServiceBusConnection failed. Please check if the management certificate is valid for the ASB subscription.",
+    "Type": "Splunk",
+    "Properties": {
+      "SplitIndicesByRegionEnv": true,
+      "Search": "\"Get ServiceBusConnection failed: Credentials for getting service bus were incorrect.\" | timechart count by source",
+      "Disabled": false,
+      "Indices": [
+        "staging_cc_services",
+        "staging_cc_services",
+        "staging_cc_services",
+        "stagingjp_cc_services",
+        "stagingjp_cc_services"
+      ],
+      "Sources": [
+        "cc/Staging/EastUS/*",
+        "cc/Staging/WestEurope/*",
+        "cc/Staging/AustraliaEast/*",
+        "cc/StagingJP/JapanEast/*",
+        "cc/StagingJP/JapanWest/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Third Party Certificate Expiry",
+    "Description": "Generates Email alert when third party certificate Expiration date <= 7 days\n\nSOP : https://info.citrite.net/display/CWC/Third+Party+Certificate+Expiry",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=ccops:services HostedRoleName=ServicesMonitorWorker | regex Message=\"The Certificate.*\" | rex field=Message \"The Certificate for the URL (?<Url_Name>.*) expires in (?<DaysRemaining>.*) days.The Expiry date is (?<Expiry_Date>.*)\" | dedup Url_Name,DaysRemaining,Expiry_Date | table Url_Name,DaysRemaining,Expiry_Date | where DaysRemaining <=7",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "ccops/Staging/EastUS/StagingEastUS/Cluster"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "0 0 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]

@@ -1,0 +1,379 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard AccessControlWorker not logging",
+    "Description": "Dashboard AccessControlWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=AccessControlWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard AccessControlWorkers not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard AdministratorInfoWorker not logging",
+    "Description": "Dashboard AdministratorInfoWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=AdministratorInfoWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard AdministratorInfoWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard AutomationTestExecutionWorker not logging",
+    "Description": "Dashboard AutomationTestExecutionWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=AutomationTestExecutionWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard AutomationTestExecutionWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard CertificatesMonitorWorker not logging",
+    "Description": "Dashboard CertificatesMonitorWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=CertificatesMonitorWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard CertificatesMonitorWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "30 5 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard CustomersEntitlementsCleanUpWorker not logging",
+    "Description": "Dashboard CustomersEntitlementsCleanUpWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=CustomersEntitlementsCleanUpWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard CustomersEntitlementsCleanUpWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "0 0 30 * *",
+      "StartTime": "-30d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard CustomerInfoWorker not logging",
+    "Description": "Dashboard CustomerInfoWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=CustomerInfoWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard CustomerInfoWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard CustomersEntitlementsInfoWorker not logging",
+    "Description": "Dashboard CustomersEntitlementsInfoWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=CustomersEntitlementsInfoWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard CustomersEntitlementsInfoWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "0 */24 * * *",
+      "StartTime": "-24h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "24h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard ConnectorsInfoWorker not logging",
+    "Description": "Dashboard ConnectorsInfoWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=ConnectorsInfoWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard ConnectorsInfoWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/6h * * * *",
+      "StartTime": "-6h",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "12h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard ConnectorStatusWorker not logging",
+    "Description": "Dashboard ConnectorStatusWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=ConnectorStatusWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard ConnectorStatusWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/30 * * * *",
+      "StartTime": "-30m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard ConnectorsHistoryWorker not logging",
+    "Description": "Dashboard ConnectorsHistoryWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=ConnectorsHistoryWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard ConnectorsHistoryWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/60 * * * *",
+      "StartTime": "-60m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "6h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard FeedSubscribersWorker not logging",
+    "Description": "Dashboard FeedSubscribersWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=FeedSubscribersWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard FeedSubscribersWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "30 5 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard PublicKeyInfoWorker not logging",
+    "Description": "Dashboard PublicKeyInfoWorker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=PublicKeyInfoWorker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard PublicKeyInfoWorker not logging, please check if the worker is down."
+      },
+      "CronExpression": "30 5 * * *",
+      "StartTime": "-1d",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "Dashboard Route53Worker not logging",
+    "Description": "Dashboard Route53Worker not logging. Investigate why it is not logging. If the worker is down, RDP into the Dashboard machine and restart CWCDashboard service.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "sourcetype=csgops:services WorkerRole=Route53Worker",
+      "Disabled": false,
+      "Indices": [
+        "staging_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "SlackChannel": {
+        "Channel": "#cc-sre-dms-dashboard-workers-alerts",
+        "Message": ">>> *Staging*: Dashboard Route53Worker not logging, please check if the worker is down."
+      },
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenEqualTo": "0",
+      "AlertSuppressionDuration": "2h"
+    }
+  }
+]

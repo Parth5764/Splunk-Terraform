@@ -1,0 +1,59 @@
+[
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS",
+        "WestEurope"
+      ]
+    },
+    "Name": "DNSAPI Authorization failure",
+    "Description": "There appears to be a service using incorrect credentials to make calls to DNSAPI. Investigate",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": " *dns* httprequestexception Unauthorized",
+      "Disabled": false,
+      "Indices": [
+        "production_cc_services"
+      ],
+      "Sources": [
+        "cc/Production/EastUS/*",
+        "cc/Production/WestEurope/*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "PagerDuty": "https://events.pagerduty.com/integration/a6479c7a2ce24497b7155138378f46f9/enqueue",
+      "CronExpression": "25 * * * *",
+      "StartTime": "-1h",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "25"
+    }
+  },
+  {
+    "Filter": {
+      "Regions": [
+        "EastUS"
+      ]
+    },
+    "Name": "DNS Limit Reached",
+    "Description": "If you receive this alert, go to AWS Route53 and check the number of domains created for the hosted zone reported in this alert.\nYou can also run \"aws route53 get-hosted-zone-limit --type <limit> --hosted-zone-id <hosted zone>\". You can get \"limit\" and \"hosted zone\" from the alert result.",
+    "Type": "Splunk",
+    "Properties": {
+      "Search": "\"exception\"\n| rex field=Message \"Exceeded limit (?<limit>.+) for zone: (?<zone>[A-Za-z0-9]+) --->\"\n| stats count by limit, zone",
+      "Disabled": false,
+      "Indices": [
+        "production_csgops_services"
+      ],
+      "Sources": [
+        "*"
+      ],
+      "Emails": [
+        "workspaceadmins@citrix.com"
+      ],
+      "CronExpression": "*/15 * * * *",
+      "StartTime": "-15m",
+      "EndTime": "now",
+      "AlertWhenGreaterThan": "0"
+    }
+  }
+]
